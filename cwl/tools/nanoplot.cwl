@@ -6,7 +6,7 @@ doc: |
 
 requirements:
   ResourceRequirement:
-    coresMax: 1
+    coresMin: 1
     ramMin: 1024  # just a default, could be lowered
 hints:
   DockerRequirement:
@@ -17,30 +17,36 @@ baseCommand: [ NanoPlot ]
 inputs:
   name:
     type: string
+    label: prefix for files
     inputBinding:
       position: 1
       prefix: --title
 
   reads:
     type: File
+    format: edam:format_1930  # FASTQ
+    label: nanopore reads
     inputBinding:
       position: 2
       prefix: --fastq
   
   pformat:
     type: string
+    label: plot format (png, pdf)
     inputBinding:
       position: 3
       prefix: -f
 
   pcolor:
     type: string
+    label: plot color
     inputBinding:
       position: 4
       prefix: --color
 
   ptype:
     type: string
+    label: plot type
     inputBinding:
       position: 5
       prefix: --plots
@@ -48,7 +54,11 @@ inputs:
 arguments:
  - --N50
  - --loglength
- 
+ - -t
+ - $(runtime.cores)
+ - -p
+ - $(inputs.name)_
+
 outputs:
   html:
     type: 
@@ -59,7 +69,7 @@ outputs:
   stats:
     type: File
     outputBinding:
-      glob: "NanoStats.txt"
+      glob: "*NanoStats.txt"
   pngs:
     type:
       type: array
