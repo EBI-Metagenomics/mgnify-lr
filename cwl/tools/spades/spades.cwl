@@ -5,12 +5,13 @@ doc: |
       Implementation of hybrid mode assembly using SPAdes assembler.
 
 requirements:
+  InlineJavascriptRequirement: {} # needed to get GB in RAM
   ResourceRequirement:
-    coresMin: 4
-    ramMin: 8193 # 8 GB for testing, it needs more in production
+    coresMin: 1
+    ramMin: 6000 # 6 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: quay.io/biocontainers/spades:3.14.1--h2d02072_0
+    dockerPull: spades:latest
 
 baseCommand: [ spades.py ]
 
@@ -42,8 +43,8 @@ inputs:
 arguments:
  - -t
  - $(runtime.cores)
- - -M
- - $(runtime.ram)
+ - -m
+ - $(runtime.ram / 1000)
  - --only-assembler
  - --meta
  - -o
@@ -63,7 +64,8 @@ $namespaces:
  s: http://schema.org/
 $schemas:
  - http://edamontology.org/EDAM_1.16.owl
- - https://schema.org/version/latest/schema.rdf
+ - https://schema.org/version/latest/schemaorg-current-https.rdf
 
 s:license: "https://www.apache.org/licenses/LICENSE-2.0"
 s:copyrightHolder: "EMBL - European Bioinformatics Institute"
+s:dateCreated: 2020-10-08

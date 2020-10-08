@@ -1,5 +1,6 @@
 cwlVersion: v1.2
-class: CommandLineTool
+class: 
+
 label: Plotting tool for long read sequencing data and alignments.
 doc: |
       Implementation to plot Fastq files, PNG and PDF plots are generated.
@@ -95,3 +96,5 @@ $schemas:
 
 s:license: "https://www.apache.org/licenses/LICENSE-2.0"
 s:copyrightHolder: "EMBL - European Bioinformatics Institute"
+s:version: 0.0.1
+s:dateCreated: 2020-10-07
