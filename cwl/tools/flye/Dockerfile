@@ -25,12 +25,12 @@ RUN apt update && \
 # for singularity compatibility
 ENV LC_ALL=C
 
-# install SPAdes
+# install Flye
 WORKDIR /opt
 RUN wget -q https://github.com/fenderglass/Flye/archive/${flyeVer}.tar.gz && \
     tar zxf ${flyeVer}.tar.gz && \
     rm ${flyeVer}.tar.gz && \
-    cd Flye-${flyeVer} \
+    cd Flye-${flyeVer} && \
     make && \
     ln -s /opt/Flye-${flyeVer}/bin/flye /usr/local/bin
 
