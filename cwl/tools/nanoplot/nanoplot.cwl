@@ -1,5 +1,5 @@
 cwlVersion: v1.2
-class: 
+class: CommandLineTool
 
 label: Plotting tool for long read sequencing data and alignments.
 doc: |
