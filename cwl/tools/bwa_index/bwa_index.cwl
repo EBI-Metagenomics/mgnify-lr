@@ -5,7 +5,8 @@ doc: |
       Implementation of genome index generation with BWA.
 
 requirements:
-  InlineJavascriptRequirement: {} # needed to get GB in RAM
+  InitialWorkDirRequirement:
+    listing: [ $(inputs.sequences) ]
   ResourceRequirement:
     coresMin: 1
     ramMin: 6000 # 6 GB for testing, it needs more in production
@@ -13,33 +14,36 @@ hints:
   DockerRequirement:
     dockerPull: bwa:latest
 
-baseCommand: [ bwa ]
-
-arguments:
- - index
+baseCommand: [ "bwa", "index" ]
 
 inputs:
   algorithm:
-    type: string
+    type: string?
     label: index algorithm
     inputBinding:
       position: 1
       prefix: -a
-  genome:
+
+  sequences:
     type: File
     format: edam:format_1929  # FASTA
     label: genome sequence to index
     inputBinding:
+      valueFrom: $(self.basename)
       position: 2
 
  
 outputs:
-  index:
-    type:
-      type: array
-      items: File
+  output:
+    type: File
+    secondaryFiles:
+      - .amb
+      - .ann
+      - .bwt
+      - .pac
+      - .sa
     outputBinding:
-      glob: "$(inputs.genome).*"
+      glob: $(inputs.sequences.basename)
   
 stdout: bwa_index.log
 stderr: bwa_index.err

@@ -15,46 +15,36 @@ hints:
 baseCommand: [ "bwa", "mem" ]
 
 arguments:
- - -t
- - $(runtime.cores) 
+ - 
 
 inputs:
-  reference:
+  index:
     type: File
     label: Genome index files
-    secondaryFiles:
-      - .amb
-      - .ann
-      - .bwt
-      - .pac
-      - .sa
     inputBinding:
       position: 1
-
   reads1:
     type: File
     format: edam:format_1930  # FASTQ
-    label: short reads in fastq format
+    label: first pair FASTQ
     inputBinding:
       position: 2
-
   reads2:
-    type: File?
+    type: File
     format: edam:format_1930  # FASTQ
-    label: short reads in fastq format
+    label: second pair FASTQ
     inputBinding:
-      position: 3
-      
-  outfile:
+      position: 2
+  outbam:
     type: string
-    label: final name for the aligment file
+    label: final name for the aligment in BAM
 
  
 outputs:
   bamfile:
     type: File
     outputBinding:
-      glob: $(inputs.outfile)
+      glob: $(inputs.outbam)
   
 stdout: bwa.log
 stderr: bwa.err
