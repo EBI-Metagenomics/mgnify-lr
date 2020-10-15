@@ -52,11 +52,9 @@ inputs:
  
 outputs:
   bamfile:
-    type: File
-    outputBinding:
-      glob: $(inputs.outfile)
+    type: stdout
   
-stdout: bwa.log
+stdout: $(inputs.outfile)
 stderr: bwa.err
 
 $namespaces:
