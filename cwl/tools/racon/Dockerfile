@@ -22,7 +22,7 @@ RUN git clone --recursive https://github.com/lbcb-sci/racon.git racon && \
     make
 
 # running container
-FROM alpine:latest  
+FROM ubuntu:latest  
 
 COPY --from=builder /work/racon/build/bin/* /usr/local/bin
 
