@@ -27,7 +27,7 @@ RUN wget -q https://github.com/samtools/samtools/releases/download/${samtoolsVer
     make install
 
 # create target container
-FROM alpine:latest
+FROM ubuntu:latest
 
 COPY --from=builder /usr/local/bin/* /usr/local/bin/
 
