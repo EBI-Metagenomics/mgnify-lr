@@ -1,4 +1,6 @@
-FROM ubuntu:latest
+FROM alpine:latest
+
+RUN apk add --no-cache bash
 
 COPY removeSmallReads.sh /usr/local/bin
 RUN chmod a+x /usr/local/bin/removeSmallReads.sh
