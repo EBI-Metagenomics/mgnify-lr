@@ -1,11 +1,14 @@
 # Dockerfile for getHostFasta
 
-FROM ubuntu:latest
+FROM alpine:latest
 
-RUN apt update && apt upgrade -y && apt install -y wget 
+RUN apk add --no-cache bash python3
+#RUN apt update && apt upgrade -y && apt install -y wget 
 
 COPY getHostFasta.sh /usr/local/bin
 RUN chmod a+x /usr/local/bin/getHostFasta.sh
+COPY getFastaFromEnsemblFTP.py /usr/local/bin/
+RUN chmod a+x /usr/local/bin/getFastaFromEnsemblFTP.py
 
 LABEL software="getHostFasta"
 LABEL software.version="0.0.1"

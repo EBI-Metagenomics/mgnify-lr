@@ -1,5 +1,5 @@
 #!/bin/bash
-# getHostFasta.sh species/url > out.fasta
+# getHostFasta.sh species/url out.fasta
 #
 # Simple script to retrieve genome sequences
 # The input parameter is the species name (homo_sapiens, mus_musculus, etc)
@@ -15,6 +15,7 @@ error_exit () {
 }
 
 SPECIES=$1
+FASTA=$2
 
 case "$SPECIES" in
     http*)
@@ -24,24 +25,8 @@ case "$SPECIES" in
         URL=$SPECIES
     ;;
     *)
-        URL="ftp://ftp.ensembl.org/pub/current_fasta/${SPECIES}/dna_index/*.dna.toplevel.fa.gz"
+        URL=$(getFastaFromEnsemblFTP.py $SPECIES)
     ;;
 esac
 
 wget -q "$URL" || error_exit "Cannot retrieve $URL, please chek the link/species"
-
-for FGZ in ./*.gz
-do
-    if [ -f "$FGZ" ]
-    then
-        gunzip -c "$FGZ" || error_exit "Error decompressing GZ $FGZ"
-    fi
-done
-
-for FIL in ./*
-do
-    if [ -f "$FIL" ]
-    then
-        cat "$FIL"
-    fi
-done

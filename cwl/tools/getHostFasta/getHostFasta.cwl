@@ -5,6 +5,8 @@ doc: |
       Implementation of retriving a genome in fasta format from Ensemble (species) or from a URL.
 
 requirements:
+  NetworkAccess:
+    networkAccess: true
   ResourceRequirement:
     coresMin: 1
     ramMin: 1000
@@ -20,14 +22,14 @@ inputs:
     label: species or url to retrieve
     inputBinding:
       position: 1
-  outfasta:
-    type: string
-    label: output file (fasta)
  
 outputs:
-  out: stdout
+  outfile:
+    type: File
+    outputBinding:
+      glob: "*.fa*"
   
-stdout: $(inputs.outfasta)
+stdout: getHostFasta.log
 stderr: getHostFasta.err
 
 $namespaces:
