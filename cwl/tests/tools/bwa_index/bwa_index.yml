@@ -1,0 +1,5 @@
+sequences:
+  class: File
+  format: edam:format_1929
+  path: ../../eco_phix_dcs.fa
+algorithm: bwtsw
