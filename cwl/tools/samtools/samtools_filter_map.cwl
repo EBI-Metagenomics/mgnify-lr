@@ -12,7 +12,7 @@ hints:
   DockerRequirement:
     dockerPull: samtools:latest
 
-baseCommand: [ "samtools", $(inputs.format) ]
+baseCommand: [ "samtools", "fastq" ]
 
 arguments:
  - -@
@@ -21,18 +21,13 @@ arguments:
  - "4"
 
 inputs:
-  outFormat:
+  outFastqName:
     type: string
-    label: output format [fastq, fasta]
-
-  outFile:
-    type: string
-    label: mapped sequences file
+    label: mapped sequences fastq
     inputBinding:
       position: 1
-      prefix: -0
-
-  inputSam:
+      prefix: "-0"
+  inSam:
     type: File
     format: edam:format_2573 # SAM
     label: SAM input to be filtered
@@ -40,10 +35,11 @@ inputs:
       position: 2
  
 outputs:
-  mapped:
+  outFastq:
     type: File
+    format: edam:format_1930
     outputBinding:
-      glob: $(inputs.outFile)
+      glob: $(inputs.outFastqName)
   
 stdout: samtools_filter_map.log
 stderr: samtools_filter_map.err
