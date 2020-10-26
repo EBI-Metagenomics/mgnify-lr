@@ -8,49 +8,54 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 1
-    ramMin: 1024  # just a default, could be lowered
+    ramMin: 4000  # just a default, could be lowered
 hints:
   DockerRequirement:
-    dockerPull: quay.io/biocontainers/nanoplot:1.32.1--py_0
+    dockerPull: nanoplot:latest
 
 baseCommand: [ NanoPlot ]
 
 inputs:
-  name:
-    type: string
-    label: prefix for files
-    inputBinding:
-      position: 1
-      prefix: --title
 
   reads:
     type: File
     format: edam:format_1930  # FASTQ
     label: nanopore reads
     inputBinding:
-      position: 2
+      position: 1
       prefix: --fastq
+
+  name:
+    type: string?
+    label: prefix for files
+    inputBinding:
+      position: 2
+      prefix: --title
+    default: nanoplot
   
   pformat:
-    type: string
+    type: string?
     label: plot format (png, pdf)
     inputBinding:
       position: 3
       prefix: -f
+    default: png
 
   pcolor:
-    type: string
+    type: string?
     label: plot color
     inputBinding:
       position: 4
       prefix: --color
+    default: darkslategrey
 
   ptype:
-    type: string
+    type: string?
     label: plot type
     inputBinding:
       position: 5
       prefix: --plots
+    default: hex
 
 arguments:
  - --N50
@@ -62,27 +67,21 @@ arguments:
 
 outputs:
   html:
-    type: 
-      type: array
-      items: File
+    type: File[]
     outputBinding:
-      glob: "*.html"
+      glob: $(inputs.name)*.html
   stats:
-    type: File
+    type: File[]
     outputBinding:
-      glob: "*NanoStats.txt"
+      glob: "$(inputs.name)*NanoStats.txt"
   pngs:
-    type:
-      type: array
-      items: File
+    type: File[]
     outputBinding:
-      glob: "*.png"
+      glob: "$(inputs.name)*.png"
   pdfs:
-    type:
-      type: array
-      items: File
+    type: File[]
     outputBinding:
-      glob: "*.pdf"
+      glob: "$(inputs.name)*.pdf"
 
 stdout: nanoplot.log
 stderr: nanoplot.err
