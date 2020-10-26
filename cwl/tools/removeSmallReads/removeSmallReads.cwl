@@ -33,8 +33,9 @@ inputs:
       position: 3
  
 outputs:
-  output:
+  outFastq:
     type: File
+    format: edam:format_1930
     outputBinding:
       glob: $(inputs.outFastq)
   

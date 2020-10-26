@@ -24,8 +24,9 @@ inputs:
       position: 1
  
 outputs:
-  outfile:
+  outGenome:
     type: File
+    format: edam:format_1929
     outputBinding:
       glob: "*.fa*"
   

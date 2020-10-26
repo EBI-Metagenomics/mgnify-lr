@@ -45,6 +45,7 @@ inputs:
 outputs:
   outSAM:
     type: File
+    format: edam:format_2573
     outputBinding:
       glob: $(inputs.outSAM)
 
