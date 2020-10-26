@@ -26,7 +26,7 @@ inputs:
     label: short reads to filter (fastq)
     inputBinding:
       position: 2
-  outFastq:
+  outFastqName:
     type: string
     label: short reads filtered (gzip fastq)
     inputBinding:
@@ -37,7 +37,7 @@ outputs:
     type: File
     format: edam:format_1930
     outputBinding:
-      glob: $(inputs.outFastq)
+      glob: $(inputs.outFastqName)
   
 stdout: removeSmallReads.log
 stderr: removeSmallReads.err

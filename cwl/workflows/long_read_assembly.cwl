@@ -77,7 +77,10 @@ outputs:
   hostMapedReads:
     type: File
     outputSource: step_3e_cleaning_extractMaped/outFastq 
-  
+  contigsFasta:
+    type: File
+    outputSource: step_4_assembly/contigs_fasta
+        
 steps:
   step_1_nanoplot:
     label: initial QC for rawdata
@@ -141,6 +144,14 @@ steps:
       inSam: step_3c_cleaning_alignHost/outSAM
     out: [ outFastq ]
 
+  step_4_assembly:
+    label: assembly long-reads with flye
+    run: ../tools/flye/flye.cwl
+    in:
+      nano: step_3d_cleaning_extractUnmaped/outFastq
+    out: [ contigs_fasta ]
+
+  
 $namespaces:
  edam: http://edamontology.org/
  s: http://schema.org/
