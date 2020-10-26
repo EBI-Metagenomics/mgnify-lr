@@ -9,9 +9,9 @@ OUT=$3
 
 case "$READS" in
     *.gz) 
-        zcat $READS | paste - - - - | awk -F"\t" "length(\$2) >= $LENGTH" | sed 's/\\t/\\n/g' | gzip > "$OUT"
+        zcat $READS | paste - - - - | awk -F"\t" "length(\$2) >= $LENGTH" | sed 's/\t/\n/g' | gzip > "$OUT"
     ;;
     *)
-        cat $READS | paste - - - - | awk -F"\t" "length(\$2) >= $LENGTH" | sed 's/\\t/\\n/g' | gzip > "$OUT"
+        cat $READS | paste - - - - | awk -F"\t" "length(\$2) >= $LENGTH" | sed 's/\t/\n/g' | gzip > "$OUT"
     ;;
 esac

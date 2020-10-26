@@ -1,0 +1,12 @@
+raw_reads:
+  class: File
+  format: edam:format_1930
+  path: ../../test_data/small.fastq.gz
+min_read_size: 200
+reads_filter_bysize: reads.fastq.gz
+host_species: caenorhabditis_elegans
+host_index: worm.mmi
+host_align: worm_align.sam
+align_preset: map-ont
+host_maped: worm_map.fastq
+host_unmaped: worm_unmap.fastq
