@@ -1,6 +1,6 @@
 cwlVersion: v1.2
 class: CommandLineTool
-label: Minimap2 align.
+label: Minimap2 align
 doc: |
       Implementation of sequence mapping with Minimap2.
 
@@ -26,16 +26,21 @@ inputs:
     inputBinding:
       position: 1
       prefix: -o
+  dbIndex:
+    type: File
+    label: genome index
+    inputBinding:
+      position: 2
   inSeq1:
     type: File
     label: sequences to map (single or first pair)
     inputBinding:
-      position: 2
+      position: 3
   inSeq2:
     type: File?
     label: sequences to map (second pair)
     inputBinding:
-      position: 3
+      position: 4
 
 outputs:
   outSAM:

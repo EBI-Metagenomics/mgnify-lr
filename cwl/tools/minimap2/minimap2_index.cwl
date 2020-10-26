@@ -25,7 +25,7 @@ inputs:
     inputBinding:
         position: 1
         prefix: -x
-  ontindex:
+  indexName:
     type: string
     label: output index name
     inputBinding:
@@ -39,10 +39,10 @@ inputs:
       position: 2
 
 outputs:
-  ontindex:
+  outIndex:
     type: File
     outputBinding:
-      glob: $(inputs.ontindex)
+      glob: $(inputs.indexName)
 
 stdout: minimap2_index.log
 stderr: minimap2_index.err

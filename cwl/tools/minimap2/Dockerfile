@@ -1,8 +1,12 @@
 # Dockerfile for minimap2
 
-FROM alpine:latest
+FROM ubuntu:latest
 
-RUN apk add --no-cache bash
+RUN apt update && \
+    apt upgrade -y && \
+    apt install -y \
+        wget
+#RUN apk add --no-cache bash
 
 ENV minimap2Ver=2.17
 WORKDIR /opt
