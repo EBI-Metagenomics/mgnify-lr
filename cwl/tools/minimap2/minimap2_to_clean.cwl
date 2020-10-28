@@ -1,6 +1,6 @@
 cwlVersion: v1.2
 class: CommandLineTool
-label: Minimap2 to polish.
+label: Minimap2 to clean.
 doc: |
       Implementation of sequence mapping with Minimap2.
 
@@ -15,39 +15,38 @@ hints:
 baseCommand: [ "minimap2" ]
 
 arguments:
- - -x
- - map-ont
+ - -a
  - -t
  - $(runtime.cores)
 
 inputs:
-  outPAFname:
+  outSAMname:
     type: string
-    label: output PAF file
+    label: output SAM file
     inputBinding:
       position: 1
       prefix: -o
-  inAssembly:
+  inHostIndex:
     type: File
-    format: edam:format_1929
-    label: assembly to be used as target
+    label: genome index
     inputBinding:
       position: 2
-  inReads:
+  inSeqs:
     type: File
-    format: edam:format_1930
-    label: read sequences to map 
+    format: edam:format_1929
+    label: assembled sequences to map 
     inputBinding:
       position: 3
 
 outputs:
-  outPAF:
+  outSAM:
     type: File
+    format: edam:format_2573
     outputBinding:
-      glob: $(inputs.outPAFname)
+      glob: $(inputs.outSAMname)
 
-stdout: minimap2_to_polish.log
-stderr: minimap2_to_polish.err
+stdout: minimap2_to_clean.log
+stderr: minimap2_to_clean.err
 
 $namespaces:
  edam: http://edamontology.org/

@@ -10,3 +10,9 @@ host_align: worm_align.sam
 align_preset: map-ont
 host_maped: worm_map.fastq
 host_unmaped: worm_unmap.fastq
+polish_paf: meta_polish.paf
+polish_assembly_racon: meta_assembly.fasta
+medaka_model: r941_min_fast_g330
+assembly_clean_sam: meta_assembly_host.sam
+host_maped_contigs: meta_assembly_mapHost.fasta
+host_unmaped_contigs: meta_assembly_unmapHost.fasta

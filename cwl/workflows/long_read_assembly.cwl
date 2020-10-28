@@ -40,12 +40,36 @@ inputs:
   host_maped:
     type: string?
     label: mapped reads to the host genome
-    default: host_mapped.fastq
+    default: host_maped.fastq
   host_unmaped:
     type: string?
     label: unmapped reads to the host genome
-    default: host_unmapped.fastq
-
+    default: host_unmaped.fastq
+  polish_paf:
+    type: string?
+    label: polish align PAF file
+    default: assembly_polish.paf
+  polish_assembly_racon:
+    type: string?
+    label: polish assembly with racon
+    default: assembly_polish_racon.fasta  
+  medaka_model:
+    type: string?
+    label: medaka model to improve assembly
+    default: r941_min_fast_g330
+  assembly_clean_sam:
+    type: string?
+    label: clean assembly map to host genome (SAM)
+    default: assembly_clean.sam
+  host_maped_contigs:
+    type: string?
+    label: clean contigs map to host genome (fasta)
+    default: assembly_mapHost.fasta
+  host_unmaped_contigs:
+    type: string?
+    label: clean contigs unmap to host genome (fasta)
+    default: assembly_unmapHost.fasta
+  
 outputs:
   nanoplot_html:
     type: File[]
@@ -80,7 +104,25 @@ outputs:
   contigsFasta:
     type: File
     outputSource: step_4_assembly/contigs_fasta
-        
+  polishPAF:
+    type: File
+    outputSource: step_5a_polishing_minimap2/outPAF
+  polishRacon:
+    type: File
+    outputSource: step_5b_polishing_racon/outAssembly
+  polishMedaka:
+    type: File
+    outputSource: step_5c_polishing_medaka/outConsensus
+  cleanAssemblySAM:
+    type: File
+    outputSource: step_6a_cleaning2_minimap2/outSAM
+  cleanAssemblyUnmap:
+    type: File
+    outputSource: step_6b_cleaning2_extractUnmaped/outFasta
+  cleanAssemblyMap:
+    type: File
+    outputSource: step_6c_cleaning2_extractMaped/outFasta
+
 steps:
   step_1_nanoplot:
     label: initial QC for rawdata
@@ -151,7 +193,59 @@ steps:
       nano: step_3d_cleaning_extractUnmaped/outFastq
     out: [ contigs_fasta ]
 
+  step_5a_polishing_minimap2:
+    label: polishing step 1, map reads back to assembly with minimap2
+    run: ../tools/minimap2/minimap2_to_polish.cwl
+    in:
+      inAssembly: step_4_assembly/contigs_fasta
+      inReads: step_3d_cleaning_extractUnmaped/outFastq
+      outPAFname: polish_paf
+    out: [ outPAF ]
+
+  step_5b_polishing_racon:
+    label: polishing step 2, using racon to improve assembly
+    run: ../tools/racon/racon.cwl
+    in:
+      inReads: step_3d_cleaning_extractUnmaped/outFastq
+      mapping: step_5a_polishing_minimap2/outPAF
+      assembly: step_4_assembly/contigs_fasta
+      outName: polish_assembly_racon
+    out: [ outAssembly ]
+
+  step_5c_polishing_medaka:
+    label: polishing step 3, using medaka to create a consensus
+    run: ../tools/medaka/medaka.cwl
+    in:
+      inReads: step_3d_cleaning_extractUnmaped/outFastq
+      assembly: step_5b_polishing_racon/outAssembly
+      medakaModel: medaka_model
+    out: [ outConsensus ]
   
+  step_6a_cleaning2_minimap2:
+    label: post-assembly cleaning, mapping with minimap2
+    run: ../tools/minimap2/minimap2_to_clean.cwl
+    in:
+      outSAMname: assembly_clean_sam
+      inHostIndex: step_3b_cleaning_indexFasta/outIndex
+      inSeqs: step_5c_polishing_medaka/outConsensus
+    out: [ outSAM ]
+
+  step_6b_cleaning2_extractUnmaped:
+    label: extract unmaped contigs to the host genome
+    run: ../tools/samtools/samtools_filter_unmap_fasta.cwl
+    in:
+      outFastaName: host_unmaped_contigs
+      inSam: step_6a_cleaning2_minimap2/outSAM
+    out: [ outFasta ]
+
+  step_6c_cleaning2_extractMaped:
+    label: extract maped contigs to the host genome
+    run: ../tools/samtools/samtools_filter_map_fasta.cwl
+    in:
+      outFastaName: host_maped_contigs
+      inSam: step_6a_cleaning2_minimap2/outSAM
+    out: [ outFasta ]
+
 $namespaces:
  edam: http://edamontology.org/
  s: http://schema.org/

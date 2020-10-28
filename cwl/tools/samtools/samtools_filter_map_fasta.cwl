@@ -1,8 +1,8 @@
 cwlVersion: v1.2
 class: CommandLineTool
-label: Assembly of Nanopore reads with Flye assembler.
+label: Filter read maped (SAM) with Samtools.
 doc: |
-      Implementation of nanopore long reads assembly using Flye assembler.
+      Implementation of extraction of NGS read maped with Samtools.
 
 requirements:
   ResourceRequirement:
@@ -10,36 +10,39 @@ requirements:
     ramMin: 6000 # 6 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: flye:latest
+    dockerPull: samtools:latest
 
-baseCommand: [ flye ]
+baseCommand: [ "samtools", "fasta" ]
 
 arguments:
- - -t
+ - -@
  - $(runtime.cores)
- - --plasmids
- - --meta
- - -o
- - flye_output
+ - -F
+ - "4"
 
 inputs:
-  nano:
-    type: File
-    format: edam:format_1930  # FASTQ
-    label: nanopore reads
+  outFastaName:
+    type: string
+    label: mapped sequences fasta
     inputBinding:
       position: 1
-      prefix: --nano-raw
-
+      prefix: "-0"
+  inSam:
+    type: File
+    format: edam:format_2573 # SAM
+    label: SAM input to be filtered
+    inputBinding:
+      position: 2
+ 
 outputs:
-  contigs_fasta:
+  outFasta:
     type: File
     format: edam:format_1929
     outputBinding:
-      glob: "flye_output/assembly.fasta"
-
-stdout: flye.log
-stderr: flye.err
+      glob: $(inputs.outFastaName)
+  
+stdout: samtools_filter_map_fasta.log
+stderr: samtools_filter_map_fasta.err
 
 $namespaces:
  edam: http://edamontology.org/
