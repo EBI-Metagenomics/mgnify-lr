@@ -15,22 +15,22 @@ hints:
 baseCommand: [ prodigal ]
 
 inputs:
-  nucleotides:
+  inNucl:
     type: File
     format: edam:format_1929  # FASTA
     label: nucleotide sequence fasta
     inputBinding:
       position: 1
       prefix: -i
-  proteins:
+  outProtName:
     type: string
-    label: predicted aminoacids
+    label: prodigal predicted proteins in Fasta
     inputBinding:
       position: 2
       prefix: -a
-  output:
+  outGbkName:
     type: string
-    label: prodigal output (gbk)
+    label: prodigal predicted proteins output in GBK
     inputBinding:
       position: 3
       prefix: -o
@@ -41,14 +41,16 @@ arguments:
  - -q
  
 outputs:
-  protpred:
+  outProt:
     type: File
+    format: edam:format_1929 # FASTA
     outputBinding:
-      glob: $(inputs.proteins)
-  outfile:
+      glob: $(inputs.outProtName)
+  outGBK:
     type: File
+    format: edam:format_1936 # GBK 
     outputBinding:
-      glob: $(inputs.output)
+      glob: $(inputs.outGbkName)
 
 stdout: prodigal.log
 stderr: prodigal.err

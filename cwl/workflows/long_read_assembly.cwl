@@ -69,7 +69,31 @@ inputs:
     type: string?
     label: clean contigs unmap to host genome (fasta)
     default: assembly_unmapHost.fasta
-  
+  predict_proteins:
+    type: string?
+    label: predicted proteins from assembly (fasta)
+    default: predicted_proteins.fasta
+  predict_proteins_gbk:
+    type: string?
+    label: predicted proteins from assembly (gbk)
+    default: predicted_proteins.gbk
+  uniprot_url:
+    type: string?
+    label: Uniprot database URL
+    default: "ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz"
+  uniprot_index:
+    type: string?
+    label: uniprot index file
+    default: uniprot.dmnd
+  diamond_out:
+    type: string?
+    label: proteins align to Uniprot
+    default: predict_proteins_align.tsv
+  ideel_out:
+    type: string?
+    label: protein completeness evaluation
+    default: ideel_report.pdf
+
 outputs:
   nanoplot_html:
     type: File[]
@@ -122,6 +146,24 @@ outputs:
   cleanAssemblyMap:
     type: File
     outputSource: step_6c_cleaning2_extractMaped/outFasta
+  predictProteins:
+    type: File
+    outputSource: step_7a_annotation_prodigal/outProt
+  predictProteinsGBK:
+    type: File
+    outputSource: step_7a_annotation_prodigal/outGBK
+  uniprotDB:
+    type: File
+    outputSource: step_7b_annotation_getUniprotDB/outGenome
+  uniprotIndex:
+    type: File
+    outputSource: step_7c_annotation_IndexUniprotDB/diamondIndex
+  diamondAlign:
+    type: File
+    outputSource: step_7d_annotation_diamond/alignment
+  ideelPDF:
+    type: File
+    outputSource: step_7e_annotation_ideel/outFig
 
 steps:
   step_1_nanoplot:
@@ -245,6 +287,50 @@ steps:
       outFastaName: host_maped_contigs
       inSam: step_6a_cleaning2_minimap2/outSAM
     out: [ outFasta ]
+  
+  step_7a_annotation_prodigal:
+    label: predict proteins in assembly with Prodigal
+    run: ../tools/prodigal/prodigal.cwl
+    in:
+      inNucl: step_6b_cleaning2_extractUnmaped/outFasta
+      outProtName: predict_proteins
+      outGbkName: predict_proteins_gbk
+    out:
+      - outProt
+      - outGBK
+
+  step_7b_annotation_getUniprotDB:
+    label: retrieve Uniprot database
+    run: ../tools/getHostFasta/getHostFasta.cwl
+    in:
+      species: uniprot_url
+      outGbkName: predict_proteins_gbk
+    out: [ outGenome ]
+
+  step_7c_annotation_IndexUniprotDB:
+    label: index Uniprot database for diamond
+    run: ../tools/diamond_makedb/diamond_makedb.cwl
+    in:
+      proteins: step_7b_annotation_getUniprotDB/outGenome
+      database: uniprot_index
+    out: [ diamondIndex ]
+
+  step_7d_annotation_diamond:
+    label: search Uniprot database with diamond
+    run: ../tools/diamond/diamond.cwl
+    in:
+      outName: diamond_out
+      proteins: step_7a_annotation_prodigal/outProt
+      database: step_7c_annotation_IndexUniprotDB/diamondIndex
+    out: [ alignment ]
+
+  step_7e_annotation_ideel:
+    label: ideel report for protein completeness
+    run: ../tools/ideel/ideel.cwl
+    in:
+      inputTable: step_7d_annotation_diamond/alignment
+      outFigName: ideel_out
+    out: [ outFig ]
 
 $namespaces:
  edam: http://edamontology.org/

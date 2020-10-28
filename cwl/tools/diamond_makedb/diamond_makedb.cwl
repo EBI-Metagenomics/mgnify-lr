@@ -33,9 +33,9 @@ arguments:
  - makedb
  
 outputs:
-  alignment:
+  diamondIndex:
     type: File
-    label: output alignments
+    label: output index
     outputBinding:
       glob: $(inputs.database)
 

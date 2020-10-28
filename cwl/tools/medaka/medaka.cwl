@@ -5,6 +5,8 @@ doc: |
       Implementation of polishing assembled contigs with Medaka.
 
 requirements:
+  InitialWorkDirRequirement:
+    listing: [ $(inputs.assembly) ]
   ResourceRequirement:
     coresMin: 1
     ramMin: 6000 # 6 GB for testing, it needs more in production

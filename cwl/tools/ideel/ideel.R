@@ -1,12 +1,12 @@
 #!/usr/bin/env Rscript
 library(ggplot2)  
 args = commandArgs(trailingOnly=TRUE)
-inputTable <- args[0]
-outputPlot <- args[1]
+inputTable <- args[1]
+outputPlot <- args[2]
 
-data <- read.table(inputTable, header=FALSE, sep='\\t')
+data <- read.table(inputTable, header=FALSE, sep='\t')
 names(data) <- c('qlen', 'slen')
-pseudogenes <- sum(data\$qlen / data\$slen < 0.9)
+pseudogenes <- sum(data$qlen / data$slen < 0.9)
 print(paste0('Encountered genes < 0.9 reference length: ', pseudogenes))
 theme_min = function (
     size=10, font=NA, face='plain',

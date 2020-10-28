@@ -25,11 +25,10 @@ inputs:
   database:
     type: File
     label: diamond database
-    format: edam:format_3326 # data index
     inputBinding:
       position: 2
       prefix: --db
-  output:
+  outName:
     type: string
     label: prefix output
     inputBinding:
@@ -51,7 +50,7 @@ outputs:
   alignment:
     type: File
     outputBinding:
-      glob: $(inputs.output)
+      glob: $(inputs.outName)
 
 stdout: diamond.log
 stderr: diamond.err

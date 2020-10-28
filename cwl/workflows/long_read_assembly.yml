@@ -12,7 +12,13 @@ host_maped: worm_map.fastq
 host_unmaped: worm_unmap.fastq
 polish_paf: meta_polish.paf
 polish_assembly_racon: meta_assembly.fasta
-medaka_model: r941_min_fast_g330
+medaka_model: r941_min_high_g360
 assembly_clean_sam: meta_assembly_host.sam
 host_maped_contigs: meta_assembly_mapHost.fasta
 host_unmaped_contigs: meta_assembly_unmapHost.fasta
+predict_proteins: meta_assembly_pred_prot.fasta
+predict_proteins_gbk: meta_assembly_pred_prot.gbk
+uniprot_url: "ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz"
+uniprot_index: uniprot.dmnd
+diamond_out: meta_assembly_diamond.tsv
+ideel_out: meta_assembly_ideel.pdf
