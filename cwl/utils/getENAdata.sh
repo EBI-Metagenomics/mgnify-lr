@@ -28,7 +28,7 @@ else
     mkdir $PROJ
 fi
 
-if [ -f "$PROJ.tsv" ]
+if [ -f "$PROJ/$PROJ.tsv" ]
 then
     for FTPFQ in $(perl -lane 'print $F[-1] if ($F[-1]=~/^ftp/)' < $PROJ/$PROJ.tsv)
     do
