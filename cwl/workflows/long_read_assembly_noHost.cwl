@@ -139,7 +139,7 @@ steps:
     run: ../tools/minimap2/minimap2_to_polish.cwl
     in:
       inAssembly: step_4_assembly/contigs_fasta
-      inReads: step_3d_cleaning_extractUnmaped/outFastq
+      inReads: step_2_filterShortReads/outFastq
       outPAFname: polish_paf
     out: [ outPAF ]
 
@@ -147,7 +147,7 @@ steps:
     label: polishing step 2, using racon to improve assembly
     run: ../tools/racon/racon.cwl
     in:
-      inReads: step_3d_cleaning_extractUnmaped/outFastq
+      inReads: step_2_filterShortReads/outFastq
       mapping: step_5a_polishing_minimap2/outPAF
       assembly: step_4_assembly/contigs_fasta
       outName: polish_assembly_racon
@@ -157,7 +157,7 @@ steps:
     label: polishing step 3, using medaka to create a consensus
     run: ../tools/medaka/medaka.cwl
     in:
-      inReads: step_3d_cleaning_extractUnmaped/outFastq
+      inReads: step_2_filterShortReads/outFastq
       assembly: step_5b_polishing_racon/outAssembly
       medakaModel: medaka_model
     out: [ outConsensus ]
