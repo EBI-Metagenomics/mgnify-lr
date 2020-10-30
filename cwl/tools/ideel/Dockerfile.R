@@ -6,9 +6,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && \
     apt upgrade -y && \
     apt install -y \
-        python3-matplotlib
+        r-base \
+        r-cran-ggplot2
 
-COPY ideel.py /usr/local/bin/
+COPY ideel.R /usr/local/bin/
 
 LABEL software="ideel"
 LABEL software.version="0.0.1"
