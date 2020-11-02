@@ -77,6 +77,37 @@ class TestNanoplot(unittest.TestCase):
                 check = files_md5["nanoplot"][file]
                 self.assertEqual(md5(file), check)
 
+class TestRemoveSmallReads(unittest.TestCase):
+    def test_removeSmallReads(self):
+        print("Checking removeSmallReads")
+        cwl = "../tools/removeSmallReads/removeSmallReads.cwl"
+        yml = "./tools/removeSmallReads/removeSmallReads.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["removeSmallReads"].keys():
+            check = files_md5["removeSmallReads"][file]
+            self.assertEqual(md5(file), check)
+
+class TestFlye(unittest.TestCase):
+    def test_flye(self):
+        print("Checking flye")
+        cwl = "../tools/flye/flye.cwl"
+        yml = "./tools/flye/flye.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["flye"].keys():
+            check = files_md5["flye"][file]
+            self.assertEqual(md5(file), check)
+
+class TestMinimapPolish(unittest.TestCase):
+    def test_flye(self):
+        print("Checking flye")
+        cwl = "../tools/minimap2/minimap2_to_polish.cwl"
+        yml = "./tools/minimap2/minimap2_to_polish.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["minimap2_to_polish"].keys():
+            check = files_md5["minimap2_to_polish"][file]
+            self.assertEqual(md5(file), check)
+
+
 class TestCleanUp(unittest.TestCase):
     def test_cleanUp():
         for test in files_md5:
