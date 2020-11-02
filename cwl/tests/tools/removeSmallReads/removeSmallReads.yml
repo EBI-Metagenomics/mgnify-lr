@@ -1,0 +1,6 @@
+inFastq:
+    class: File
+    format: edam:format_1930
+    path: ../../../../test_data/small.fastq.gz
+length: 200
+outFastqName: reads.fastq.gz

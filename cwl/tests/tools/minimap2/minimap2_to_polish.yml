@@ -1,0 +1,9 @@
+inAssembly:
+    class: File
+    format: edam:format_1929
+    path: ../../../../test_data/assembly.fasta
+inReads:
+    class: File
+    format: edam:format_1930
+    path: ../../../../test_data/small.fastq.gz
+outPAFname: assembly_polish.paf

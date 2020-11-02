@@ -1,0 +1,12 @@
+inReads:
+    class: File
+    format: edam:format_1930
+    path: ../../../../test_data/small.fastq.gz
+mapping:
+    class: File
+    path: ../../../../test_data/assembly_polish.paf
+assembly:
+    class: File
+    format: edam:format_1929
+    path: ../../../../test_data/assembly.fasta
+outName: assembly_racon.fasta

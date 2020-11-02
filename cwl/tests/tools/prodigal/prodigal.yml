@@ -1,0 +1,7 @@
+inNucl:
+    class: File
+    format: edam:format_1929
+    path: ../../../../test_data/assembly.fasta
+outProtName: proteins.fasta
+outGbkName: proteins.gbk
+
