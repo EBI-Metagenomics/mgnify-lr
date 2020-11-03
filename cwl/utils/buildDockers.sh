@@ -10,7 +10,7 @@ TOOLS="flye getHostFasta ideel medaka minimap2 nanoplot racon removeSmallReads s
 
 for TOOL in $TOOLS
 do
-    DOCKERKDIR="$WDIR/../tools/$TOOL"
+    DOCKERDIR="$WDIR/../tools/$TOOL"
     if [ -f "$DOCKERDIR/Dockerfile" ]
     then
         echo "Building $TOOL"
