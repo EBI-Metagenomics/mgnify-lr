@@ -1,15 +1,50 @@
 # Dokerfile for Medaka
 
-FROM conda/miniconda3:latest
+FROM ubuntu:latest AS builder
+
+ARG medakaVer=1.1.3
+ARG tensorflowVer=2.2.0
+
+# install dependencies
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt update && \
+    apt upgrade -y && \
+    apt install -y \
+        python3 \
+        python3-pip \
+        python3-venv 
+
+RUN python3 -m venv /opt/venv
+
+# Make sure we use the virtualenv:
+ENV PATH="/opt/venv/bin:$PATH"
+
+# install tensorflow and medaka
+RUN pip3 install tensorflow==${tensorflowVer} && \
+    pip3 install medaka==${medakaVer}
+
+# Target container
+FROM ubuntu:latest
 
 ENV DEBIAN_FRONTEND noninteractive
+RUN apt update && \
+    apt upgrade -y && \
+    apt install -y \
+        python3-minimal \
+        python3-distutils \
+        samtools \
+        tabix \
+        bcftools \
+        minimap2 && \
+    apt-get autoclean && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN conda update -n base -c defaults conda && \
-    conda config --add channels defaults && \
-    conda config --add channels bioconda && \
-    conda config --add channels conda-forge && \
-    conda install medaka && \
-    conda clean -a
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
+COPY --from=builder /opt/venv /opt/venv
+
+# Make sure we use the virtualenv:
+ENV PATH="/opt/venv/bin:$PATH"
 
 LABEL software="Medaka"
 LABEL software.version="1.1.3"
