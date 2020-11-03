@@ -6,17 +6,17 @@
 # (C) 2020 EMBL-EBI
 
 WDIR=$PWD
-TOOLS="bbduk bwa flye getHostFasta ideel medaka minimap2 nanoplot pilon racon removeSmallReads samtools spades"
+TOOLS="flye getHostFasta ideel medaka minimap2 nanoplot racon removeSmallReads samtools"
 
 for TOOL in $TOOLS
 do
-    DKFILE="$WDIR/../tools/$TOOL/Dockerfile"
-    if [ -f "$DKFILE" ]
+    DOCKERKDIR="$WDIR/../tools/$TOOL"
+    if [ -f "$DOCKERDIR/Dockerfile" ]
     then
         echo "Building $TOOL"
-        docker build -t $TOOL $DKFILE
+        docker build -t $TOOL $DOCKERDIR
     else
-        echo "No Dockerfile for $TOOL in $DKFILE, skipped"
+        echo "No Dockerfile for $TOOL in $DOCKERDIR, skipped"
     fi
 done
 echo "All containers ready"
