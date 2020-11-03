@@ -14,7 +14,7 @@ do
     if [ -f "$DOCKERDIR/Dockerfile" ]
     then
         echo "Building $TOOL"
-        docker build -t $TOOL $DOCKERDIR
+        docker build -t $(echo $TOOL | perl -lane 'print lc($F[0])') $DOCKERDIR
     else
         echo "No Dockerfile for $TOOL in $DOCKERDIR, skipped"
     fi
