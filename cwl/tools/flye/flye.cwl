@@ -1,4 +1,4 @@
-cwlVersion: v1.2
+cwlVersion: v1.1
 class: CommandLineTool
 label: Assembly of Nanopore reads with Flye assembler.
 doc: |

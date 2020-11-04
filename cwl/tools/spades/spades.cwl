@@ -1,4 +1,4 @@
-cwlVersion: v1.2
+cwlVersion: v1.1
 class: CommandLineTool
 label: Hybrid assembly of Nanopore and Illumina reads with SPAdes.
 doc: |

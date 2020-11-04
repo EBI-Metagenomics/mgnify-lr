@@ -1,4 +1,4 @@
-cwlVersion: v1.2
+cwlVersion: v1.1
 class: CommandLineTool
 label: Conversion of text read mapping (SAM) to BAM with Samtools.
 doc: |

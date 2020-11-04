@@ -1,4 +1,4 @@
-cwlVersion: v1.2
+cwlVersion: v1.1
 class: CommandLineTool
 label: getHostFasta retrieve a genome fasta from Ensembl/link.
 doc: |
