@@ -304,7 +304,6 @@ steps:
     run: ../tools/getHostFasta/getHostFasta.cwl
     in:
       species: uniprot_url
-      outGbkName: predict_proteins_gbk
     out: [ outGenome ]
 
   step_7c_annotation_IndexUniprotDB:
@@ -326,7 +325,7 @@ steps:
 
   step_7e_annotation_ideel:
     label: ideel report for protein completeness
-    run: ../tools/ideel/ideel.cwl
+    run: ../tools/ideel/ideelPy.cwl
     in:
       inputTable: step_7d_annotation_diamond/alignment
       outFigName: ideel_out

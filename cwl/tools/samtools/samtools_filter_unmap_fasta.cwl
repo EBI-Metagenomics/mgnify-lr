@@ -10,7 +10,7 @@ requirements:
     ramMin: 6000 # 6 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: samtools:latest
+    dockerPull: jcaballero/mgnify-lr.samtools:1.11
 
 baseCommand: [ "samtools", "fasta" ]
 

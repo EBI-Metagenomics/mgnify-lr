@@ -10,7 +10,7 @@ requirements:
     ramMin: 6000 # 6 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: racon:latest
+    dockerPull: jcaballero/mgnify-lr.racon:1.4.13
 
 baseCommand: [ "racon" ]
 

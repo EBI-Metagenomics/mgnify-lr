@@ -10,7 +10,7 @@ requirements:
     ramMin: 2000 # 2 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: removesmallreads:latest
+    dockerPull: jcaballero/mgnify-lr.removesmallreads:0.0.1
 
 baseCommand: [ "removeSmallReads.sh" ]
 

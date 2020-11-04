@@ -12,7 +12,7 @@ requirements:
     ramMin: 1000 # 1 GB for testing
 hints:
   DockerRequirement:
-    dockerPull: samtools:latest
+    dockerPull: jcaballero/mgnify-lr.samtools:1.11
 
 baseCommand: [ "samtools", "faidx" ]
 

@@ -12,7 +12,7 @@ requirements:
     ramMin: 1000
 hints:
   DockerRequirement:
-    dockerPull: gethostfasta:latest
+    dockerPull: jcaballero/mgnify-lr.gethostfasta:0.0.1
 
 baseCommand: [ "getHostFasta.sh" ]
 

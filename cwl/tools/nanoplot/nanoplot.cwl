@@ -11,7 +11,7 @@ requirements:
     ramMin: 4000  # just a default, could be lowered
 hints:
   DockerRequirement:
-    dockerPull: nanoplot:latest
+    dockerPull: jcaballero/mgnify-lr.nanoplot:1.33.1
 
 baseCommand: [ NanoPlot ]
 
