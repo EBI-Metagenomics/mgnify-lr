@@ -6,8 +6,8 @@ doc: |
 
 requirements:
   ResourceRequirement:
-    coresMin: 1
-    ramMin: 6000 # 6 GB for testing, it needs more in production
+    coresMin: 8
+    ramMin: 8000 # 8 GB for testing, it needs more in production
 hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.flye:2.8.1

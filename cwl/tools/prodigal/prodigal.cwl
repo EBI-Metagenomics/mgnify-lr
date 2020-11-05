@@ -14,6 +14,11 @@ hints:
 
 baseCommand: [ prodigal ]
 
+arguments:
+ - -p
+ - meta
+ - -q
+
 inputs:
   inNucl:
     type: File
@@ -34,12 +39,7 @@ inputs:
     inputBinding:
       position: 3
       prefix: -o
-  
-arguments:
- - -p
- - meta
- - -q
- 
+   
 outputs:
   outProt:
     type: File

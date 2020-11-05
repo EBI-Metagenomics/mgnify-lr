@@ -14,6 +14,9 @@ hints:
 
 baseCommand: [ diamond ]
 
+arguments:
+ - makedb
+
 inputs:
   proteins:
     type: File
@@ -28,9 +31,6 @@ inputs:
     inputBinding:
       position: 2
       prefix: -d
-
-arguments:
- - makedb
  
 outputs:
   diamondIndex:

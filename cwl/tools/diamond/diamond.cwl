@@ -6,13 +6,24 @@ doc: |
 
 requirements:
   ResourceRequirement:
-    coresMin: 1
+    coresMin: 8
     ramMin: 1000 # 1 GB for testing, it needs more in production
 hints:
   DockerRequirement:
     dockerPull: microbiomeinformatics/pipeline-v5.diamond:v0.9.25
 
 baseCommand: [ diamond ]
+
+arguments:
+ - blastp
+ - --threads
+ - $(runtime.cores)
+ - --max-target-seqs
+ - "1"
+ - --outfmt
+ - "6"
+ - qlen
+ - slen
 
 inputs:
   proteins:
@@ -34,17 +45,6 @@ inputs:
     inputBinding:
       position: 3
       prefix: --out
-
-arguments:
- - blastp
- - --threads
- - $(runtime.cores)
- - --max-target-seqs
- - "1"
- - --outfmt
- - "6"
- - qlen
- - slen
  
 outputs:
   alignment:

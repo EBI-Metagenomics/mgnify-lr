@@ -7,7 +7,7 @@ doc: |
 
 requirements:
   ResourceRequirement:
-    coresMin: 1
+    coresMin: 4
     ramMin: 4000  # just a default, could be lowered
 hints:
   DockerRequirement:
@@ -15,8 +15,15 @@ hints:
 
 baseCommand: [ NanoPlot ]
 
-inputs:
+arguments:
+ - --N50
+ - --loglength
+ - -t
+ - $(runtime.cores)
+ - -p
+ - $(inputs.name)_
 
+inputs:
   reads:
     type: File
     format: edam:format_1930  # FASTQ
@@ -56,14 +63,6 @@ inputs:
       position: 5
       prefix: --plots
     default: hex
-
-arguments:
- - --N50
- - --loglength
- - -t
- - $(runtime.cores)
- - -p
- - $(inputs.name)_
 
 outputs:
   html:
