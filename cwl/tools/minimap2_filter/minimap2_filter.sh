@@ -7,8 +7,9 @@
 
 THREADS=$1
 FORMAT=$2
-INDEX=$3
-READS=$4
-OUTFILE=$5
+ALNMODE=$3
+INDEX=$4
+READS=$5
+OUTFILE=$6
 
-minimap2 -a -t $THREADS $INDEX $READS | samtools $FORMAT -f 4 | gzip > $OUTFILE
+minimap2 -a -x $ALNMODE -t $THREADS $INDEX $READS | samtools $FORMAT -f 4 | gzip > $OUTFILE

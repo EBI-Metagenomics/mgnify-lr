@@ -10,7 +10,7 @@ requirements:
     ramMin: 2000 # 2 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.minimap2_filter:2.17
+    dockerPull: jcaballero/mgnify-lr.minimap2_filter:2.17.1
 
 baseCommand: [ "minimap2_filter.sh" ]
 
@@ -19,12 +19,17 @@ arguments:
  - fastq
 
 inputs:
+  alignMode:
+    type: string
+    label: minimap2 align mode
+    inputBinding:
+      position: 0
   dbIndex:
     type: File
     label: genome index
     inputBinding:
       position: 1
-  inSeq1:
+  inSeq:
     type: File
     format: edam:format_1930
     label: sequences to map
@@ -43,8 +48,8 @@ outputs:
     outputBinding:
       glob: $(inputs.outReadsName)
 
-stdout: minimap2_filter.log
-stderr: minimap2_filter.err
+stdout: minimap2_filterFq.log
+stderr: minimap2_filterFq.err
 
 $namespaces:
  edam: http://edamontology.org/
