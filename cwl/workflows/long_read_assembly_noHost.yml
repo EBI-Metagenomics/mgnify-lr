@@ -3,7 +3,7 @@ raw_reads:
   format: edam:format_1930
   path: ../../test_data/small.fastq.gz
 min_read_size: 200
-reads_filter_bysize: reads.fastq.gz
+reads_filter_bysize_name: reads_filtered
 polish_paf: meta_polish.paf
 polish_assembly_racon: meta_assembly.fasta
 medaka_model: r941_min_high_g360
