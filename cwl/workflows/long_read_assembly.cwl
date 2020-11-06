@@ -6,7 +6,7 @@ doc: |
 
 requirements:
   ResourceRequirement:
-    coresMin: 1
+    coresMin: 8
     ramMin: 8000 # 6 GB for testing, it needs more in production
 
 inputs:
@@ -16,35 +16,28 @@ inputs:
     label: long reads to assemble
   min_read_size:
     type: int?
-    label: Raw reads filter by size
+    label: raw reads filter by size
     default: 200
-  reads_filter_bysize:
+  reads_filter_bysize_name:
     type: string?
-    label: Reads with length > min_read_size
-    default: reads_filt.fastq.gz
+    label: prefix file for reads with length > min_read_size
+    default: reads_filtered
   host_species:
     type: string?
-    label: if defined, retrieve the genome to decontaminate the sample
+    label: retrieve the genome to decontaminate the sample
+    default: homo_sapiens
   host_index:
     type: string?
     label: index name if genome host is used for decontaminate
     default: genome.mmi
-  host_align:
-    type: string?
-    label: SAM output from reads alignment to host
-    default: genome_align.sam
   align_preset:
     type: string?
     label: minimap2 align mode
     default: map-ont
-  host_maped:
-    type: string?
-    label: mapped reads to the host genome
-    default: host_maped.fastq
-  host_unmaped:
+  host_unmaped_reads:
     type: string?
     label: unmapped reads to the host genome
-    default: host_unmaped.fastq
+    default: host_unmaped.fastq.gz
   polish_paf:
     type: string?
     label: polish align PAF file
@@ -57,18 +50,10 @@ inputs:
     type: string?
     label: medaka model to improve assembly
     default: r941_min_fast_g330
-  assembly_clean_sam:
-    type: string?
-    label: clean assembly map to host genome (SAM)
-    default: assembly_clean.sam
-  host_maped_contigs:
-    type: string?
-    label: clean contigs map to host genome (fasta)
-    default: assembly_mapHost.fasta
   host_unmaped_contigs:
     type: string?
     label: clean contigs unmap to host genome (fasta)
-    default: assembly_unmapHost.fasta
+    default: assembly_unmapHost.fasta.gz
   predict_proteins:
     type: string?
     label: predicted proteins from assembly (fasta)
@@ -88,7 +73,7 @@ inputs:
   diamond_out:
     type: string?
     label: proteins align to Uniprot
-    default: predict_proteins_align.tsv
+    default: predict_proteins_diamond.tsv
   ideel_out:
     type: string?
     label: protein completeness evaluation
@@ -109,22 +94,22 @@ outputs:
     outputSource: step_1_nanoplot/pdfs
   filtered_reads:
     type: File
-    outputSource: step_2_filterShortReads/outFastq
+    outputSource: step_2_filterShortReads/outReads
+  filtered_reads_qcHtml:
+    type: File
+    outputSource: step_2_filterShortReads/qchtml
+  filtered_reads_qcJson:
+    type: File
+    outputSource: step_2_filterShortReads/qcjson
   hostGenome:
     type: File
     outputSource: step_3a_cleaning_getHostFasta/outGenome
   hostGenomeIndex:
     type: File
     outputSource: step_3b_cleaning_indexFasta/outIndex
-  hostAlignSAM:
-    type: File
-    outputSource: step_3c_cleaning_alignHost/outSAM 
   hostUnmapedReads:
     type: File
-    outputSource: step_3d_cleaning_extractUnmaped/outFastq 
-  hostMapedReads:
-    type: File
-    outputSource: step_3e_cleaning_extractMaped/outFastq 
+    outputSource: step_3c_cleaning_alignHost/outReads
   contigsFasta:
     type: File
     outputSource: step_4_assembly/contigs_fasta
@@ -137,15 +122,9 @@ outputs:
   polishMedaka:
     type: File
     outputSource: step_5c_polishing_medaka/outConsensus
-  cleanAssemblySAM:
-    type: File
-    outputSource: step_6a_cleaning2_minimap2/outSAM
   cleanAssemblyUnmap:
     type: File
-    outputSource: step_6b_cleaning2_extractUnmaped/outFasta
-  cleanAssemblyMap:
-    type: File
-    outputSource: step_6c_cleaning2_extractMaped/outFasta
+    outputSource: step_6a_cleaning2_alignHost/outReads
   predictProteins:
     type: File
     outputSource: step_7a_annotation_prodigal/outProt
@@ -179,17 +158,19 @@ steps:
 
   step_2_filterShortReads:
     label: filtering short reads
-    run: ../tools/removeSmallReads/removeSmallReads.cwl
+    run: ../tools/fastp/fastp_filter.cwl
     in:
-      inFastq: raw_reads
-      length: min_read_size
-      outFastqName: reads_filter_bysize
-    out: [ outFastq ]
+      reads: raw_reads
+      minLength: min_read_size
+      name: reads_filter_bysize_name
+    out:
+      - outReads
+      - qcjson
+      - qchtml
   
   step_3a_cleaning_getHostFasta:
-    label: retrieve genome fasta from host (if defined)
+    label: retrieve genome fasta from host
     run: ../tools/getHostFasta/getHostFasta.cwl
-    #when: host_species
     in:
       species: host_species
     out: [ outGenome ]
@@ -205,34 +186,19 @@ steps:
 
   step_3c_cleaning_alignHost:
     label: align reads to the genome fasta index
-    run: ../tools/minimap2/minimap2_align.cwl
+    run: ../tools/minimap2_filter/minimap2_filterHostFq.cwl
     in:
-      outSAM: host_align
-      inSeq1: step_2_filterShortReads/outFastq
+      alignMode: align_preset
+      outReadsName: host_unmaped_reads
+      inSeq: step_2_filterShortReads/outReads
       dbIndex: step_3b_cleaning_indexFasta/outIndex
-    out: [ outSAM ]
-
-  step_3d_cleaning_extractUnmaped:
-    label: extract unmaped reads to the host genome
-    run: ../tools/samtools/samtools_filter_unmap.cwl
-    in:
-      outFastqName: host_unmaped
-      inSam: step_3c_cleaning_alignHost/outSAM
-    out: [ outFastq ]
-
-  step_3e_cleaning_extractMaped:
-    label: extract maped reads to the host genome
-    run: ../tools/samtools/samtools_filter_map.cwl
-    in:
-      outFastqName: host_maped
-      inSam: step_3c_cleaning_alignHost/outSAM
-    out: [ outFastq ]
+    out: [ outReads ]
 
   step_4_assembly:
     label: assembly long-reads with flye
     run: ../tools/flye/flye.cwl
     in:
-      nano: step_3d_cleaning_extractUnmaped/outFastq
+      nano: step_3c_cleaning_alignHost/outReads
     out: [ contigs_fasta ]
 
   step_5a_polishing_minimap2:
@@ -240,7 +206,7 @@ steps:
     run: ../tools/minimap2/minimap2_to_polish.cwl
     in:
       inAssembly: step_4_assembly/contigs_fasta
-      inReads: step_3d_cleaning_extractUnmaped/outFastq
+      inReads: step_3c_cleaning_alignHost/outReads
       outPAFname: polish_paf
     out: [ outPAF ]
 
@@ -248,7 +214,7 @@ steps:
     label: polishing step 2, using racon to improve assembly
     run: ../tools/racon/racon.cwl
     in:
-      inReads: step_3d_cleaning_extractUnmaped/outFastq
+      inReads: step_3c_cleaning_alignHost/outReads
       mapping: step_5a_polishing_minimap2/outPAF
       assembly: step_4_assembly/contigs_fasta
       outName: polish_assembly_racon
@@ -258,41 +224,33 @@ steps:
     label: polishing step 3, using medaka to create a consensus
     run: ../tools/medaka/medaka.cwl
     in:
-      inReads: step_3d_cleaning_extractUnmaped/outFastq
+      inReads: step_3c_cleaning_alignHost/outReads
       assembly: step_5b_polishing_racon/outAssembly
       medakaModel: medaka_model
     out: [ outConsensus ]
   
-  step_6a_cleaning2_minimap2:
+  step_6a_cleaning2_alignHost:
     label: post-assembly cleaning, mapping with minimap2
-    run: ../tools/minimap2/minimap2_to_clean.cwl
+    run: ../tools/minimap2_filter/minimap2_filterHostFa.cwl
     in:
-      outSAMname: assembly_clean_sam
-      inHostIndex: step_3b_cleaning_indexFasta/outIndex
-      inSeqs: step_5c_polishing_medaka/outConsensus
-    out: [ outSAM ]
+      alignMode: align_preset
+      outReadsName: host_unmaped_contigs
+      dbIndex: step_3b_cleaning_indexFasta/outIndex
+      inSeq: step_5c_polishing_medaka/outConsensus
+    out: [ outReads ]
 
-  step_6b_cleaning2_extractUnmaped:
-    label: extract unmaped contigs to the host genome
-    run: ../tools/samtools/samtools_filter_unmap_fasta.cwl
+  step_6b_cleaning2_decompress:
+    label: unmapped sequences decompression
+    run: ../tools/decompress/decompressFasta.cwl
     in:
-      outFastaName: host_unmaped_contigs
-      inSam: step_6a_cleaning2_minimap2/outSAM
-    out: [ outFasta ]
+      gzfile: step_6a_cleaning2_alignHost/outReads
+    out: [ outfile ] 
 
-  step_6c_cleaning2_extractMaped:
-    label: extract maped contigs to the host genome
-    run: ../tools/samtools/samtools_filter_map_fasta.cwl
-    in:
-      outFastaName: host_maped_contigs
-      inSam: step_6a_cleaning2_minimap2/outSAM
-    out: [ outFasta ]
-  
   step_7a_annotation_prodigal:
     label: predict proteins in assembly with Prodigal
     run: ../tools/prodigal/prodigal.cwl
     in:
-      inNucl: step_6b_cleaning2_extractUnmaped/outFasta
+      inNucl: step_6b_cleaning2_decompress/outfile
       outProtName: predict_proteins
       outGbkName: predict_proteins_gbk
     out:

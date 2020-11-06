@@ -6,7 +6,7 @@ doc: |
 
 requirements:
   ResourceRequirement:
-    coresMin: 8s
+    coresMin: 8
     ramMin: 1000 # 1 GB for testing, it needs more in production
 hints:
   DockerRequirement:

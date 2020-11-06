@@ -22,7 +22,7 @@ arguments:
 inputs:
   inNucl:
     type: File
-    format: edam:format_1929  # FASTA
+    #format: edam:format_1929  # FASTA
     label: nucleotide sequence fasta
     inputBinding:
       position: 1
