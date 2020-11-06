@@ -241,7 +241,7 @@ steps:
 
   step_6b_cleaning2_decompress:
     label: unmapped sequences decompression
-    run: ../tools/decompress/decompressFasta.cwl
+    run: ../tools/decompress/decompress.cwl
     in:
       gzfile: step_6a_cleaning2_alignHost/outReads
     out: [ outfile ] 
