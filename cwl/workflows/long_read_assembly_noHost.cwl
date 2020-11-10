@@ -56,18 +56,18 @@ inputs:
     default: ideel_report.pdf
 
 outputs:
-  nanoplot_html:
-    type: File[]
-    outputSource: step_1_nanoplot/html
-  nanoplot_pngs:
-    type: File[]
-    outputSource: step_1_nanoplot/pngs
-  nanoplot_stats:
-    type: File[]
-    outputSource: step_1_nanoplot/stats
-  nanoplot_pdfs:
-    type: File[]
-    outputSource: step_1_nanoplot/pdfs
+#  nanoplot_html:
+#    type: File[]
+#    outputSource: step_1_nanoplot/html
+#  nanoplot_pngs:
+#    type: File[]
+#    outputSource: step_1_nanoplot/pngs
+#  nanoplot_stats:
+#    type: File[]
+#    outputSource: step_1_nanoplot/stats
+#  nanoplot_pdfs:
+#    type: File[]
+#    outputSource: step_1_nanoplot/pdfs
   filtered_reads:
     type: File
     outputSource: step_2_filterShortReads/outReads 
@@ -103,16 +103,16 @@ outputs:
     outputSource: step_5e_annotation_ideel/outFig
 
 steps:
-  step_1_nanoplot:
-    label: initial QC for rawdata
-    run: ../tools/nanoplot/nanoplot.cwl
-    in:
-      reads: raw_reads
-    out:
-      - html
-      - pngs
-      - stats
-      - pdfs
+#  step_1_nanoplot:
+#    label: initial QC for rawdata
+#    run: ../tools/nanoplot/nanoplot.cwl
+#    in:
+#      reads: raw_reads
+#    out:
+#      - html
+#      - pngs
+#      - stats
+#      - pdfs
 
   step_2_filterShortReads:
     label: filtering short reads
