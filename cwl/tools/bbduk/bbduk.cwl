@@ -7,7 +7,7 @@ doc: |
 requirements:
   InlineJavascriptRequirement: {} # needed to get GB in RAM
   ResourceRequirement:
-    coresMin: 8
+    coresMin: 1
     ramMin: 6000 # 6 GB for testing, it needs more in production
 hints:
   DockerRequirement:

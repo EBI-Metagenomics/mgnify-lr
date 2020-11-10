@@ -8,7 +8,7 @@ requirements:
   InitialWorkDirRequirement:
     listing: [ $(inputs.reads) ]
   ResourceRequirement:
-    coresMin: 8
+    coresMin: 1
     ramMin: 1000 # 1 GB for testing, it needs more in production
 hints:
   DockerRequirement:
