@@ -4,8 +4,9 @@ raw_reads:
   path: ../../test_data/small.fastq.gz
 min_read_size: 200
 reads_filter_bysize_name: reads_filtered
-host_species: caenorhabditis_elegans
-host_index: worm.mmi
+host_index:
+  class: File
+  path: ../db/worm.mmi
 align_preset: map-ont
 host_unmaped: worm_unmap.fastq.gz
 polish_paf: meta_polish.paf
@@ -14,7 +15,8 @@ medaka_model: r941_min_high_g360
 host_unmaped_contigs: meta_assembly_unmapHost.fasta.gz
 predict_proteins: meta_assembly_pred_prot.fasta
 predict_proteins_gbk: meta_assembly_pred_prot.gbk
-uniprot_url: "ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz"
-uniprot_index: uniprot.dmnd
+uniprot_index:
+  class: File
+  path: ../db/uniprot-2020-11-10.dmnd
 diamond_out: meta_assembly_diamond.tsv
 ideel_out: meta_assembly_ideel.pdf

@@ -1,0 +1,6 @@
+inFasta:
+    class: File
+    format: edam:format_1929
+    path: Caenorhabditis_elegans.WBcel235.dna.toplevel.fa.gz
+preset: map-ont
+indexName: worm.mmi

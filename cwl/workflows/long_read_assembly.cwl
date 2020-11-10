@@ -22,14 +22,10 @@ inputs:
     type: string?
     label: prefix file for reads with length > min_read_size
     default: reads_filtered
-  host_species:
-    type: string?
-    label: retrieve the genome to decontaminate the sample
-    default: homo_sapiens
   host_index:
-    type: string?
-    label: index name if genome host is used for decontaminate
-    default: genome.mmi
+    type: File
+    label: index name for genome host, used for decontaminate
+    default: ../db/genome.mmi
   align_preset:
     type: string?
     label: minimap2 align mode
@@ -62,14 +58,10 @@ inputs:
     type: string?
     label: predicted proteins from assembly (gbk)
     default: predicted_proteins.gbk
-  uniprot_url:
-    type: string?
-    label: Uniprot database URL
-    default: "ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz"
   uniprot_index:
-    type: string?
+    type: File
     label: uniprot index file
-    default: uniprot.dmnd
+    default: ../db/uniprot.dmnd
   diamond_out:
     type: string?
     label: proteins align to Uniprot
@@ -101,12 +93,6 @@ outputs:
   filtered_reads_qcJson:
     type: File
     outputSource: step_2_filterShortReads/qcjson
-  hostGenome:
-    type: File
-    outputSource: step_3a_cleaning_getHostFasta/outGenome
-  hostGenomeIndex:
-    type: File
-    outputSource: step_3b_cleaning_indexFasta/outIndex
   hostUnmapedReads:
     type: File
     outputSource: step_3c_cleaning_alignHost/outReads
@@ -131,12 +117,6 @@ outputs:
   predictProteinsGBK:
     type: File
     outputSource: step_7a_annotation_prodigal/outGBK
-  uniprotDB:
-    type: File
-    outputSource: step_7b_annotation_getUniprotDB/outGenome
-  uniprotIndex:
-    type: File
-    outputSource: step_7c_annotation_IndexUniprotDB/diamondIndex
   diamondAlign:
     type: File
     outputSource: step_7d_annotation_diamond/alignment
@@ -168,22 +148,6 @@ steps:
       - qcjson
       - qchtml
   
-  step_3a_cleaning_getHostFasta:
-    label: retrieve genome fasta from host
-    run: ../tools/getHostFasta/getHostFasta.cwl
-    in:
-      species: host_species
-    out: [ outGenome ]
-
-  step_3b_cleaning_indexFasta:
-    label: generate the genome fasta index for minimap2
-    run: ../tools/minimap2/minimap2_index.cwl
-    in:
-      preset: align_preset
-      inFasta: step_3a_cleaning_getHostFasta/outGenome
-      indexName: host_index
-    out: [ outIndex ]
-
   step_3c_cleaning_alignHost:
     label: align reads to the genome fasta index
     run: ../tools/minimap2_filter/minimap2_filterHostFq.cwl
@@ -191,7 +155,7 @@ steps:
       alignMode: align_preset
       outReadsName: host_unmaped_reads
       inSeq: step_2_filterShortReads/outReads
-      dbIndex: step_3b_cleaning_indexFasta/outIndex
+      dbIndex: host_index
     out: [ outReads ]
 
   step_4_assembly:
@@ -235,7 +199,7 @@ steps:
     in:
       alignMode: align_preset
       outReadsName: host_unmaped_contigs
-      dbIndex: step_3b_cleaning_indexFasta/outIndex
+      dbIndex: host_index
       inSeq: step_5c_polishing_medaka/outConsensus
     out: [ outReads ]
 
@@ -257,28 +221,13 @@ steps:
       - outProt
       - outGBK
 
-  step_7b_annotation_getUniprotDB:
-    label: retrieve Uniprot database
-    run: ../tools/getHostFasta/getHostFasta.cwl
-    in:
-      species: uniprot_url
-    out: [ outGenome ]
-
-  step_7c_annotation_IndexUniprotDB:
-    label: index Uniprot database for diamond
-    run: ../tools/diamond_makedb/diamond_makedb.cwl
-    in:
-      proteins: step_7b_annotation_getUniprotDB/outGenome
-      database: uniprot_index
-    out: [ diamondIndex ]
-
   step_7d_annotation_diamond:
     label: search Uniprot database with diamond
     run: ../tools/diamond/diamond.cwl
     in:
       outName: diamond_out
       proteins: step_7a_annotation_prodigal/outProt
-      database: step_7c_annotation_IndexUniprotDB/diamondIndex
+      database: uniprot_index
     out: [ alignment ]
 
   step_7e_annotation_ideel:

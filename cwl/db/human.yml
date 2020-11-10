@@ -1,0 +1,6 @@
+inFasta:
+    class: File
+    format: edam:format_1929
+    path: Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+preset: map-ont
+indexName: human_GRCh38.mmi

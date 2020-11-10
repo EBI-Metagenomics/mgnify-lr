@@ -42,14 +42,10 @@ inputs:
     type: string?
     label: predicted proteins from assembly (gbk)
     default: predicted_proteins.gbk
-  uniprot_url:
-    type: string?
-    label: Uniprot database URL
-    default: "ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz"
   uniprot_index:
-    type: string?
+    type: File
     label: uniprot index file
-    default: uniprot.dmnd
+    default: ../db/uniprot.dmnd
   diamond_out:
     type: string?
     label: proteins align to Uniprot
@@ -99,12 +95,6 @@ outputs:
   predictProteinsGBK:
     type: File
     outputSource: step_5a_annotation_prodigal/outGBK
-  uniprotDB:
-    type: File
-    outputSource: step_5b_annotation_getUniprotDB/outGenome
-  uniprotIndex:
-    type: File
-    outputSource: step_5c_annotation_IndexUniprotDB/diamondIndex
   diamondAlign:
     type: File
     outputSource: step_5d_annotation_diamond/alignment
@@ -182,28 +172,13 @@ steps:
       - outProt
       - outGBK
 
-  step_5b_annotation_getUniprotDB:
-    label: retrieve Uniprot database
-    run: ../tools/getHostFasta/getHostFasta.cwl
-    in:
-      species: uniprot_url
-    out: [ outGenome ]
-
-  step_5c_annotation_IndexUniprotDB:
-    label: index Uniprot database for diamond
-    run: ../tools/diamond_makedb/diamond_makedb.cwl
-    in:
-      proteins: step_5b_annotation_getUniprotDB/outGenome
-      database: uniprot_index
-    out: [ diamondIndex ]
-
   step_5d_annotation_diamond:
     label: search Uniprot database with diamond
     run: ../tools/diamond/diamond.cwl
     in:
       outName: diamond_out
       proteins: step_5a_annotation_prodigal/outProt
-      database: step_5c_annotation_IndexUniprotDB/diamondIndex
+      database: uniprot_index
     out: [ alignment ]
 
   step_5e_annotation_ideel:

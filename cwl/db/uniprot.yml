@@ -1,0 +1,5 @@
+proteins:
+    class: File
+    format: edam:format_1929
+    path: uniprot_sprot.fasta.gz
+database: uniprot-2020-11-10.dmnd
