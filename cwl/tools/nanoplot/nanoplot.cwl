@@ -8,7 +8,7 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 1
-    ramMin: 4000  # just a default, could be lowered
+    ramMin: 1000
 hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.nanoplot:1.33.1

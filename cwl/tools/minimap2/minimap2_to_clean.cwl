@@ -7,7 +7,7 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 1
-    ramMin: 2000 # 2 GB for testing, it needs more in production
+    ramMin: 1000 # 1 GB for testing, it needs more in production
 hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.minimap2:2.17

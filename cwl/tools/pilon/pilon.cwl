@@ -7,7 +7,7 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 1
-    ramMin: 8000 # 8 GB for testing, it needs more in production
+    ramMin: 1000 # 1 GB for testing, it needs more in production
 hints:
   DockerRequirement:
     dockerPull: pilon:latest
