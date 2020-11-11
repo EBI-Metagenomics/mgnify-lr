@@ -17,14 +17,16 @@ hints:
 baseCommand: [ fastp ]
 
 arguments:
-- -w
-- $(runtime.cores)
-- -o
-- $(inputs.name).fastp.fastq.gz
-- --json
-- $(inputs.name).fastp.qc.json
-- --html
-- $(inputs.name).fastp.qc.html
+  - -Q
+  - -A
+  - -w
+  - $(runtime.cores)
+  - -o
+  - $(inputs.name).fastp.fastq.gz
+  - --json
+  - $(inputs.name).fastp.qc.json
+  - --html
+  - $(inputs.name).fastp.qc.html
 
 inputs:
   name:
