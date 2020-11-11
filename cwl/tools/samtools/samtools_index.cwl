@@ -8,7 +8,7 @@ requirements:
   InitialWorkDirRequirement:
     listing: [ $(inputs.inputBam) ]
   ResourceRequirement:
-    coresMin: 1
+    coresMin: 8
     ramMin: 1000 # 1 GB for testing
 hints:
   DockerRequirement:
