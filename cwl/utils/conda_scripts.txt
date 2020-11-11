@@ -1,0 +1,6 @@
+../tools/minimap2_filter/minimap2_filter.sh
+../tools/ideel/ideel.py
+../tools/getHostFasta/getHostFasta.sh
+../tools/getHostFasta/getHostFasta.sh
+../tools/getHostFasta/getFastaFromEnsemblFTP.py
+../tools/removeSmallReads/removeSmallReads.sh
