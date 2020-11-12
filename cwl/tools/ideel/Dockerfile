@@ -9,6 +9,7 @@ RUN apt update && \
         python3-matplotlib
 
 COPY ideel.py /usr/local/bin/
+RUN chmod +x /usr/local/bin/ideel.py
 
 LABEL software="ideel"
 LABEL software.version="0.0.1"

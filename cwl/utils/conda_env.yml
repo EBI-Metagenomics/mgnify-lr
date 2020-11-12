@@ -4,11 +4,12 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
-  - minimap2=2.17
-  - samtools=1.11
-  - racon=1.4.13
-  - medaka=1.1.3
-  - flye=2.8.1
-  - prodigal=2.6.3
-  - diamond=0.9.25
-  - fastp=0.20.1
+  - minimap2
+  - samtools
+  - racon
+  - medaka
+  - flye
+  - prodigal
+  - diamond
+  - fastp
+  - matplotlib

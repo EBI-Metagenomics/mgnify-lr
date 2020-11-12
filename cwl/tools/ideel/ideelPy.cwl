@@ -10,9 +10,9 @@ requirements:
     ramMin: 1000 # 6 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.ideel:0.0.1
+    dockerPull: jcaballero/mgnify-lr.ideel:0.0.2
 
-baseCommand: [ "python3", "/usr/local/bin/ideel.py" ]
+baseCommand: [ "ideel.py" ]
 
 inputs:
   inputTable:
