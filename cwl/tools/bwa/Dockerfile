@@ -1,35 +1,32 @@
 # Docker container for BWA
 
-FROM ubuntu:latest AS builder
+FROM ubuntu:latest 
 
 # install dependencies
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt update && \
     apt upgrade -y && \
     apt install -y \
-        build-essential \
-        zlib1g-dev \
-        git && \
+        samtools \
+        wget && \
     apt-get autoclean && \
     rm -rf /var/lib/apt/lists/*
 
-WORKDIR /opt
+WORKDIR /tmp
+ENV bwamem2Ver=2.1
+RUN wget -q https://github.com/bwa-mem2/bwa-mem2/releases/download/v${bwamem2Ver}/bwa-mem2-${bwamem2Ver}_x64-linux.tar.bz2 && \
+    tar jxf bwa-mem2-${bwamem2Ver}_x64-linux.tar.bz2 && \
+    mv bwa-mem2-${bwamem2Ver}_x64-linux/bwa-mem2* /usr/local/bin/ && \
+    rm -rf bwa-mem2-${bwamem2Ver}_x64-linux*
 
-# compile BWA
-RUN git clone https://github.com/lh3/bwa.git && \
-    cd bwa && \
-    make
+COPY bwa-mem2.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/bwa-mem2.sh
 
-# create running container
-FROM ubuntu:latest
-
-COPY --from=builder /opt/bwa/bwa /usr/local/bin/
-
-LABEL software="BWA"
-LABEL software.version="0.7.17"
-LABEL description="BWA is a software package for mapping DNA sequences against a large reference genome, such as the human genome."
-LABEL website="https://github.com/lh3/bwa"
-LABEL license="GPLv3"
+LABEL software="BWA-mem2"
+LABEL software.version="2.1"
+LABEL description="Bwa-mem2 is the next version of the bwa-mem algorithm in bwa. It produces alignment identical to bwa and is ~1.3-3.1x faster depending on the use-case, dataset and the running machine."
+LABEL website="https://github.com/bwa-mem2/bwa-mem2"
+LABEL license="https://github.com/bwa-mem2/bwa-mem2/blob/master/LICENSE"
 
 # for singularity compatibility
 ENV LC_ALL=C
