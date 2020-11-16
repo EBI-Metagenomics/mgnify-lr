@@ -10,7 +10,7 @@ requirements:
     ramMin: 1000 # 1 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: pilon:latest
+    dockerPull: jcaballero/mgnify-lr.pilon:1.23
 
 baseCommand: [ "java", "-Xmx16G", "-jar", "/opt/pilon.jar" ]
 
@@ -48,6 +48,7 @@ inputs:
 outputs:
   outfile:
     type: File
+    format: edam:format_1929
     outputBinding:
       glob: $(inputs.outfile).fasta
   

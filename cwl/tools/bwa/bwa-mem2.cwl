@@ -12,7 +12,7 @@ requirements:
     ramMin: 1000 # 1 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: bwa-mem2:latest
+    dockerPull: jcaballero/mgnify-lr.bwa-mem2:2.1
 
 baseCommand: [ "bwa-mem2.sh" ]
 
@@ -47,6 +47,7 @@ inputs:
 outputs:
   bam:
     type: File
+    format: edam:format_2572
     secondaryFiles:
       - .bai
     outputBinding:
