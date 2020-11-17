@@ -13,3 +13,5 @@ dependencies:
   - diamond
   - fastp
   - matplotlib
+  - pilon
+  - bwa-mem2

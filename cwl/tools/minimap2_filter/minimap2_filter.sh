@@ -12,4 +12,9 @@ INDEX=$4
 READS=$5
 OUTFILE=$6
 
-minimap2 -a -x $ALNMODE -t $THREADS $INDEX $READS | samtools $FORMAT -f 4 | gzip > $OUTFILE
+if [ "$FORMAT" == "fastq" ]
+then
+    minimap2 -a -x $ALNMODE -t $THREADS $INDEX $READS | samtools $FORMAT -f 4 | gzip > $OUTFILE
+else
+    minimap2 -a -x $ALNMODE -t $THREADS $INDEX $READS | samtools $FORMAT -f 4 > $OUTFILE
+fi

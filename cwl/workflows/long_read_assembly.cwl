@@ -49,7 +49,7 @@ inputs:
   host_unmaped_contigs:
     type: string?
     label: clean contigs unmap to host genome (fasta)
-    default: assembly_unmapHost.fasta.gz
+    default: assembly_unmapHost.fasta
   predict_proteins:
     type: string?
     label: predicted proteins from assembly (fasta)
@@ -203,18 +203,11 @@ steps:
       inSeq: step_5c_polishing_medaka/outConsensus
     out: [ outReads ]
 
-  step_6b_cleaning2_decompress:
-    label: unmapped sequences decompression
-    run: ../tools/decompress/decompress.cwl
-    in:
-      gzfile: step_6a_cleaning2_alignHost/outReads
-    out: [ outfile ] 
-
   step_7a_annotation_prodigal:
     label: predict proteins in assembly with Prodigal
     run: ../tools/prodigal/prodigal.cwl
     in:
-      inNucl: step_6b_cleaning2_decompress/outfile
+      inNucl: step_6a_cleaning2_alignHost/outReads
       outProtName: predict_proteins
       outGbkName: predict_proteins_gbk
     out:

@@ -10,7 +10,7 @@ requirements:
     ramMin: 1000 # 1 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.minimap2_filter:2.17.1
+    dockerPull: jcaballero/mgnify-lr.minimap2_filter:2.17.2
 
 baseCommand: [ "minimap2_filter.sh" ]
 
