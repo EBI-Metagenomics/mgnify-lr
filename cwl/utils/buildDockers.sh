@@ -2,19 +2,21 @@
 
 # buildDockers.sh
 # Script to build docker containers for mgnify-lr CWL pipeline
-# Juan Caballero <jcaballero@ebi.ac.uk>
 # (C) 2020 EMBL-EBI
 
+REPO="jcaballero"
 WDIR=$PWD
-TOOLS="flye getHostFasta ideel medaka minimap2 nanoplot racon removeSmallReads samtools"
+TOOLFILE="tools.txt"
 
-for TOOL in $TOOLS
+for LINE in $(cat $TOOLS)
 do
+    TOOL=$(echo $LINE | perl -pe 's/#.+//')
+    TAG="${REPO}/$(echo $LINE | perl -pe 's/.+#//')"
     DOCKERDIR="$WDIR/../tools/$TOOL"
     if [ -f "$DOCKERDIR/Dockerfile" ]
     then
         echo "Building $TOOL"
-        docker build -t $(echo $TOOL | perl -lane 'print lc($F[0])') $DOCKERDIR
+        docker build -t $TAG $DOCKERDIR
     else
         echo "No Dockerfile for $TOOL in $DOCKERDIR, skipped"
     fi
