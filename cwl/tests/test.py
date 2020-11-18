@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-# Batch of tests for mgnigy-lr-cwl
-# 
+# Batch of tests for mgnigy-lr-cwl pipeline
 # (C) 2020 EMBL - European Bioinformatics Insitute
 
 import json
@@ -10,7 +9,8 @@ import unittest
 import subprocess
 import hashlib
 
-md5_json   = "files_md5.json"
+clean      = False # flag to delete created files
+md5_json   = 'files_md5.json'
 cwl_runner = 'toil-cwl-runner'
 files_md5  = None
 
@@ -21,70 +21,29 @@ def md5(fname):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
 
-
-class TestGetHostFasta(unittest.TestCase):
-
-    def test_getCionaGenome(self):
-        print("Checking getHostFasta: retrieve ciona_intestinalis genome from Ensembl FTP")
-        cwl = "../tools/getHostFasta/getHostFasta.cwl"
-        yml = "./tools/getHostFasta/ciona.yml"
-        out = "Ciona_intestinalis.KH.dna.toplevel.fa.gz"
-        # file is not an unique url, could change overtime, we only check if exists and isn't empty
+# Test Batch
+class TestFastp(unittest.TestCase):
+    def test_fastp(self):
+        print("Checking fastp")
+        cwl = "../tools/fastp/fastp_filter.cwl"
+        yml = "./tools/fastp/fastp_filter.yml"
         subprocess.check_call([cwl_runner, cwl, yml])
-        self.assertTrue(os.path.getsize(out) > 30000)
-
-    def test_getYeastGenome(self):
-        print("Checking getHostFasta: retrieve Saccharomyces genome from UCSC Genome Browser")
-        cwl = "../tools/getHostFasta/getHostFasta.cwl"
-        yml = "./tools/getHostFasta/yeast.yml"
-        out = "sacCer3.fa.gz"
-        chk = files_md5["getHostFasta"][out]
-        subprocess.check_call([cwl_runner, cwl, yml])
-        self.assertEqual(md5(out), chk)
-
-class TestDecompress(unittest.TestCase):
-    def test_decompress(self):
-        print("Checking Decompress")
-        cwl = "../tools/decompress/decompress.cwl"
-        yml = "./tools/decompress/decompress.yml"
-        out = "eco_phix_dcs.fa"
-        chk = files_md5["decompress"][out]
-        subprocess.check_call([cwl_runner, cwl, yml])
-        self.assertEqual(md5(out), chk)
-
-class TestBwaIndex(unittest.TestCase):
-    def test_bwa_index(self):
-        print("Checking bwa_index")
-        cwl = "../tools/bwa_index/bwa_index.cwl"
-        yml = "./tools/bwa_index/bwa_index.yml"
-        out = "eco_phix_dcs.fa"
-        subprocess.check_call([cwl_runner, cwl, yml])
-        for file in files_md5["bwa_index"].keys():
-            check = files_md5["bwa_index"][file]
-            self.assertEqual(md5(file), check)
-
-class TestNanoplot(unittest.TestCase):
-    def test_nanoplot(self):
-        print("Checking Nanoplot")
-        cwl = "../tools/nanoplot/nanoplot.cwl"
-        yml = "./tools/nanoplot/nanoplot.yml"
-        subprocess.check_call([cwl_runner, cwl, yml])
-        for file in files_md5["nanoplot"].keys():
-            # HTML files are dynamic, we only check if exists and aren't empty
-            if file.endswith("html"):
-                self.assertTrue(os.path.getsize(file) > 100)
-            else:
-                check = files_md5["nanoplot"][file]
+        for file in files_md5["fastp"].keys():
+            # HTML/JSON files are dynamic, we only check if exists and aren't empty
+            if file.endswith("fastq.gz"):
+                check = files_md5["fastp"][file]
                 self.assertEqual(md5(file), check)
+            else:
+                self.assertTrue(os.path.getsize(file) > 100)
 
-class TestRemoveSmallReads(unittest.TestCase):
-    def test_removeSmallReads(self):
-        print("Checking removeSmallReads")
-        cwl = "../tools/removeSmallReads/removeSmallReads.cwl"
-        yml = "./tools/removeSmallReads/removeSmallReads.yml"
+class TestMinimap2filterHostFq(unittest.TestCase):
+    def test_minimap2_filterHostFq(self):
+        print("Checking minimap2_filterHostFq")
+        cwl = "../tools/minimap2_filter/minimap2_filterHostFq.cwl"
+        yml = "./tools/minimap2/minimap2_filterHostFq.yml"
         subprocess.check_call([cwl_runner, cwl, yml])
-        for file in files_md5["removeSmallReads"].keys():
-            check = files_md5["removeSmallReads"][file]
+        for file in files_md5["minimap2_filterHostFq"].keys():
+            check = files_md5["minimap2_filterHostFq"][file]
             self.assertEqual(md5(file), check)
 
 class TestFlye(unittest.TestCase):
@@ -97,9 +56,9 @@ class TestFlye(unittest.TestCase):
             check = files_md5["flye"][file]
             self.assertEqual(md5(file), check)
 
-class TestMinimapPolish(unittest.TestCase):
-    def test_flye(self):
-        print("Checking flye")
+class TestMinimap2ToPolish(unittest.TestCase):
+    def test_minimap2_to_polish(self):
+        print("Checking minimap2_to_polish")
         cwl = "../tools/minimap2/minimap2_to_polish.cwl"
         yml = "./tools/minimap2/minimap2_to_polish.yml"
         subprocess.check_call([cwl_runner, cwl, yml])
@@ -107,14 +66,97 @@ class TestMinimapPolish(unittest.TestCase):
             check = files_md5["minimap2_to_polish"][file]
             self.assertEqual(md5(file), check)
 
+class TestRacon(unittest.TestCase):
+    def test_racon(self):
+        print("Checking racon")
+        cwl = "../tools/racon/racon.cwl"
+        yml = "./tools/racon/racon.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["racon"].keys():
+            check = files_md5["racon"][file]
+            self.assertEqual(md5(file), check)
+
+class TestMedaka(unittest.TestCase):
+    def test_medaka(self):
+        print("Checking medaka")
+        cwl = "../tools/medaka/medaka.cwl"
+        yml = "./tools/medaka/medaka.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["medaka"].keys():
+            check = files_md5["medaka"][file]
+            self.assertEqual(md5(file), check)
+
+class TestMinimap2filterHostFa(unittest.TestCase):
+    def test_minimap2_filterHostFa(self):
+        print("Checking minimap2_filterHostFa")
+        cwl = "../tools/minimap2_filter/minimap2_filterHostFa.cwl"
+        yml = "./tools/minimap2/minimap2_filterHostFa.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["minimap2_filterHostFa"].keys():
+            check = files_md5["minimap2_filterHostFa"][file]
+            self.assertEqual(md5(file), check)
+
+class TestProdigal(unittest.TestCase):
+    def test_prodigal(self):
+        print("Checking prodigal")
+        cwl = "../tools/prodigal/prodigal.cwl"
+        yml = "./tools/prodigal/prodigal.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["prodigal"].keys():
+            check = files_md5["prodigal"][file]
+            self.assertEqual(md5(file), check)
+
+class TestDiamond(unittest.TestCase):
+    def test_diamond(self):
+        print("Checking diamond")
+        cwl = "../tools/diamond/diamond.cwl"
+        yml = "./tools/diamond/diamond.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["diamond"].keys():
+            check = files_md5["diamond"][file]
+            self.assertEqual(md5(file), check)
+
+class TestIdeel(unittest.TestCase):
+    def test_ideel(self):
+        print("Checking ideel")
+        cwl = "../tools/ideel/ideelPy.cwl"
+        yml = "./tools/ideel/ideel.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["ideel"].keys():
+            check = files_md5["ideel"][file]
+            self.assertEqual(md5(file), check)
+
+class TestBWAmem2(unittest.TestCase):
+    def test_bwamem2(self):
+        print("Checking BWA-mem2")
+        cwl = "../tools/bwa/bwa-mem2.cwl"
+        yml = "./tools/bwa/bwa-mem2.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["bwa-mem2"].keys():
+            check = files_md5["bwa/bwa-mem2"][file]
+            self.assertEqual(md5(file), check)
+
+class TestPilon(unittest.TestCase):
+    def test_pilon(self):
+        print("Checking pilon")
+        cwl = "../tools/pilon/pilon.cwl"
+        yml = "./tools/pilon/pilon.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["pilon"].keys():
+            check = files_md5["pilon"][file]
+            self.assertEqual(md5(file), check)
 
 class TestCleanUp(unittest.TestCase):
     def test_cleanUp():
-        for test in files_md5:
-            for file in files_md5[test]:
-                os.remove(file)
-        
-
+        if clean:
+            print("Deleting test files")
+            for test in files_md5:
+                for file in files_md5[test]:
+                    if os.path.exists(file):
+                        print("  deleting {}".format(file))
+                        os.remove(file)
+        else:
+            print("No clean up of test files")
 
 if __name__ == "__main__":
     print("loading test files")

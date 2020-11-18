@@ -1,0 +1,9 @@
+alignMode: map-ont
+outReadsName: unmapped_reads.fastq.gz
+inSeq:
+  class: File
+  format: edam:format_1930
+  path: ../../../../test_data/small.fastq.gz
+dbIndex:
+  class: File
+  path: ../../../db/worm.mmi

@@ -1,0 +1,9 @@
+medakaModel: r941_min_high_g360
+inReads:
+  class: File
+  format: edam:format_1930
+  path: ../../../../test_data/small.fastq.gz
+assembly:
+  class: File
+  format: edam:format_1929
+  path: ../../../../test_data/assembly.fasta

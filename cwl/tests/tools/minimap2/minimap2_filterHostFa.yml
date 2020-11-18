@@ -1,0 +1,9 @@
+alignMode: map-ont
+outReadsName: unmapped_contigs.fasta
+inSeq:
+  class: File
+  format: edam:format_1929
+  path: ../../../../test_data/assembly.fasta
+dbIndex:
+  class: File
+  path: ../../../db/worm.mmi

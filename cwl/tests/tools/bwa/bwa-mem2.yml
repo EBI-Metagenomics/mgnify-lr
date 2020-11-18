@@ -1,0 +1,13 @@
+reference:
+  class: File
+  format: edam:format_1929
+  path: ../../../../test_data/assembly.fasta
+reads1:
+  class: File
+  format: edam:format_1930
+  path: ../../../../test_data/small.R1.fastq.gz
+reads2:
+  class: File
+  format: edam:format_1930
+  path: ../../../../test_data/small.R1.fastq.gz
+bamName: illumina_aln.bam

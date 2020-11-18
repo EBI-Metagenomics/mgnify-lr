@@ -1,0 +1,6 @@
+reads:
+  class: File
+  format: edam:format_1930
+  path: ../../../../test_data/small.fastq.gz
+minLength: 200
+name: reads

@@ -1,0 +1,8 @@
+proteins:
+  class: File
+  format: edam:format_1929
+  path: ../../../../test_data/proteins.fasta
+database:
+  class: File
+  path: ../../../db/uniprot-2020-11-10.dmnd
+outName: proteins_diamond.tsv

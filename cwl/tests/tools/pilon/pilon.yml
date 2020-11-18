@@ -1,0 +1,9 @@
+sequences:
+  class: File
+  format: edam:format_1929
+  path: ../../../../test_data/assembly.fasta
+alignment:
+  class: File
+  format: edam:format_2572
+  path: ../../../../test_data/illumina_aln.bam
+outfile: assembly_pilon

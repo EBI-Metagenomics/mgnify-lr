@@ -1,38 +1,42 @@
 {
-    "getHostFasta": {
-        "Ciona_intestinalis.KH.dna.toplevel.fa.gz":                      "3f7f0b1017b173e9bb77cf4471d2535a",
-        "sacCer3.fa.gz":                                                 "4a2c1e56c14eb8b0e2fac3992a7260ed"
+    "fastp": {
+        "reads.fastp.fastq.gz":      "168e790b708604cf7d436b586c138fde",
+        "reads.fastp.qc.html":       "checked by size",
+        "reads.fastp.qc.json":       "checked by size"
     },
-    "nanoplot": {
-        "nanoplotTest_Dynamic_Histogram_Read_length.html":               "aa7295e77a64b98923a3a19657bb139a",
-        "nanoplotTest_HistogramReadlength.png":                          "fd01100c11a107fabf46580d5bf20179",
-        "nanoplotTest_LengthvsQualityScatterPlot_hex.png":               "b2207ef1ebd5bdb2a4573ef979582390",
-        "nanoplotTest_LengthvsQualityScatterPlot_loglength_hex.png":     "9792dd5f08ef99960303bfe55a846336",
-        "nanoplotTest_LogTransformed_HistogramReadlength.png":           "dc0428cae7d3dab0be92a87df38d42f4",
-        "nanoplotTest_NanoPlot-report.html":                             "cb3380e2e5ee2c49347869b0ba57def5",
-        "nanoplotTest_NanoStats.txt":                                    "94a106348b5d911a5b942dc9c6d1cab2",
-        "nanoplotTest_Weighted_HistogramReadlength.png":                 "dbf321e67e16b427c29f51e353621cc4",
-        "nanoplotTest_Weighted_LogTransformed_HistogramReadlength.png":  "d5a93e49279ce39fb692e4347fcf0093",
-        "nanoplotTest_Yield_By_Length.png":                              "107f122fbcd9a719e3ee3ceadd96e1df"
-    },
-    "decompress": {
-        "eco_phix_dcs.fa":                                               "5de86a72521fd2f866941909c1b3c64e"
-    },
-    "bwa_index": {
-        "eco_phix_dcs.fa.amb":                                           "0dcf7c56d93a4a3255839471c74bef7b",
-        "eco_phix_dcs.fa.ann":                                           "2f354ea977950f164181e9023a3d8182",
-        "eco_phix_dcs.fa.bwt":                                           "07b5be3614f9b30b224da31e6a521a1d",
-        "eco_phix_dcs.fa.pac":                                           "bd99d6fbd6f48e66d1b6895804bceb9e",
-        "eco_phix_dcs.fa.sa":                                            "fbfb94987a8a3148921f733b43eefc35"
-    },
-    "removeSmallReads": {
-        "reads.fastq.gz":                                                "7c8c5156f0b5ee4aeb667c0c255c1091"
+    "minimap2_filterHostFq": {
+        "unmapped_reads.fastq.gz":   "34f815a3cbefa8c5a624a51738faa123"
     },
     "flye": {
-        "assembly.fasta":                                                "69b062050f36f0967debb687a06989bd"
+        "assembly.fasta":            "69b062050f36f0967debb687a06989bd"
     },
     "minimap2_to_polish": {
-        "assembly_polish.paf":                                           "bd8746b544ad5923f1c32c1493d92ade"
-    }
-    
+        "assembly_polish.paf":       "bd8746b544ad5923f1c32c1493d92ade"
+    },
+    "racon": {
+        "assembly_racon.fasta":      "6e08c337a451a57d1b74a2cc7147cada"
+    },
+    "medaka": {
+        "consensus.fasta":           "9e398c24c3ccb28515bee96558b11c3f"
+    },
+    "minimap2_filterHostFa": {
+        "unmapped_reads.fasta":      "91a4cd5b7346761b92c25895e4ef7faa"
+    },
+    "prodigal": {
+        "proteins.fasta":            "dfee33a7862ddfce026ce807485b3018",
+        "proteins.gbk":              "fc778ab45dd873ec5cb124541b7576fa"
+    },
+    "diamond": {
+        "proteins_diamond.tsv":      "f609b71dbf83d8ead58761110a95c9ef"
+    },
+    "ideel": {
+        "ideel_plot.pdf":            "11af69a89045d125bf050ad54cd5d261"
+    },
+    "bwa-mem2": {
+        "illumina_aln.bam":          "37797a847366eefe4db48fb7384490c9",
+        "illumina_aln.bam.bai":      "e014d4615c72a93990b13725552f8583"
+    },
+    "pilon": {
+        "assembly_pilon.fasta":      "bd4997dd1b730639f5114b5a5e745499"
+    }    
 }

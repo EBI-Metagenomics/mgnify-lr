@@ -1,0 +1,4 @@
+inputTable:
+  class: File
+  path: ../../../../test_data/proteins_diamond.tsv
+outFigName: ideel_plot.pdf
