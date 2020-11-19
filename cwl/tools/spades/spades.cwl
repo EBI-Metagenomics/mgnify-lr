@@ -8,10 +8,10 @@ requirements:
   InlineJavascriptRequirement: {} # needed to get GB in RAM
   ResourceRequirement:
     coresMin: 8
-    ramMin: 1000 # 1 GB for testing, it needs more in production
+    ramMin: 8000 # 8 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: spades:latest
+    dockerPull: jcaballero/mgnify-lr.spades:3.14.1
 
 baseCommand: [ spades.py ]
 
@@ -43,8 +43,6 @@ inputs:
 arguments:
  - -t
  - $(runtime.cores)
- - -m
- - $(runtime.ram / 1000)
  - --only-assembler
  - --meta
  - -o
@@ -53,6 +51,7 @@ arguments:
 outputs:
   contigs_fasta:
     type: File
+    format: edam:format_1929
     outputBinding:
       glob: "spades_out/contigs.fasta"
   
