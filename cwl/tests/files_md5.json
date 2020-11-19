@@ -8,7 +8,7 @@
         "unmapped_reads.fastq.gz":   "34f815a3cbefa8c5a624a51738faa123"
     },
     "flye": {
-        "assembly.fasta":            "69b062050f36f0967debb687a06989bd"
+        "assembly.fasta":            "checked by size"
     },
     "minimap2_to_polish": {
         "assembly_polish.paf":       "bd8746b544ad5923f1c32c1493d92ade"
@@ -20,7 +20,7 @@
         "consensus.fasta":           "9e398c24c3ccb28515bee96558b11c3f"
     },
     "minimap2_filterHostFa": {
-        "unmapped_reads.fasta":      "91a4cd5b7346761b92c25895e4ef7faa"
+        "unmapped_contigs.fasta":    "91a4cd5b7346761b92c25895e4ef7faa"
     },
     "prodigal": {
         "proteins.fasta":            "dfee33a7862ddfce026ce807485b3018",
@@ -30,11 +30,11 @@
         "proteins_diamond.tsv":      "f609b71dbf83d8ead58761110a95c9ef"
     },
     "ideel": {
-        "ideel_plot.pdf":            "11af69a89045d125bf050ad54cd5d261"
+        "ideel_plot.pdf":            "checked by size"
     },
     "bwa-mem2": {
-        "illumina_aln.bam":          "37797a847366eefe4db48fb7384490c9",
-        "illumina_aln.bam.bai":      "e014d4615c72a93990b13725552f8583"
+        "illumina_aln.bam":          "checked by size",
+        "illumina_aln.bam.bai":      "checked by size"
     },
     "pilon": {
         "assembly_pilon.fasta":      "bd4997dd1b730639f5114b5a5e745499"
