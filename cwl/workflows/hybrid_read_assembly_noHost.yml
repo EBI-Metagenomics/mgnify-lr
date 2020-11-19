@@ -1,0 +1,25 @@
+raw_reads:
+  class: File
+  format: edam:format_1930
+  path: ../../test_data/small.fastq.gz
+p1_reads:
+  class: File
+  format: edam:format_1930
+  path: ../../test_data/small.R1.fastq.gz
+p2_reads:
+  class: File
+  format: edam:format_1930
+  path: ../../test_data/small.R2.fastq.gz
+min_read_size: 200
+min_read_size_ill: 20
+reads_filter_bysize_nano: reads_filtered_nano
+reads_filter_bysize_ill: reads_filtered_ill
+pilon_align: align.bam
+polish_assembly_pilon: meta_assembly
+predict_proteins: meta_assembly_pred_prot.fasta
+predict_proteins_gbk: meta_assembly_pred_prot.gbk
+uniprot_index:
+  class: File
+  path: ../db/uniprot-2020-11-10.dmnd
+diamond_out: meta_assembly_diamond.tsv
+ideel_out: meta_assembly_ideel.pdf
