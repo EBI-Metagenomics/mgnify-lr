@@ -5,8 +5,6 @@ doc: |
       Implementation of paired-end Fastq preprocessing and quality reporting with fastp.
 
 requirements:
-  InitialWorkDirRequirement:
-    listing: [ $(inputs.reads) ]
   ResourceRequirement:
     coresMin: 8
     ramMin: 1000 # 1 GB for testing, it needs more in production
@@ -51,15 +49,15 @@ outputs:
     type: File
     format: edam:format_1930
     outputBinding:
-      glob: "*.fastp.fastq.gz"
+      glob: $(inputs.name).fastp.fastq.gz
   qcjson:
     type: File
     outputBinding:
-      glob: "*.fastp.qc.json"
+      glob: $(inputs.name).fastp.qc.json
   qchtml:
     type: File
     outputBinding:
-      glob: "*.fastp.qc.html"
+      glob: $(inputs.name).fastp.qc.html
 
 stdout: fastp.log
 stderr: fastp.err

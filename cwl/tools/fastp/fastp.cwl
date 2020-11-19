@@ -14,8 +14,6 @@ hints:
 
 baseCommand: [ fastp ]
 
-#fastp -w ${task.cpus} --in1 ${sread[0]} --in2 ${sread[1]} --out1 "${name}.fastp.R1.fastq" \
-#        --out2 "${name}.fastp.R2.fastq" --json "${name}.qc.json" --html "${name}.qc.html"
 arguments:
 - -w
 - $(runtime.cores)
@@ -24,15 +22,14 @@ arguments:
 - --out2
 - $(inputs.name).fastp.R2.fastq.gz
 - --json
-- $(inputs.name).fastq.qc.json
+- $(inputs.name).fastp.qc.json
 - --html
-- $(inputs.name).fastq.qc.html
+- $(inputs.name).fastp.qc.html
 
 inputs:
   name:
     type: string
     label: name prefix for output files (Fastq, JSON and HTML)
-
   reads1:
     type: File
     format: edam:format_1930  # FASTQ
@@ -40,7 +37,6 @@ inputs:
     inputBinding:
       position: 1
       prefix: --in1
-
   reads2:
     type: File
     format: edam:format_1930  # FASTQ
@@ -48,27 +44,35 @@ inputs:
     inputBinding:
       position: 2
       prefix: --in2
+  minLength:
+    type: int
+    label: filter reads shorted that this value
+    inputBinding:
+      position: 3
+      prefix: -l
  
 outputs:
   outreads1:
     type: File
+    format: edam:format_1930
     outputBinding:
-      glob: "$(inputs.name).fastp.R1.fastq.gz"
+      glob: $(inputs.name).fastp.R1.fastq.gz
 
   outreads2:
     type: File
+    format: edam:format_1930
     outputBinding:
-      glob: "$(inputs.name).fastp.R2.fastq.gz"
+      glob: $(inputs.name).fastp.R2.fastq.gz
 
   qcjson:
     type: File
     outputBinding:
-      glob: "$(inputs.name).fastp.qc.json"
+      glob: $(inputs.name).fastp.qc.json
 
   qchtml:
     type: File
     outputBinding:
-      glob: "$(inputs.name).fastp.qc.html"
+      glob: $(inputs.name).fastp.qc.html
 
 stdout: fastp.log
 stderr: fastp.err
