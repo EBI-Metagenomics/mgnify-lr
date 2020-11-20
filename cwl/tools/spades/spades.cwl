@@ -15,38 +15,35 @@ hints:
 
 baseCommand: [ spades.py ]
 
-inputs:
-  nano:
-    type: File
-    format: edam:format_1930  # FASTQ
-    label: nanopore reads
-    inputBinding:
-      position: 1
-      prefix: --nanopore
+arguments:
+ - -t
+ - $(runtime.cores)
+ - --meta
+ - -o
+ - spades_out
 
+inputs:
   reads1:
     type: File
     format: edam:format_1930  # FASTQ
     label: illumina first pair reads
     inputBinding:
-      position: 2
+      position: 1
       prefix: "-1"
-  
   reads2:
     type: File
     format: edam:format_1930  # FASTQ
     label: illumina second pair reads
     inputBinding:
-      position: 3
+      position: 2
       prefix: "-2"
-
-arguments:
- - -t
- - $(runtime.cores)
- - --only-assembler
- - --meta
- - -o
- - spades_out
+  nano:
+    type: File
+    format: edam:format_1930  # FASTQ
+    label: nanopore reads
+    inputBinding:
+      position: 3
+      prefix: --nanopore
  
 outputs:
   contigs_fasta:

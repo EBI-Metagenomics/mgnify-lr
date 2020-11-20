@@ -12,7 +12,7 @@ hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.pilon:1.23
 
-baseCommand: [ "java", "-Xmx16G", "-jar", "/opt/pilon.jar" ]
+baseCommand: [ "java", "-jar", "/opt/pilon.jar" ]
 
 arguments:
  - --threads
