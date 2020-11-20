@@ -15,3 +15,4 @@ dependencies:
   - matplotlib
   - pilon
   - bwa-mem2
+  - spades

@@ -6,3 +6,4 @@ samtools#mgnify-lr.samtools:1.11
 pilon#mgnify-lr.pilon:1.23
 bwa#mgnify-lr.bwa-mem2:2.1
 minimap2_filter#mgnify-lr.minimap2_filter:2.17.2
+spades#mgnify-lr.spades:3.14.1
