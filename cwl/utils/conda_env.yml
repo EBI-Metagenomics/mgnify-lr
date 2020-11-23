@@ -16,3 +16,4 @@ dependencies:
   - pilon
   - bwa-mem2
   - spades
+  - toil
