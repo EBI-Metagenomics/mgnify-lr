@@ -11,6 +11,6 @@ predict_proteins: meta_assembly_pred_prot.fasta
 predict_proteins_gbk: meta_assembly_pred_prot.gbk
 uniprot_index:
   class: File
-  path: ../db/uniprot-2020-11-10.dmnd
+  path: ../db/uniprot.dmnd
 diamond_out: meta_assembly_diamond.tsv
 ideel_out: meta_assembly_ideel.pdf
