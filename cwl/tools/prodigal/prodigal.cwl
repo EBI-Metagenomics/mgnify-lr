@@ -10,19 +10,19 @@ requirements:
     ramMin: 1000 # 1 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: microbiomeinformatics/pipeline-v5.prodigal:v2.6.3
+    dockerPull: jcaballero/mgnify-lr.prodigal:2.6.3
 
 baseCommand: [ prodigal ]
 
 arguments:
  - -p
  - meta
- - -q
+
 
 inputs:
   inNucl:
     type: File
-    #format: edam:format_1929  # FASTA
+    format: edam:format_1929  # FASTA
     label: nucleotide sequence fasta
     inputBinding:
       position: 1
