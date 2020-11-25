@@ -21,6 +21,9 @@ RUN wget -q https://github.com/bwa-mem2/bwa-mem2/releases/download/v${bwamem2Ver
 
 COPY bwa-mem2.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/bwa-mem2.sh
+COPY bwa-mem2_filterHostFq.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/bwa-mem2_filterHostFq.sh
+
 
 LABEL software="BWA-mem2"
 LABEL software.version="2.1"

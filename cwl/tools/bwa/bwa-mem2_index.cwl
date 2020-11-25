@@ -12,7 +12,7 @@ requirements:
     ramMin: 1000 # 1 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: bwa-mem2:latest
+    dockerPull: jcaballero/mgnify-lr.bwa-mem2:2.1.1
 
 baseCommand: [ "bwa-mem2" ]
 
