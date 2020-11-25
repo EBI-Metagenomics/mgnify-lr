@@ -20,12 +20,7 @@ arguments:
 inputs:
   reference:
     type: File
-    secondaryFiles:
-      - .0123
-      - .amb
-      - .ann
-      - .bwt.2bit.64
-      - .pac
+    format: edam:format_1929
     label: Genome index (bwa-mem2 -x sr)
     inputBinding:
       position: 1
