@@ -29,15 +29,9 @@ inputs:
  
 outputs:
   index:
-    type: File
-    secondaryFiles:
-      - .0123
-      - .amb
-      - .ann
-      - .bwt.2bit.64
-      - .pac
+    type: File[]
     outputBinding:
-      glob: $(inputs.reference.basename)
+      glob: $(inputs.reference.basename)*
   
 stdout: bwa-mem2_index.log
 stderr: bwa-mem2_index.err
