@@ -5,6 +5,8 @@ doc: |
       Implementation of BWA-mem2 aligner to remove reads mapping to host reference genome and kept unmapped reads as Fastq files
 
 requirements:
+  InitialWorkDirRequirement:
+    listing: [ $(inputs.reference) ]
   ResourceRequirement:
     coresMin: 8
     ramMin: 1000 # 1 GB for testing, it needs more in production
