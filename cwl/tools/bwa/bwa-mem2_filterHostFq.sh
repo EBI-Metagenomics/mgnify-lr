@@ -7,8 +7,8 @@
 
 THR=$1
 REF=$2
-IN1=$3
-IN2=$4
+FQ1=$3
+FQ2=$4
 OUT1=$5
 OUT2=$6
 echo "creating index for $REF"

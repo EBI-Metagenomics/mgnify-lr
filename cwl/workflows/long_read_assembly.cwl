@@ -72,42 +72,12 @@ inputs:
     default: ideel_report.pdf
 
 outputs:
-#  nanoplot_html:
-#    type: File[]
-#    outputSource: step_1_nanoplot/html
-#  nanoplot_pngs:
-#    type: File[]
-#    outputSource: step_1_nanoplot/pngs
-#  nanoplot_stats:
-#    type: File[]
-#    outputSource: step_1_nanoplot/stats
-#  nanoplot_pdfs:
-#    type: File[]
-#    outputSource: step_1_nanoplot/pdfs
-  filtered_reads:
-    type: File
-    outputSource: step_2_filterShortReads/outReads
   filtered_reads_qcHtml:
     type: File
     outputSource: step_2_filterShortReads/qchtml
   filtered_reads_qcJson:
     type: File
     outputSource: step_2_filterShortReads/qcjson
-  hostUnmapedReads:
-    type: File
-    outputSource: step_3c_cleaning_alignHost/outReads
-  contigsFasta:
-    type: File
-    outputSource: step_4_assembly/contigs_fasta
-  polishPAF:
-    type: File
-    outputSource: step_5a_polishing_minimap2/outPAF
-  polishRacon:
-    type: File
-    outputSource: step_5b_polishing_racon/outAssembly
-  polishMedaka:
-    type: File
-    outputSource: step_5c_polishing_medaka/outConsensus
   cleanAssemblyUnmap:
     type: File
     outputSource: step_6a_cleaning2_alignHost/outReads
@@ -125,17 +95,6 @@ outputs:
     outputSource: step_7e_annotation_ideel/outFig
 
 steps:
-#  step_1_nanoplot:
-#    label: initial QC for rawdata
-#    run: ../tools/nanoplot/nanoplot.cwl
-#    in:
-#      reads: raw_reads
-#    out:
-#      - html
-#      - pngs
-#      - stats
-#      - pdfs
-
   step_2_filterShortReads:
     label: filtering short reads
     run: ../tools/fastp/fastp_filter.cwl
