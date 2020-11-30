@@ -22,6 +22,7 @@ export RESTART_MEMORY=120G
 export NUM_CORES=8
 # lsf queue limit
 export LIMIT_QUEUE=100
+export LSF_CONF_FILENAME=$LSF_ENVDIR/lsf.conf
 # clone of mgnify-lr repo
 export PIPELINE_FOLDER=/hps/nobackup2/production/metagenomics/jcaballero/mgnify-lr/cwl/
 # run_folder
