@@ -52,7 +52,7 @@ done
 export JOB_GROUP=mgnify-lr
 bgadd -L "${LIMIT_QUEUE}" /"${USER}_${JOB_GROUP}" > /dev/null
 bgmod -L "${LIMIT_QUEUE}" /"${USER}_${JOB_GROUP}" > /dev/null
-export TOIL_LSF_ARGS="-q production-rh74 -g /${USER}_${JOB_GROUP}"
+export TOIL_LSF_ARGS="-P bigmem -q production-rh74 -g /${USER}_${JOB_GROUP}"
 
 echo "Activating envs"
 source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate mgnify-lr
@@ -116,7 +116,7 @@ case $TYPE in
         ;;
 esac
 
-python3 "$YML_SCRIPT" "$PARAM" -o "$RUN_YML"
+python3 $YML_SCRIPT $PARAM -o $RUN_YML
 
 # ----------------------------- running pipeline -----------------------------
 echo "Running with:
