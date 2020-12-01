@@ -13,7 +13,7 @@ export UNIPROT=null          # path to uniprot index (diamond)
 export MEDAKA=r941_min_high_g360  # medaka model to use
 export MINILL=50             # minimal size for illumina reads
 export MINNANO=200           # minimal size for nanopore reads
-export DOCKER="False"        # flag to use singularity/docker
+export DOCKER="True"        # flag to use singularity/docker
 
 # max limit of memory that would be used by toil to restart
 export MEMORY=120G
@@ -56,7 +56,8 @@ bgmod -L "${LIMIT_QUEUE}" /"${USER}_${JOB_GROUP}" > /dev/null
 export TOIL_LSF_ARGS="-P bigmem -q production-rh74 -g /${USER}_${JOB_GROUP}"
 
 echo "Activating envs"
-source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate mgnify-lr
+source /hps/nobackup/production/metagenomics/software/toil-20200722/v3nv/bin/activate 
+#source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate mgnify-lr
 
 # ----------------------------- preparation -----------------------------
 # work dir
