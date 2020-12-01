@@ -9,7 +9,7 @@ requirements:
     networkAccess: true
   ResourceRequirement:
     coresMin: 1
-    ramMin: 1000
+    ramMin: 2000
 hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.gethostfasta:0.0.1

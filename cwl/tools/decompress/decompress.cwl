@@ -9,7 +9,7 @@ requirements:
     listing: [ $(inputs.gzfile) ]
   ResourceRequirement:
     coresMin: 1
-    ramMin: 1000
+    ramMin: 2000
 hints:
   DockerRequirement:
     dockerPull: alpine:latest

@@ -9,7 +9,7 @@ requirements:
     listing: [ $(inputs.assembly) ]
   ResourceRequirement:
     coresMin: 8
-    ramMin: 1000 # 1 GB for testing, it needs more in production
+    ramMin: 8000 # 8 GB for testing, it needs more in production
 hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.medaka:1.1.3

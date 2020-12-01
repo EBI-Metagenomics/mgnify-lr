@@ -9,7 +9,7 @@ requirements:
     listing: [ $(inputs.inputBam) ]
   ResourceRequirement:
     coresMin: 8
-    ramMin: 1000 # 1 GB for testing
+    ramMin: 2000 # 2 GB for testing
 hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.samtools:1.11

@@ -7,7 +7,7 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 1
-    ramMin: 1000 # 6 GB for testing, it needs more in production
+    ramMin: 2000 # 2 GB for testing, it needs more in production
 hints:
   DockerRequirement:
     dockerPull: ideel:latest
