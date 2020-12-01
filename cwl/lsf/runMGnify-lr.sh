@@ -39,7 +39,7 @@ while getopts :a:d:f:h:l:m:n:r:s:t:u:z:i:j:k: option; do
 		s) SINGLE=${OPTARG};;
         h) HOST=${OPTARG};;
         u) UNIPROT=${OPTARG};;
-        d) DOCKER="True";;
+        d) DOCKER=${OPTARG};;
 		l) LIMIT_QUEUE=${OPTARG};;
 		z) RESTART_MEMORY=${OPTARG};;
         k) MEDAKA=${OPTARG};;
