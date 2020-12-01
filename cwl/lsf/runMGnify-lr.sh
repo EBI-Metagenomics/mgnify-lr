@@ -16,15 +16,15 @@ export MINNANO=200           # minimal size for nanopore reads
 export DOCKER="False"        # flag to use singularity/docker
 
 # max limit of memory that would be used by toil to restart
-export MEMORY=120000           # Assembly can use large mem
-export RESTART_MEMORY=120000
+export MEMORY=120GB
+export RESTART_MEMORY=120GB
 # number of cores to run toil
 export NUM_CORES=8
 # lsf queue limit
 export LIMIT_QUEUE=100
-export LSF_CONF_FILENAME=$LSF_ENVDIR/lsf.conf
+
 # clone of mgnify-lr repo
-export PIPELINE_FOLDER=/hps/nobackup2/production/metagenomics/jcaballero/mgnify-lr/cwl/
+export PIPELINE_FOLDER=/hps/nobackup2/production/metagenomics/jcaballero/mgnify-lr/cwl
 # run_folder
 export RUN_DIR=/hps/nobackup2/production/metagenomics/jcaballero/runs
 
