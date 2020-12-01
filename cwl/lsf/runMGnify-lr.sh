@@ -16,8 +16,8 @@ export MINNANO=200           # minimal size for nanopore reads
 export DOCKER="False"        # flag to use singularity/docker
 
 # max limit of memory that would be used by toil to restart
-export MEMORY=120GB
-export RESTART_MEMORY=120GB
+export MEMORY=120G
+export RESTART_MEMORY=120G
 # number of cores to run toil
 export NUM_CORES=8
 # lsf queue limit
