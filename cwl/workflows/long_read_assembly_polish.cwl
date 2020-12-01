@@ -7,7 +7,7 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 8
-    ramMin: 1000 # 1 GB for testing, it needs more in production
+    ramMin: 2000 # 2 GB for testing, it needs more in production
 
 inputs:
   raw_reads:
@@ -28,7 +28,7 @@ inputs:
     default: 200
   reads_filter_bysize_name:
     type: string?
-    label: prefix file for reads with length > min_read_size
+    label: prefix file for reads with length lt min_read_size
     default: reads_filtered
   host_index:
     type: File

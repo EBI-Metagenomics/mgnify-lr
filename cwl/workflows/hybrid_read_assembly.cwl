@@ -7,7 +7,7 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 8
-    ramMin: 1000 # 1 GB for testing, it needs more in production
+    ramMin: 2000 # 2 GB for testing, it needs more in production
 
 inputs:
   raw_reads:
@@ -36,11 +36,11 @@ inputs:
     default: map-ont
   reads_filter_bysize_nano:
     type: string?
-    label: prefix for reads with length > min_read_size
+    label: prefix for reads with length lt min_read_size
     default: nano_reads_filtered
   reads_filter_bysize_ill:
     type: string?
-    label: prefix for reads with length > min_read_size
+    label: prefix for reads with length lt min_read_size
     default: ill_reads_filtered
   host_index:
     type: File
