@@ -7,6 +7,7 @@ RUN apk add --no-cache bash
 
 WORKDIR /usr/local/bin
 RUN wget -q -O prodigal https://github.com/hyattpd/Prodigal/releases/download/v${prodigalVer}/prodigal.linux
+RUN chmod +x /usr/local/bin/prodigal
 
 RUN mkdir /data
 WORKDIR /data
