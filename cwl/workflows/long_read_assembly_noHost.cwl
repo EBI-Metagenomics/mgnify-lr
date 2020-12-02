@@ -18,6 +18,14 @@ inputs:
     type: int?
     label: Raw reads filter by size
     default: 200
+  min_contig_size:
+    type: int?
+    label: contigs filter by size
+    default: 500
+  raw_reads_report:
+    type: string?
+    label: initial sequences report
+    default: raw_reads_stats.txt
   reads_filter_bysize_name:
     type: string?
     label: prefix for reads with length lt min_read_size
@@ -34,6 +42,14 @@ inputs:
     type: string?
     label: medaka model to improve assembly
     default: r941_min_fast_g330
+  final_assembly:
+    type: string?
+    label: final assembly file (fasta)
+    default: assembly_final.fasta
+  final_assembly_stats:
+    type: string?
+    label: final assembly stats
+    default: assembly_final_stats.txt
   predict_proteins:
     type: string?
     label: predicted proteins from assembly (fasta)
@@ -56,63 +72,40 @@ inputs:
     default: ideel_report.pdf
 
 outputs:
-#  nanoplot_html:
-#    type: File[]
-#    outputSource: step_1_nanoplot/html
-#  nanoplot_pngs:
-#    type: File[]
-#    outputSource: step_1_nanoplot/pngs
-#  nanoplot_stats:
-#    type: File[]
-#    outputSource: step_1_nanoplot/stats
-#  nanoplot_pdfs:
-#    type: File[]
-#    outputSource: step_1_nanoplot/pdfs
-  filtered_reads:
+  raw_reads_stats:
     type: File
-    outputSource: step_2_filterShortReads/outReads 
+    outputSource: step_1_pre_assembly_stats/outReport
   filtered_reads_qc_html:
     type: File
     outputSource: step_2_filterShortReads/qchtml 
   filtered_reads_qc_json:
     type: File
-    outputSource: step_2_filterShortReads/qcjson 
-  contigsFasta:
+    outputSource: step_2_filterShortReads/qcjson
+  final_assembly:
     type: File
-    outputSource: step_3_assembly/contigs_fasta
-  polishPAF:
+    format: edam:format_1929
+    outputSource: step_4d_cleaning_filterContigs/outFasta
+  final_assembly_stats:
     type: File
-    outputSource: step_4a_polishing_minimap2/outPAF
-  polishRacon:
-    type: File
-    outputSource: step_4b_polishing_racon/outAssembly
-  polishMedaka:
-    type: File
-    outputSource: step_4c_polishing_medaka/outConsensus
-  predictProteins:
+    outputSource: step_4e_cleaning_assemblyStats/outReport 
+  predict_proteins:
     type: File
     outputSource: step_5a_annotation_prodigal/outProt
-  predictProteinsGBK:
+  diamond_align:
     type: File
-    outputSource: step_5a_annotation_prodigal/outGBK
-  diamondAlign:
+    outputSource: step_5b_annotation_diamond/alignment
+  ideel_pdf:
     type: File
-    outputSource: step_5d_annotation_diamond/alignment
-  ideelPDF:
-    type: File
-    outputSource: step_5e_annotation_ideel/outFig
+    outputSource: step_5c_annotation_ideel/outFig
 
 steps:
-#  step_1_nanoplot:
-#    label: initial QC for rawdata
-#    run: ../tools/nanoplot/nanoplot.cwl
-#    in:
-#      reads: raw_reads
-#    out:
-#      - html
-#      - pngs
-#      - stats
-#      - pdfs
+  step_1_pre_assembly_stats:
+    label: pre-assembly stats
+    run: ../tools/assembly_stats/assemblyStatsFastq.cwl
+    in:
+      inFile: raw_reads
+      outReport: raw_reads_report
+    out: [ outReport ]
 
   step_2_filterShortReads:
     label: filtering short reads
@@ -160,19 +153,34 @@ steps:
       assembly: step_4b_polishing_racon/outAssembly
       medakaModel: medaka_model
     out: [ outConsensus ]
-    
+
+  step_4d_cleaning_filterContigs:
+    label: remove short contigs
+    run: ../tools/filterContigs/filterContigs.cwl
+    in:
+      minSize: min_contig_size
+      inFasta: step_4c_polishing_medaka/outConsensus
+      outFasta: final_assembly
+    out: [ outFasta ]
+
+  step_4e_cleaning_assemblyStats:
+    label: final assembly stats report
+    run: ../tools/assembly_stats/assemblyStatsFasta.cwl
+    in:
+      inFile: step_4d_cleaning_filterContigs/outFasta
+      outReport: final_assembly_stats
+    out: [ outReport ]
+
   step_5a_annotation_prodigal:
     label: predict proteins in assembly with Prodigal
     run: ../tools/prodigal/prodigal.cwl
     in:
-      inNucl: step_4c_polishing_medaka/outConsensus
+      inNucl: step_4d_cleaning_filterContigs/outFasta
       outProtName: predict_proteins
       outGbkName: predict_proteins_gbk
-    out:
-      - outProt
-      - outGBK
+    out: [ outProt ]
 
-  step_5d_annotation_diamond:
+  step_5b_annotation_diamond:
     label: search Uniprot database with diamond
     run: ../tools/diamond/diamond.cwl
     in:
@@ -181,11 +189,11 @@ steps:
       database: uniprot_index
     out: [ alignment ]
 
-  step_5e_annotation_ideel:
+  step_5c_annotation_ideel:
     label: ideel report for protein completeness
     run: ../tools/ideel/ideelPy.cwl
     in:
-      inputTable: step_5d_annotation_diamond/alignment
+      inputTable: step_5b_annotation_diamond/alignment
       outFigName: ideel_out
     out: [ outFig ]
 
