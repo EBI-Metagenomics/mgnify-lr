@@ -12,10 +12,14 @@ p2_reads:
   path: ../../test_data/small.R2.fastq.gz
 min_read_size: 200
 min_read_size_ill: 20
+min_contig_size: 500
+raw_reads_report: raw_reads_stats.txt
 reads_filter_bysize_nano: reads_filtered_nano
 reads_filter_bysize_ill: reads_filtered_ill
 pilon_align: align.bam
-polish_assembly_pilon: meta_assembly
+polish_assembly_pilon: meta_assembly_pilon
+final_assembly: meta_assembly_final.fasta
+final_assembly_stats: meta_assembly_final_stats.txt
 predict_proteins: meta_assembly_pred_prot.fasta
 predict_proteins_gbk: meta_assembly_pred_prot.gbk
 uniprot_index:

@@ -30,6 +30,14 @@ inputs:
     type: int?
     label: Raw reads filter by size (illumina)
     default: 50
+  min_contig_size:
+    type: int?
+    label: contigs filter by size
+    default: 500
+  raw_reads_report:
+    type: string?
+    label: initial sequences report
+    default: raw_reads_stats.txt
   align_preset:
     type: string?
     label: minimap2 align preset
@@ -74,6 +82,14 @@ inputs:
     type: string?
     label: clean contigs unmap to host genome (fasta)
     default: assembly_unmapHost.fasta
+  final_assembly:
+    type: string?
+    label: final assembly file (fasta)
+    default: assembly_final.fasta
+  final_assembly_stats:
+    type: string?
+    label: final assembly stats
+    default: assembly_final_stats.txt
   predict_proteins:
     type: string?
     label: predicted proteins from assembly (fasta)
@@ -96,6 +112,9 @@ inputs:
     default: ideel_report.pdf
 
 outputs:
+  raw_reads_stats:
+    type: File
+    outputSource: step_0_pre_assembly_stats/outReport
   filtered_reads_nano_qc_html:
     type: File
     outputSource: step_1a_filterShortReads_nano/qchtml 
@@ -108,22 +127,33 @@ outputs:
   filtered_reads_ill_qc_json:
     type: File
     outputSource: step_1b_filterShortReads_ill/qcjson 
-  assemblyFasta:
+  final_assembly:
     type: File
     format: edam:format_1929
-    outputSource: step_4c_cleaning2_alignHost/outReads
-  predictProteins:
+    outputSource: step_4d_cleaning2_filterContigs/outFasta
+  final_assembly_stats:
+    type: File
+    outputSource: step_4e_cleaning2_assemblyStats/outReport 
+  predict_proteins:
     type: File
     format: edam:format_1929
     outputSource: step_5a_annotation_prodigal/outProt
-  diamondAlign:
+  diamond_align:
     type: File
     outputSource: step_5d_annotation_diamond/alignment
-  ideelPDF:
+  ideel_pdf:
     type: File
     outputSource: step_5e_annotation_ideel/outFig
 
 steps:
+  step_0_pre_assembly_stats:
+    label: pre-assembly stats
+    run: ../tools/assembly_stats/assemblyStatsFastq.cwl
+    in:
+      inFile: raw_reads
+      outReport: raw_reads_report
+    out: [ outReport ]
+
   step_1a_filterShortReads_nano:
     label: filtering short reads (nanopore)
     run: ../tools/fastp/fastp_filter.cwl
@@ -230,16 +260,31 @@ steps:
       inSeq: step_4b_polishing_pilon_rnd2/outfile
     out: [ outReads ]
 
+  step_4d_cleaning2_filterContigs:
+    label: remove short contigs
+    run: ../tools/filterContigs/filterContigs.cwl
+    in:
+      minSize: min_contig_size
+      inFasta: step_4c_cleaning2_alignHost/outReads
+      outFasta: final_assembly
+    out: [ outFasta ]
+
+  step_4e_cleaning2_assemblyStats:
+    label: final assembly stats report
+    run: ../tools/assembly_stats/assemblyStatsFasta.cwl
+    in:
+      inFile: step_4d_cleaning2_filterContigs/outFasta
+      outReport: final_assembly_stats
+    out: [ outReport ]
+
   step_5a_annotation_prodigal:
     label: predict proteins in assembly with Prodigal
     run: ../tools/prodigal/prodigal.cwl
     in:
-      inNucl: step_4c_cleaning2_alignHost/outReads
+      inNucl: step_4d_cleaning2_filterContigs/outFasta
       outProtName: predict_proteins
       outGbkName: predict_proteins_gbk
-    out:
-      - outProt
-      - outGBK
+    out: [ outProt ]
 
   step_5d_annotation_diamond:
     label: search Uniprot database with diamond

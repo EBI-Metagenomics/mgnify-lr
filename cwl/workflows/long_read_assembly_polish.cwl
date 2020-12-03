@@ -26,6 +26,14 @@ inputs:
     type: int?
     label: raw reads filter by size
     default: 200
+  min_contig_size:
+    type: int?
+    label: contigs filter by size
+    default: 500
+  raw_reads_report:
+    type: string?
+    label: initial sequences report
+    default: raw_reads_stats.txt
   reads_filter_bysize_name:
     type: string?
     label: prefix file for reads with length lt min_read_size
@@ -66,6 +74,14 @@ inputs:
     type: string?
     label: polish assembly after illumina map
     default: assembly_polish_pilon
+  final_assembly:
+    type: string?
+    label: final assembly file (fasta)
+    default: assembly_final.fasta
+  final_assembly_stats:
+    type: string?
+    label: final assembly stats
+    default: assembly_final_stats.txt
   predict_proteins:
     type: string?
     label: predicted proteins from assembly (fasta)
@@ -88,72 +104,40 @@ inputs:
     default: ideel_report.pdf
 
 outputs:
-#  nanoplot_html:
-#    type: File[]
-#    outputSource: step_1_nanoplot/html
-#  nanoplot_pngs:
-#    type: File[]
-#    outputSource: step_1_nanoplot/pngs
-#  nanoplot_stats:
-#    type: File[]
-#    outputSource: step_1_nanoplot/stats
-#  nanoplot_pdfs:
-#    type: File[]
-#    outputSource: step_1_nanoplot/pdfs
-#  filtered_reads:
-#    type: File
-#    outputSource: step_2_filterShortReads/outReads
+  raw_reads_stats:
+    type: File
+    outputSource: step_1_pre_assembly_stats/outReport
   filtered_reads_qcHtml:
     type: File
     outputSource: step_2_filterShortReads/qchtml
   filtered_reads_qcJson:
     type: File
     outputSource: step_2_filterShortReads/qcjson
-#  hostUnmapedReads:
-#    type: File
-#    outputSource: step_3c_cleaning_alignHost/outReads
-#  contigsFasta:
-#    type: File
-#    outputSource: step_4_assembly/contigs_fasta
-#  polishPAF:
-#    type: File
-#   outputSource: step_5a_polishing_minimap2/outPAF
-#  polishRacon:
-#    type: File
-#    outputSource: step_5b_polishing_racon/outAssembly
-#  polishMedaka:
-#    type: File
-#   outputSource: step_5c_polishing_medaka/outConsensus
-#  cleanAssemblyUnmap:
-#    type: File
-#    outputSource: step_6a_cleaning2_alignHost/outReads
-  polishPilon:
+  final_assembly:
     type: File
-    outputSource: step_7d_polishing_pilon_rnd2/outfile
-  predictProteins:
+    format: edam:format_1929
+    outputSource: step_7e_cleaning_filterContigs/outFasta
+  final_assembly_stats:
+    type: File
+    outputSource: step_7f_cleaning_assemblyStats/outReport 
+  predict_proteins:
     type: File
     outputSource: step_8a_annotation_prodigal/outProt
-#  predictProteinsGBK:
-#    type: File
-#    outputSource: step_8a_annotation_prodigal/outGBK
-  diamondAlign:
+  diamond_align:
     type: File
     outputSource: step_8b_annotation_diamond/alignment
-  ideelPDF:
+  ideel_pdf:
     type: File
     outputSource: step_8c_annotation_ideel/outFig
 
 steps:
-#  step_1_nanoplot:
-#    label: initial QC for rawdata
-#    run: ../tools/nanoplot/nanoplot.cwl
-#    in:
-#      reads: raw_reads
-#    out:
-#      - html
-#      - pngs
-#      - stats
-#      - pdfs
+  step_1_pre_assembly_stats:
+    label: pre-assembly stats
+    run: ../tools/assembly_stats/assemblyStatsFastq.cwl
+    in:
+      inFile: raw_reads
+      outReport: raw_reads_report
+    out: [ outReport ]
 
   step_2_filterShortReads:
     label: filtering short reads
@@ -167,7 +151,7 @@ steps:
       - qcjson
       - qchtml
   
-  step_3c_cleaning_alignHost:
+  step_3_cleaning_alignHost:
     label: align reads to the genome fasta index
     run: ../tools/minimap2_filter/minimap2_filterHostFq.cwl
     in:
@@ -181,7 +165,7 @@ steps:
     label: assembly long-reads with flye
     run: ../tools/flye/flye.cwl
     in:
-      nano: step_3c_cleaning_alignHost/outReads
+      nano: step_3_cleaning_alignHost/outReads
     out: [ contigs_fasta ]
 
   step_5a_polishing_minimap2:
@@ -189,7 +173,7 @@ steps:
     run: ../tools/minimap2/minimap2_to_polish.cwl
     in:
       inAssembly: step_4_assembly/contigs_fasta
-      inReads: step_3c_cleaning_alignHost/outReads
+      inReads: step_3_cleaning_alignHost/outReads
       outPAFname: polish_paf
     out: [ outPAF ]
 
@@ -197,7 +181,7 @@ steps:
     label: polishing step 2, using racon to improve assembly
     run: ../tools/racon/racon.cwl
     in:
-      inReads: step_3c_cleaning_alignHost/outReads
+      inReads: step_3_cleaning_alignHost/outReads
       mapping: step_5a_polishing_minimap2/outPAF
       assembly: step_4_assembly/contigs_fasta
       outName: polish_assembly_racon
@@ -207,7 +191,7 @@ steps:
     label: polishing step 3, using medaka to create a consensus
     run: ../tools/medaka/medaka.cwl
     in:
-      inReads: step_3c_cleaning_alignHost/outReads
+      inReads: step_3_cleaning_alignHost/outReads
       assembly: step_5b_polishing_racon/outAssembly
       medakaModel: medaka_model
     out: [ outConsensus ]
@@ -259,17 +243,32 @@ steps:
       alignment: step_7c_polishing_illumina_align_rnd2/bam
       outfile: polish_assembly_pilon
     out: [ outfile ]
+  
+  step_7e_cleaning_filterContigs:
+    label: remove short contigs
+    run: ../tools/filterContigs/filterContigs.cwl
+    in:
+      minSize: min_contig_size
+      inFasta: step_7d_polishing_pilon_rnd2/outfile
+      outFasta: final_assembly
+    out: [ outFasta ]
+
+  step_7f_cleaning_assemblyStats:
+    label: final assembly stats report
+    run: ../tools/assembly_stats/assemblyStatsFasta.cwl
+    in:
+      inFile: step_7e_cleaning_filterContigs/outFasta
+      outReport: final_assembly_stats
+    out: [ outReport ]
 
   step_8a_annotation_prodigal:
     label: predict proteins in assembly with Prodigal
     run: ../tools/prodigal/prodigal.cwl
     in:
-      inNucl: step_7d_polishing_pilon_rnd2/outfile
+      inNucl: step_7e_cleaning_filterContigs/outFasta
       outProtName: predict_proteins
       outGbkName: predict_proteins_gbk
-    out:
-      - outProt
-      - outGBK
+    out: [ outProt ]
 
   step_8b_annotation_diamond:
     label: search Uniprot database with diamond

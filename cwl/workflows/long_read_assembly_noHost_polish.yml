@@ -11,11 +11,14 @@ p2_reads:
   format: edam:format_1930
   path: ../../test_data/small.R2.fastq.gz
 min_read_size: 200
+raw_reads_report: raw_reads_stats.txt
 reads_filter_bysize_name: reads_filtered
 polish_paf: meta_polish.paf
 polish_assembly_racon: meta_assembly.fasta
 medaka_model: r941_min_high_g360
-polish_assembly_pilon: meta_assembly_final
+polish_assembly_pilon: meta_assembly_pilon
+final_assembly: meta_assembly_final.fasta
+final_assembly_stats: meta_assembly_final_stats.txt
 predict_proteins: meta_assembly_pred_prot.fasta
 predict_proteins_gbk: meta_assembly_pred_prot.gbk
 uniprot_index:
