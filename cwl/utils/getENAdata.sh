@@ -30,10 +30,10 @@ fi
 
 if [ -f "$PROJ/$PROJ.tsv" ]
 then
-    for FTPFQ in $(perl -lane 'print $F[-1] if ($F[-1]=~/^ftp/)' < $PROJ/$PROJ.tsv)
+    for FTPFQ in $(perl -lane 'print $F[-1] if ($F[-1]=~/^ftp/)' < $PROJ/$PROJ.tsv | sed "s/;/ /g")
     do
         FQ=$(basename $FTPFQ)
         echo "retriving $FQ"
-        wget -q -O $PROJ/$FQ "ftp://$FTPFQ"
+        wget -O $PROJ/$FQ "ftp://$FTPFQ"
     done
 fi
