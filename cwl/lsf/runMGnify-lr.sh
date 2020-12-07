@@ -31,26 +31,26 @@ export PIPELINE_FOLDER=/hps/nobackup2/production/metagenomics/jcaballero/mgnify-
 export RUN_DIR=/hps/nobackup2/production/metagenomics/jcaballero/runs
 
 while getopts :a:d:f:h:l:m:n:r:s:t:u:z:i:j:k:x:c: option; do
-	case "${option}" in
-		m) MEMORY=${OPTARG};;
-		n) NUM_CORES=${OPTARG};;
-		t) TYPE=${OPTARG};;
-		f) FORWARD_READS=${OPTARG};;
-		r) REVERSE_READS=${OPTARG};;
-		a) NAME_RUN=${OPTARG};;
-		s) SINGLE=${OPTARG};;
+    case "${option}" in
+        m) MEMORY=${OPTARG};;
+        n) NUM_CORES=${OPTARG};;
+        t) TYPE=${OPTARG};;
+        f) FORWARD_READS=${OPTARG};;
+        r) REVERSE_READS=${OPTARG};;
+        a) NAME_RUN=${OPTARG};;
+        s) SINGLE=${OPTARG};;
         h) HOST=${OPTARG};;
         x) HOSTFA=${OPTARG};;
         u) UNIPROT=${OPTARG};;
         d) DOCKER=${OPTARG};;
-		l) LIMIT_QUEUE=${OPTARG};;
-		z) RESTART_MEMORY=${OPTARG};;
+        l) LIMIT_QUEUE=${OPTARG};;
+        z) RESTART_MEMORY=${OPTARG};;
         k) MEDAKA=${OPTARG};;
         i) MINILL=${OPTARG};;
         j) MINNANO=${OPTARG};;
         c) MINCONTIG=${OPTARG};;
         *) echo "invalid option: $option"; exit;;
-	esac
+    esac
 done
 # ----------------------------- Toil and envs -----------------------------
 # Create job groups so we do not run too many jobs at the same time for parallelizable steps.

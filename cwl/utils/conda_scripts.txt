@@ -6,4 +6,4 @@
 ../tools/bwa/bwa-mem2_filterHostFq.sh
 ../tools/filterContigs/filterContigs.pl
 ../tools/assembly_stats/calc_stats.pl
-../tool/removeSmallReads/removeSmallReads.sh
+../tools/removeSmallReads/removeSmallReads.sh
