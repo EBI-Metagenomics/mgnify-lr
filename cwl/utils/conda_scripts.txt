@@ -3,3 +3,7 @@
 ../tools/getHostFasta/getHostFasta.sh
 ../tools/getHostFasta/getFastaFromEnsemblFTP.py
 ../tools/bwa/bwa-mem2.sh
+../tools/bwa/bwa-mem2_filterHostFq.sh
+../tools/filterContigs/filterContigs.pl
+../tools/assembly_stats/calc_stats.pl
+../tool/removeSmallReads/removeSmallReads.sh
