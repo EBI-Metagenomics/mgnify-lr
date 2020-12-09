@@ -18,8 +18,8 @@ export MINCONTIG=500         # minimal size for assembled contigs
 export DOCKER="True"         # flag to use singularity/docker
 
 # max limit of memory that would be used by toil to restart
-export MEMORY=120G
-export RESTART_MEMORY=120G
+export MEMORY=120
+export RESTART_MEMORY=120
 # number of cores to run toil
 export NUM_CORES=8
 # lsf queue limit
@@ -57,10 +57,15 @@ done
 export JOB_GROUP=mgnify-lr
 bgadd -L "${LIMIT_QUEUE}" /"${USER}_${JOB_GROUP}" > /dev/null
 bgmod -L "${LIMIT_QUEUE}" /"${USER}_${JOB_GROUP}" > /dev/null
-export TOIL_LSF_ARGS="-P bigmem -q production-rh74 -g /${USER}_${JOB_GROUP}"
+
+if [ "$MEMORY" -ge "100" ]
+then
+    export TOIL_LSF_ARGS="-P bigmem -q production-rh74 -g /${USER}_${JOB_GROUP}"
+else
+    export TOIL_LSF_ARGS="-q production-rh74 -g /${USER}_${JOB_GROUP}"
+fi
 
 echo "Activating envs"
-#source /hps/nobackup/production/metagenomics/software/toil-20200722/v3nv/bin/activate 
 source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate mgnify-lr
 
 # ----------------------------- preparation -----------------------------
@@ -139,7 +144,7 @@ if [ "${DOCKER}" == "True" ]; then
       --logFile ${LOG_DIR}/${NAME_RUN}.log \
       --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
       --singularity --batchSystem LSF --disableCaching \
-      --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 3 \
+      --defaultMemory ${MEMORY}G --defaultCores ${NUM_CORES} --retryCount 3 \
     ${CWL} ${RUN_YML} > ${OUT_JSON}
     EXIT_CODE=$?
 elif [ "${DOCKER}" == "False" ]; then
@@ -148,7 +153,7 @@ elif [ "${DOCKER}" == "False" ]; then
       --logFile ${LOG_DIR}/${NAME_RUN}.log \
       --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
       --no-container --batchSystem LSF --disableCaching \
-      --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 3 \
+      --defaultMemory ${MEMORY}G --defaultCores ${NUM_CORES} --retryCount 3 \
     ${CWL} ${RUN_YML} > ${OUT_JSON}
     EXIT_CODE=$?
 fi
