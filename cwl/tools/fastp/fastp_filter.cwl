@@ -7,7 +7,7 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 8
-    ramMin: 2000 # 1 GB for testing, it needs more in production
+    ramMin: 8000
 hints:
   DockerRequirement:
     dockerPull: microbiomeinformatics/fastp:v0.20.1
