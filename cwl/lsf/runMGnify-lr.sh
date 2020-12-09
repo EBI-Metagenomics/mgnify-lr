@@ -19,7 +19,7 @@ export DOCKER="True"         # flag to use singularity/docker
 
 # max limit of memory that would be used by toil to restart
 export MEMORY=120
-export RESTART_MEMORY=120
+export RESTART_MEMORY=120G
 # number of cores to run toil
 export NUM_CORES=8
 # lsf queue limit
@@ -64,6 +64,7 @@ then
 else
     export TOIL_LSF_ARGS="-q production-rh74 -g /${USER}_${JOB_GROUP}"
 fi
+MEMORY="${MEMORY}G"
 
 echo "Activating envs"
 source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate mgnify-lr
@@ -87,7 +88,7 @@ mkdir -p "${LOG_DIR}" "${OUT_DIR_FINAL}" "${JOB_TOIL_FOLDER}"
 export RUN_YML=${OUT_DIR_FINAL}/${NAME_RUN}.yml
 export YML_SCRIPT=${PIPELINE_FOLDER}/utils/createYML.py
 
-export PARAM="-m $TYPE -n $SINGLE -l $MINNANO -k $MEDAKA -c $MINCONTIG"
+export PARAM="-m $TYPE -n $SINGLE -l $MINNANO -k $MEDAKA -c $MINCONTIG -p $NAME_RUN"
 
 if [ "$UNIPROT" != "null" ]; then PARAM="$PARAM -u $UNIPROT"; fi
 
@@ -127,6 +128,8 @@ case $TYPE in
         ;;
 esac
 
+echo "creating YAML file:"
+echo python3 $YML_SCRIPT $PARAM -o $RUN_YML
 python3 $YML_SCRIPT $PARAM -o $RUN_YML
 
 # ----------------------------- running pipeline -----------------------------
@@ -144,7 +147,7 @@ if [ "${DOCKER}" == "True" ]; then
       --logFile ${LOG_DIR}/${NAME_RUN}.log \
       --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
       --singularity --batchSystem LSF --disableCaching \
-      --defaultMemory ${MEMORY}G --defaultCores ${NUM_CORES} --retryCount 3 \
+      --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 3 \
     ${CWL} ${RUN_YML} > ${OUT_JSON}
     EXIT_CODE=$?
 elif [ "${DOCKER}" == "False" ]; then
@@ -153,7 +156,7 @@ elif [ "${DOCKER}" == "False" ]; then
       --logFile ${LOG_DIR}/${NAME_RUN}.log \
       --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
       --no-container --batchSystem LSF --disableCaching \
-      --defaultMemory ${MEMORY}G --defaultCores ${NUM_CORES} --retryCount 3 \
+      --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 3 \
     ${CWL} ${RUN_YML} > ${OUT_JSON}
     EXIT_CODE=$?
 fi
