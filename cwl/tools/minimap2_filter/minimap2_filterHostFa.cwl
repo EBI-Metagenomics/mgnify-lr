@@ -23,12 +23,13 @@ inputs:
     type: string
     label: minimap2 align mode
     inputBinding:
-      position: 0
-  dbIndex:
-    type: File
-    label: genome index
-    inputBinding:
       position: 1
+  refSeq:
+    type: File
+    format: edam:format_1929
+    label: genome fasta
+    inputBinding:
+      position: 2
   inSeq:
     type: File
     format: edam:format_1929

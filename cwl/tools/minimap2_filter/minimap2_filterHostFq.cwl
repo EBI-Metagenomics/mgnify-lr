@@ -23,23 +23,24 @@ inputs:
     type: string
     label: minimap2 align mode
     inputBinding:
-      position: 0
-  dbIndex:
-    type: File
-    label: genome index
-    inputBinding:
       position: 1
+  refSeq:
+    type: File
+    format: edam:format_1929
+    label: genome fasta
+    inputBinding:
+      position: 2
   inSeq:
     type: File
     format: edam:format_1930
     label: sequences to map
     inputBinding:
-      position: 2
+      position: 3
   outReadsName:
     type: string
     label: unmapped reads file name 
     inputBinding:
-      position: 3
+      position: 4
 
 outputs:
   outReads:
