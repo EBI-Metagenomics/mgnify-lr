@@ -38,14 +38,14 @@ inputs:
       position: 2
       prefix: "-2"
   nano:
-    type: File
+    type: File?
     format: edam:format_1930  # FASTQ
     label: nanopore reads
     inputBinding:
       position: 3
       prefix: --nanopore
   pacbio:
-    type: File
+    type: File?
     format: edam:format_1930  # FASTQ
     label: pacbio reads
     inputBinding:
