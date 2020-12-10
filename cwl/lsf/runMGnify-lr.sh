@@ -8,14 +8,14 @@ export TYPE=null             # analysis type: {assembly, hybrid, polish}
 export FORWARD_READS=null    # path to illumina first pair reads fastq file
 export REVERSE_READS=null    # path to illumina second pair reads fastq file
 export SINGLE=null           # path to nanopore read fastq file
-export HOST=null             # path to genome index (minimap2)
+export TECH=null             # long-reads technology (nanopore/pacbio)
 export HOSTFA=null           # path to genome fasta
 export UNIPROT=null          # path to uniprot index (diamond)
 export MEDAKA=r941_min_high_g360  # medaka model to use
 export MINILL=50             # minimal size for illumina reads
 export MINNANO=200           # minimal size for nanopore reads
 export MINCONTIG=500         # minimal size for assembled contigs
-export DOCKER="True"         # flag to use singularity/docker
+export DOCKER="False"        # flag to use singularity+docker
 
 # max limit of memory that would be used by toil to restart
 export MEMORY=120
@@ -30,7 +30,7 @@ export PIPELINE_FOLDER=/hps/nobackup2/production/metagenomics/jcaballero/mgnify-
 # run_folder
 export RUN_DIR=/hps/nobackup2/production/metagenomics/jcaballero/runs
 
-while getopts :a:d:f:h:l:m:n:r:s:t:u:z:i:j:k:x:c: option; do
+while getopts :a:d:f:h:l:m:n:r:s:t:u:z:i:j:k:g:c: option; do
     case "${option}" in
         m) MEMORY=${OPTARG};;
         n) NUM_CORES=${OPTARG};;
@@ -39,8 +39,8 @@ while getopts :a:d:f:h:l:m:n:r:s:t:u:z:i:j:k:x:c: option; do
         r) REVERSE_READS=${OPTARG};;
         a) NAME_RUN=${OPTARG};;
         s) SINGLE=${OPTARG};;
-        h) HOST=${OPTARG};;
-        x) HOSTFA=${OPTARG};;
+        h) TECH=${OPTARG};;
+        g) HOSTFA=${OPTARG};;
         u) UNIPROT=${OPTARG};;
         d) DOCKER=${OPTARG};;
         l) LIMIT_QUEUE=${OPTARG};;
@@ -88,7 +88,7 @@ mkdir -p "${LOG_DIR}" "${OUT_DIR_FINAL}" "${JOB_TOIL_FOLDER}"
 export RUN_YML=${OUT_DIR_FINAL}/${NAME_RUN}.yml
 export YML_SCRIPT=${PIPELINE_FOLDER}/utils/createYML.py
 
-export PARAM="-m $TYPE -n $SINGLE -l $MINNANO -k $MEDAKA -c $MINCONTIG -p $NAME_RUN"
+export PARAM="-m $TYPE -r $SINGLE -l $MINNANO -k $MEDAKA -c $MINCONTIG -p $NAME_RUN -t $TECH"
 
 if [ "$UNIPROT" != "null" ]; then PARAM="$PARAM -u $UNIPROT"; fi
 
@@ -99,7 +99,7 @@ case $TYPE in
             export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly_noHost.cwl
         else
             export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly.cwl
-            PARAM="$PARAM -s $HOST"
+            PARAM="$PARAM -g $HOST"
         fi
         ;;
     polish)
@@ -109,7 +109,7 @@ case $TYPE in
             export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly_noHost_polish.cwl
         else
             export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly_polish.cwl
-            PARAM="$PARAM -s $HOST"
+            PARAM="$PARAM -g $HOST"
         fi
         ;;
     hybrid)
@@ -119,7 +119,7 @@ case $TYPE in
             export CWL=${PIPELINE_FOLDER}/workflows/hybrid_read_assembly_noHost.cwl
         else
             export CWL=${PIPELINE_FOLDER}/workflows/hybrid_read_assembly.cwl
-            PARAM="$PARAM -s $HOST -r $HOSTFA"
+            PARAM="$PARAM -g $HOST"
         fi
         ;;
     *)
