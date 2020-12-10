@@ -32,7 +32,7 @@ if par.mode == "hybrid" or par.mode == "polish":
 
 oh = open(par.out, "w")
 
-oh.write("raw_reads:\n  class: File\n  format: edam:format_1930\n  path: {}\n".format(par.nano))
+oh.write("raw_reads:\n  class: File\n  format: edam:format_1930\n  path: {}\n".format(par.reads))
 oh.write("min_read_size: {}\n".format(par.minLen))
 oh.write("min_contig_size: {}\n".format(par.minContig))
 oh.write("lr_tech: {}\n".format(par.tech))
