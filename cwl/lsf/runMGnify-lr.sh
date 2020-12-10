@@ -91,35 +91,33 @@ export YML_SCRIPT=${PIPELINE_FOLDER}/utils/createYML.py
 export PARAM="-m $TYPE -r $SINGLE -l $MINNANO -k $MEDAKA -c $MINCONTIG -p $NAME_RUN -t $TECH"
 
 if [ "$UNIPROT" != "null" ]; then PARAM="$PARAM -u $UNIPROT"; fi
+if [ "$HOSTFA" != "null" ]; then PARAM="$PARAM -g $HOSTFA"; fi
 
 case $TYPE in
     assembly)
-        if [ "$HOST" == "null" ]
+        if [ "$HOSTFA" == "null" ]
         then
             export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly_noHost.cwl
         else
             export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly.cwl
-            PARAM="$PARAM -g $HOST"
         fi
         ;;
     polish)
         PARAM="$PARAM -1 $FORWARD_READS -2 $REVERSE_READS -i $MINILL"
-        if [ "$HOST" == "null" ]
+        if [ "$HOSTFA" == "null" ]
         then
             export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly_noHost_polish.cwl
         else
             export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly_polish.cwl
-            PARAM="$PARAM -g $HOST"
         fi
         ;;
     hybrid)
         PARAM="$PARAM -1 $FORWARD_READS -2 $REVERSE_READS -i $MINILL"
-        if [ "$HOST" == "null" ]
+        if [ "$HOSTFA" == "null" ]
         then
             export CWL=${PIPELINE_FOLDER}/workflows/hybrid_read_assembly_noHost.cwl
         else
             export CWL=${PIPELINE_FOLDER}/workflows/hybrid_read_assembly.cwl
-            PARAM="$PARAM -g $HOST"
         fi
         ;;
     *)
