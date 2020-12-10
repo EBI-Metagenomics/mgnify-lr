@@ -24,7 +24,7 @@ arguments:
 
 inputs:
   nano:
-    type: File
+    type: File?
     format: edam:format_1930  # FASTQ
     label: nanopore reads
     inputBinding:
@@ -32,7 +32,7 @@ inputs:
       prefix: --nano-raw
 
   pacbio:
-    type: File
+    type: File?
     format: edam:format_1930  # FASTQ
     label: pacbio reads
     inputBinding:
