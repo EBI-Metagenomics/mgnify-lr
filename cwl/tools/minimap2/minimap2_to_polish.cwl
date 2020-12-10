@@ -15,12 +15,16 @@ hints:
 baseCommand: [ "minimap2" ]
 
 arguments:
- - -x
- - map-ont
  - -t
  - $(runtime.cores)
 
 inputs:
+  alignMode:
+    type: string
+    label: minimap2 align mode (map-ont, map-pb)
+    inputBinding:
+      position: 1
+      prefix: -x
   outPAFname:
     type: string
     label: output PAF file

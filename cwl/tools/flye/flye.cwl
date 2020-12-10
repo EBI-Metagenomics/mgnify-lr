@@ -31,6 +31,14 @@ inputs:
       position: 1
       prefix: --nano-raw
 
+  pacbio:
+    type: File
+    format: edam:format_1930  # FASTQ
+    label: pacbio reads
+    inputBinding:
+      position: 2
+      prefix: --pacbio-raw
+
 outputs:
   contigs_fasta:
     type: File

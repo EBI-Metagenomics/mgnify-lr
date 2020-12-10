@@ -44,6 +44,13 @@ inputs:
     inputBinding:
       position: 3
       prefix: --nanopore
+  pacbio:
+    type: File
+    format: edam:format_1930  # FASTQ
+    label: pacbio reads
+    inputBinding:
+      position: 4
+      prefix: --pacbio
  
 outputs:
   contigs_fasta:
