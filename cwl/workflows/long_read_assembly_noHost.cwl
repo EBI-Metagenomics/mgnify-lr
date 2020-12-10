@@ -1,19 +1,28 @@
-cwlVersion: v1.1
+cwlVersion: v1.2
 class: Workflow
 label: Long read assembly workflow
 doc: |
       Implementation of nanopore reads assembly pipeline
 
 requirements:
+  SubworkflowFeatureRequirement: {}
   ResourceRequirement:
     coresMin: 8
-    ramMin: 2000 # 2 GB for testing, it needs more in production
+    ramMin: 8000
 
 inputs:
   raw_reads:
     type: File
     format: edam:format_1930  # FASTQ
     label: long reads to assemble
+  lr_tech:
+    type: string?
+    label: long reads technology, supported techs are nanopore and pacbio
+    default: nanopore
+  align_preset:
+    type: string?
+    label: minimap2 align mode
+    default: map-ont
   min_read_size:
     type: int?
     label: Raw reads filter by size
@@ -81,17 +90,17 @@ outputs:
   filtered_reads_qc_json:
     type: File
     outputSource: step_2_filterShortReads/qcjson
-  final_assembly:
+  final_assembly_fasta:
     type: File
     format: edam:format_1929
     outputSource: step_4d_cleaning_filterContigs/outFasta
-  final_assembly_stats:
+  final_assembly_report:
     type: File
     outputSource: step_4e_cleaning_assemblyStats/outReport 
-  predict_proteins:
+  predict_proteins_fasta:
     type: File
     outputSource: step_5a_annotation_prodigal/outProt
-  diamond_align:
+  diamond_align_table:
     type: File
     outputSource: step_5b_annotation_diamond/alignment
   ideel_pdf:
@@ -121,15 +130,17 @@ steps:
    
   step_3_assembly:
     label: assembly long-reads with flye
-    run: ../tools/flye/flye.cwl
+    run: ../tools/flye/flye_runner.cwl
     in:
-      nano: step_2_filterShortReads/outReads
+      readType: lr_tech
+      readFile: step_2_filterShortReads/outReads
     out: [ contigs_fasta ]
 
   step_4a_polishing_minimap2:
     label: polishing step 1, map reads back to assembly with minimap2
     run: ../tools/minimap2/minimap2_to_polish.cwl
     in:
+      alignMode: align_preset
       inAssembly: step_3_assembly/contigs_fasta
       inReads: step_2_filterShortReads/outReads
       outPAFname: polish_paf

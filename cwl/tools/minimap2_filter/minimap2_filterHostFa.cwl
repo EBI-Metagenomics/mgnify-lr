@@ -7,16 +7,18 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 8
-    ramMin: 2000 # 2GB for testing, it needs more in production
+    ramMin: 2000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.minimap2_filter:2.17.2
+    dockerPull: jcaballero/mgnify-lr.minimap2_filter:2.17.3
 
 baseCommand: [ "minimap2_filter.sh" ]
 
 arguments:
- - $(runtime.cores)
- - fasta
+  - -t 
+  - $(runtime.cores)
+  - -f
+  - fasta
 
 inputs:
   alignMode:
@@ -24,23 +26,27 @@ inputs:
     label: minimap2 align mode
     inputBinding:
       position: 1
+      prefix: -a
   refSeq:
     type: File
     format: edam:format_1929
     label: genome fasta
     inputBinding:
       position: 2
+      prefix: -g
   inSeq:
     type: File
     format: edam:format_1929
     label: sequences to map
     inputBinding:
-      position: 2
+      position: 3
+      prefix: -r
   outReadsName:
     type: string
     label: unmapped reads file name 
     inputBinding:
-      position: 3
+      position: 4
+      prefix: -o
 
 outputs:
   outReads:

@@ -2,6 +2,8 @@ raw_reads:
   class: File
   format: edam:format_1930
   path: ../../test_data/small.fastq.gz
+lr_tech: nanopore
+align_preset: map-ont
 min_read_size: 200
 min_contig_size: 500
 raw_reads_report: raw_reads_stats.txt

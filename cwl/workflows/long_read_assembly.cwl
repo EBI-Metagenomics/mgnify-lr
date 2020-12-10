@@ -1,19 +1,24 @@
-cwlVersion: v1.1
+cwlVersion: v1.2
 class: Workflow
 label: Long read assembly workflow
 doc: |
       Implementation of nanopore reads assembly pipeline
 
 requirements:
+  SubworkflowFeatureRequirement: {}
   ResourceRequirement:
     coresMin: 8
-    ramMin: 2000 # 2GB for testing, it needs more in production
+    ramMin: 8000
 
 inputs:
   raw_reads:
     type: File
-    format: edam:format_1930  # FASTQ
+    format: edam:format_1930
     label: long reads to assemble
+  lr_tech:
+    type: string?
+    label: long reads technology, supported techs are nanopore and pacbio
+    default: nanopore
   min_read_size:
     type: int?
     label: raw reads filter by size
@@ -30,10 +35,11 @@ inputs:
     type: string?
     label: prefix file for reads with length lt min_read_size
     default: reads_filtered
-  host_index:
+  host_genome:
     type: File
-    label: index name for genome host, used for decontaminate
-    default: ../db/genome.mmi
+    format: edam:format_1929
+    label: genome host, used for decontaminate
+    default: ../db/genome.fa.gz
   align_preset:
     type: string?
     label: minimap2 align mode
@@ -97,17 +103,17 @@ outputs:
   filtered_reads_qcJson:
     type: File
     outputSource: step_2_filterShortReads/qcjson
-  final_assembly:
+  final_assembly_fasta:
     type: File
     format: edam:format_1929
     outputSource: step_6b_cleaning2_filterContigs/outFasta
-  final_assembly_stats:
+  final_assembly_report:
     type: File
     outputSource: step_6c_cleaning_assemblyStats/outReport 
-  predict_proteins:
+  predict_proteins_fasta:
     type: File
     outputSource: step_7a_annotation_prodigal/outProt
-  diamond_align:
+  diamond_align_table:
     type: File
     outputSource: step_7d_annotation_diamond/alignment
   ideel_pdf:
@@ -142,20 +148,22 @@ steps:
       alignMode: align_preset
       outReadsName: host_unmaped_reads
       inSeq: step_2_filterShortReads/outReads
-      dbIndex: host_index
+      refSeq: host_genome
     out: [ outReads ]
 
   step_4_assembly:
     label: assembly long-reads with flye
-    run: ../tools/flye/flye.cwl
+    run: ../tools/flye/flye_runner.cwl
     in:
-      nano: step_3_cleaning_alignHost/outReads
+      readType: lr_tech
+      readFile: step_3_cleaning_alignHost/outReads
     out: [ contigs_fasta ]
 
   step_5a_polishing_minimap2:
     label: polishing step 1, map reads back to assembly with minimap2
     run: ../tools/minimap2/minimap2_to_polish.cwl
     in:
+      alignMode: align_preset
       inAssembly: step_4_assembly/contigs_fasta
       inReads: step_3_cleaning_alignHost/outReads
       outPAFname: polish_paf
@@ -186,7 +194,7 @@ steps:
     in:
       alignMode: align_preset
       outReadsName: host_unmaped_contigs
-      dbIndex: host_index
+      refSeq: host_genome
       inSeq: step_5c_polishing_medaka/outConsensus
     out: [ outReads ]
   
