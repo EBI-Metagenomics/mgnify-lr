@@ -2,6 +2,7 @@ raw_reads:
   class: File
   format: edam:format_1930
   path: ../../test_data/small.fastq.gz
+lr_tech: nanopore
 p1_reads:
   class: File
   format: edam:format_1930
@@ -17,10 +18,7 @@ raw_reads_report: raw_reads_stats.txt
 reads_filter_bysize_nano: reads_filtered_nano
 reads_filter_bysize_ill: reads_filtered_ill
 align_preset: map-ont
-host_index:
-  class: File
-  path: ../db/worm.mmi
-host_index_sr:
+host_genome:
   class: File
   format: edam:format_1929
   path: ../db/worm.fa.gz

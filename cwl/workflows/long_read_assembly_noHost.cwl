@@ -99,6 +99,7 @@ outputs:
     outputSource: step_4e_cleaning_assemblyStats/outReport 
   predict_proteins_fasta:
     type: File
+    format: edam:format_1929
     outputSource: step_5a_annotation_prodigal/outProt
   diamond_align_table:
     type: File

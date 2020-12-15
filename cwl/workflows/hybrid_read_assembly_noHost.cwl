@@ -1,26 +1,31 @@
-cwlVersion: v1.1
+cwlVersion: v1.2.0-dev5
 class: Workflow
 label: Hybrid read assembly workflow
 doc: |
       Implementation of nanopore + illumina reads assembly pipeline
 
 requirements:
+  SubworkflowFeatureRequirement: {}
   ResourceRequirement:
     coresMin: 8
-    ramMin: 2000 # 2 GB for testing, it needs more in production
+    ramMin: 8000
 
 inputs:
   raw_reads:
     type: File
-    format: edam:format_1930  # FASTQ
+    format: edam:format_1930 
     label: long reads to assemble
+  lr_tech:
+    type: string?
+    label: long reads technology, supported techs are nanopore and pacbio
+    default: nanopore
   p1_reads:
     type: File
-    format: edam:format_1930  # FASTQ
+    format: edam:format_1930
     label: illumina paired reads to assemble (first pair)
   p2_reads:
     type: File
-    format: edam:format_1930  # FASTQ
+    format: edam:format_1930
     label: illumina paired reads to assemble (second pair)
   min_read_size:
     type: int?
@@ -99,18 +104,18 @@ outputs:
   filtered_reads_ill_qc_json:
     type: File
     outputSource: step_1b_filterShortReads_ill/qcjson 
-  final_assembly:
+  final_assembly_fasta:
     type: File
     format: edam:format_1929
     outputSource: step_4c_cleaning_filterContigs/outFasta
-  final_assembly_stats:
+  final_assembly_report:
     type: File
     outputSource: step_4d_cleaning_assemblyStats/outReport 
-  predict_proteins:
+  predict_proteins_fasta:
     type: File
     format: edam:format_1929
     outputSource: step_5a_annotation_prodigal/outProt
-  diamond_align:
+  diamond_align_table:
     type: File
     outputSource: step_5b_annotation_diamond/alignment
   ideel_pdf:
@@ -154,9 +159,10 @@ steps:
    
   step_2_assembly:
     label: hybrid assembly with SPAdes
-    run: ../tools/spades/spades.cwl
+    run: ../tools/spades/spades_runner.cwl
     in:
-      nano: step_1a_filterShortReads_nano/outReads
+      readType: lr_tech
+      readFile: step_1a_filterShortReads_nano/outReads
       reads1: step_1b_filterShortReads_ill/outreads1
       reads2: step_1b_filterShortReads_ill/outreads2
     out: [ contigs_fasta ]
