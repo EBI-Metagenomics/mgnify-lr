@@ -126,7 +126,7 @@ outputs:
   final_assembly_report:
     type: File
     outputSource: step_7f_cleaning_assemblyStats/outReport 
-  predict_proteins_fasta
+  predict_proteins_fasta:
     type: File
     format: edam:format_1929
     outputSource: step_8a_annotation_prodigal/outProt
