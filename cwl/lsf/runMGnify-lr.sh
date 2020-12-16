@@ -146,6 +146,7 @@ if [ "${DOCKER}" == "True" ]; then
       --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
       --singularity --batchSystem lsf --disableCaching \
       --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 3 \
+      --cleanWorkDir=never --clean=never --stats \
     ${CWL} ${RUN_YML} > ${OUT_JSON}
     EXIT_CODE=$?
 elif [ "${DOCKER}" == "False" ]; then
@@ -155,6 +156,7 @@ elif [ "${DOCKER}" == "False" ]; then
       --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
       --no-container --batchSystem lsf --disableCaching \
       --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 3 \
+      --cleanWorkDir=never --clean=never --stats \
     ${CWL} ${RUN_YML} > ${OUT_JSON}
     EXIT_CODE=$?
 fi
