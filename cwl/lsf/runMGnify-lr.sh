@@ -15,7 +15,7 @@ export MEDAKA=r941_min_high_g360  # medaka model to use
 export MINILL=50             # minimal size for illumina reads
 export MINNANO=200           # minimal size for nanopore reads
 export MINCONTIG=500         # minimal size for assembled contigs
-export DOCKER="True"         # flag to use singularity+docker
+export DOCKER="False"        # flag to use singularity+docker
 
 # max limit of memory that would be used by toil to restart
 export MEMORY=120
@@ -67,7 +67,7 @@ fi
 MEMORY="${MEMORY}G"
 
 echo "Activating envs"
-source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate toil
+source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate mgnify-lr
 
 # ----------------------------- preparation -----------------------------
 # work dir
@@ -144,7 +144,7 @@ if [ "${DOCKER}" == "True" ]; then
       --preserve-entire-environment --enable-dev --disableChaining \
       --logFile ${LOG_DIR}/${NAME_RUN}.log \
       --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
-      --user-space-docker-cmd udocker --batchSystem lsf --disableCaching \
+      --singularity --batchSystem lsf --disableCaching \
       --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 3 \
       --cleanWorkDir=never --clean=never --stats \
     ${CWL} ${RUN_YML} > ${OUT_JSON}
