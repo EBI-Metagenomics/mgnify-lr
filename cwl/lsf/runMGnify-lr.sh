@@ -28,23 +28,7 @@ export LIMIT_QUEUE=100
 # clone of mgnify-lr repo
 export PIPELINE_FOLDER=/hps/nobackup2/production/metagenomics/jcaballero/mgnify-lr/cwl
 # run_folder
-if [ -d /tmp/jc ]
-then
-    echo "TEMP /tmp/jc exists"
-    if [ -e /tmp/jc/runs ]
-    then
-        echo "TEMP /tmp/jc/runs exists"
-    else
-        ln -s /hps/nobackup2/production/metagenomics/jcaballero/runs /tmp/jc/
-    fi
-else
-    echo "creating TEMP DIR"
-    mkdir /tmp/jc
-    ln -s /hps/nobackup2/production/metagenomics/jcaballero/runs /tmp/jc/
-fi
-
-
-export RUN_DIR=/tmp/jc/runs
+export RUN_DIR=/homes/jcaballero/workdir/runs
 
 while getopts :a:d:f:h:l:m:n:r:s:t:u:z:i:j:k:g:c: option; do
     case "${option}" in
