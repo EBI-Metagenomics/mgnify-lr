@@ -17,3 +17,6 @@ dependencies:
   - pilon=1.23*
   - bwa-mem2=2.1*
   - spades=3.14.*
+  - pip:
+    - toil=5.1*
+    
