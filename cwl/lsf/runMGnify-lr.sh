@@ -144,7 +144,7 @@ if [ "${DOCKER}" == "True" ]; then
       --preserve-entire-environment --enable-dev --disableChaining \
       --logFile ${LOG_DIR}/${NAME_RUN}.log \
       --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
-      --singularity --batchSystem lsf --disableCaching \
+      --user-space-docker-cmd udocker --batchSystem lsf --disableCaching \
       --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 3 \
       --cleanWorkDir=never --clean=never --stats \
     ${CWL} ${RUN_YML} > ${OUT_JSON}
