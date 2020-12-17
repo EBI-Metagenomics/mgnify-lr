@@ -1,9 +1,6 @@
 ../tools/minimap2_filter/minimap2_filter.sh
 ../tools/ideel/ideel.py
-../tools/getHostFasta/getHostFasta.sh
-../tools/getHostFasta/getFastaFromEnsemblFTP.py
 ../tools/bwa/bwa-mem2.sh
 ../tools/bwa/bwa-mem2_filterHostFq.sh
 ../tools/filterContigs/filterContigs.pl
 ../tools/assembly_stats/calc_stats.pl
-../tools/removeSmallReads/removeSmallReads.sh
