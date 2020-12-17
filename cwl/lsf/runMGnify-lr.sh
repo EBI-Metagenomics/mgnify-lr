@@ -28,7 +28,23 @@ export LIMIT_QUEUE=100
 # clone of mgnify-lr repo
 export PIPELINE_FOLDER=/hps/nobackup2/production/metagenomics/jcaballero/mgnify-lr/cwl
 # run_folder
-export RUN_DIR=/hps/nobackup2/production/metagenomics/jcaballero/runs
+if [ -d /tmp/jc ]
+then
+    echo "TEMP /tmp/jc exists"
+    if [ -e /tmp/jc/runs ]
+    then
+        echo "TEMP /tmp/jc/runs exists"
+    else
+        ln -s /hps/nobackup2/production/metagenomics/jcaballero/runs /tmp/jc/
+    fi
+else
+    echo "creating TEMP DIR"
+    mkdir /tmp/jc
+    ln -s /hps/nobackup2/production/metagenomics/jcaballero/runs /tmp/jc/
+fi
+
+
+export RUN_DIR=/tmp/jc/runs
 
 while getopts :a:d:f:h:l:m:n:r:s:t:u:z:i:j:k:g:c: option; do
     case "${option}" in
@@ -73,7 +89,7 @@ source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate
 # work dir
 export WORK_DIR=${RUN_DIR}/work-dir
 export JOB_TOIL_FOLDER=${WORK_DIR}/job-store-wf
-export TMPDIR=${WORK_DIR}/temp-dir/${NAME_RUN}
+export TMPDIR=${WORK_DIR}/tmp/${NAME_RUN}
 
 # result dir
 export OUT_DIR=${RUN_DIR}
@@ -136,7 +152,8 @@ CWL: ${CWL}
 YML: ${RUN_YML}"
 
 mkdir -p "${TMPDIR}"  && \
-echo "Toil start:" ; date
+echo "Toil start: $(date)"
+
 cd ${WORK_DIR} || exit
 
 if [ "${DOCKER}" == "True" ]; then
@@ -145,7 +162,7 @@ if [ "${DOCKER}" == "True" ]; then
       --logFile ${LOG_DIR}/${NAME_RUN}.log \
       --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
       --singularity --batchSystem lsf --disableCaching \
-      --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 3 \
+      --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 5 \
       --cleanWorkDir=never --clean=never --stats \
     ${CWL} ${RUN_YML} > ${OUT_JSON}
     EXIT_CODE=$?
@@ -155,7 +172,7 @@ elif [ "${DOCKER}" == "False" ]; then
       --logFile ${LOG_DIR}/${NAME_RUN}.log \
       --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
       --no-container --batchSystem lsf --disableCaching \
-      --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 3 \
+      --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 5 \
       --cleanWorkDir=never --clean=never --stats \
     ${CWL} ${RUN_YML} > ${OUT_JSON}
     EXIT_CODE=$?
