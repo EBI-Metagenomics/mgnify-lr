@@ -73,7 +73,8 @@ source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate
 # work dir
 export WORK_DIR=${RUN_DIR}/work-dir
 export JOB_TOIL_FOLDER=${WORK_DIR}/job-store-wf
-export TMPDIR=${WORK_DIR}/tmp/${NAME_RUN}
+#export TMPDIR=${WORK_DIR}/tmp/${NAME_RUN}
+export TMPDIR=/scratch
 
 # result dir
 export OUT_DIR=${RUN_DIR}
@@ -135,7 +136,7 @@ echo "Running with:
 CWL: ${CWL}
 YML: ${RUN_YML}"
 
-mkdir -p "${TMPDIR}"  && \
+#mkdir -p "${TMPDIR}"  && \
 echo "Toil start: $(date)"
 
 cd ${WORK_DIR} || exit
@@ -147,7 +148,7 @@ if [ "${DOCKER}" == "True" ]; then
       --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
       --singularity --batchSystem lsf --disableCaching \
       --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 3 \
-      --cleanWorkDir=never --clean=never --stats \
+      --stats \
     ${CWL} ${RUN_YML} > ${OUT_JSON}
     EXIT_CODE=$?
 elif [ "${DOCKER}" == "False" ]; then
@@ -157,11 +158,12 @@ elif [ "${DOCKER}" == "False" ]; then
       --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
       --no-container --batchSystem lsf --disableCaching \
       --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 3 \
-      --cleanWorkDir=never --clean=never --stats \
+      --stats \
     ${CWL} ${RUN_YML} > ${OUT_JSON}
     EXIT_CODE=$?
 fi
 
-echo "Toil finish:" ; date ; sleep 1m
+echo "Toil finish: $(date)"
+sleep 1m
 
 echo "EXIT: $EXIT_CODE"
