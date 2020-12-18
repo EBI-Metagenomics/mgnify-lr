@@ -7,8 +7,10 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 8
-    ramMin: 8000 # 1 GB for testing, it needs more in production
+    ramMin: 8000
 hints:
+  EnvVarRequirement:
+    TMPDIR: /scratch
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.flye:2.8.1
 
