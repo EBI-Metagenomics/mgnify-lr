@@ -9,8 +9,6 @@ requirements:
     coresMin: 8
     ramMin: 8000
 hints:
-  EnvVarRequirement:
-    TMPDIR: /scratch
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.flye:2.8.1
 
