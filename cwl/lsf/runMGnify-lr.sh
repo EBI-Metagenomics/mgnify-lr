@@ -28,7 +28,7 @@ export LIMIT_QUEUE=100
 # clone of mgnify-lr repo
 export PIPELINE_FOLDER=/hps/nobackup2/production/metagenomics/jcaballero/mgnify-lr/cwl
 # run_folder
-export RUN_DIR=/homes/jcaballero/workdir/runs
+export RUN_DIR=/hps/nobackup2/production/metagenomics/jcaballero/runs
 
 while getopts :a:d:f:h:l:m:n:r:s:t:u:z:i:j:k:g:c: option; do
     case "${option}" in
