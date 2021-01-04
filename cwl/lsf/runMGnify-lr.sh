@@ -15,7 +15,7 @@ export MEDAKA=r941_min_high_g360  # medaka model to use
 export MINILL=50             # minimal size for illumina reads
 export MINNANO=200           # minimal size for nanopore reads
 export MINCONTIG=500         # minimal size for assembled contigs
-export DOCKER="False"        # flag to use singularity+docker
+export DOCKER="True"        # flag to use singularity+docker
 
 # max limit of memory that would be used by toil to restart
 export MEMORY=120
@@ -24,6 +24,16 @@ export RESTART_MEMORY=120G
 export NUM_CORES=8
 # lsf queue limit
 export LIMIT_QUEUE=100
+
+## Singularity CACHE
+module load singularity/3.5.0
+export SINGULARITY_HOME=/hps/nobackup2/production/metagenomics/jcaballero/singularity
+export SINGULARITY_CACHEDIR=$SINGULARITY_HOME/cache
+export SINGULARITY_TMPDIR=$SINGULARITY_HOME/tmp
+export SINGULARITY_LOCALCACHEDIR=$SINGULARITY_HOME/local_tmp
+export SINGULARITY_PULLFOLDER=$SINGULARITY_HOME/pull
+export SINGULARITY_BINDPATH=$SINGULARITY_HOME/scratch
+export CWL_SINGULARITY_CACHE=$SINGULARITY_HOME/cache
 
 # clone of mgnify-lr repo
 export PIPELINE_FOLDER=/hps/nobackup2/production/metagenomics/jcaballero/mgnify-lr/cwl
@@ -73,8 +83,8 @@ source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate
 # work dir
 export WORK_DIR=${RUN_DIR}/work-dir
 export JOB_TOIL_FOLDER=${WORK_DIR}/job-store-wf
-#export TMPDIR=${WORK_DIR}/tmp/${NAME_RUN}
-export TMPDIR=/scratch
+export TMPDIR=${WORK_DIR}/tmp/${NAME_RUN}
+#export TMPDIR=/scratch
 
 # result dir
 export OUT_DIR=${RUN_DIR}
