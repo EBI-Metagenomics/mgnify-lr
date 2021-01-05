@@ -70,8 +70,10 @@ bgmod -L "${LIMIT_QUEUE}" /"${USER}_${JOB_GROUP}" > /dev/null
 
 if [ "$MEMORY" -ge "100" ]
 then
+    echo "High memory requested, using bigmem queue"
     export TOIL_LSF_ARGS="-P bigmem -q production-rh74 -g /${USER}_${JOB_GROUP}"
 else
+    echo "Using regular queue"
     export TOIL_LSF_ARGS="-q production-rh74 -g /${USER}_${JOB_GROUP}"
 fi
 MEMORY="${MEMORY}G"
@@ -84,7 +86,6 @@ source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate
 export WORK_DIR=${RUN_DIR}/work-dir
 export JOB_TOIL_FOLDER=${WORK_DIR}/job-store-wf
 export TMPDIR=${WORK_DIR}/tmp/${NAME_RUN}
-#export TMPDIR=/scratch
 
 # result dir
 export OUT_DIR=${RUN_DIR}
@@ -146,7 +147,6 @@ echo "Running with:
 CWL: ${CWL}
 YML: ${RUN_YML}"
 
-#mkdir -p "${TMPDIR}"  && \
 echo "Toil start: $(date)"
 
 cd ${WORK_DIR} || exit
@@ -157,7 +157,7 @@ if [ "${DOCKER}" == "True" ]; then
       --logFile ${LOG_DIR}/${NAME_RUN}.log \
       --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
       --singularity --batchSystem lsf --disableCaching \
-      --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 3 \
+      --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 5 \
       --stats \
     ${CWL} ${RUN_YML} > ${OUT_JSON}
     EXIT_CODE=$?
@@ -167,7 +167,7 @@ elif [ "${DOCKER}" == "False" ]; then
       --logFile ${LOG_DIR}/${NAME_RUN}.log \
       --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
       --no-container --batchSystem lsf --disableCaching \
-      --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 3 \
+      --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 5 \
       --stats \
     ${CWL} ${RUN_YML} > ${OUT_JSON}
     EXIT_CODE=$?
