@@ -1,7 +1,0 @@
-name: kmc
-channels:
-  - bioconda
-  - conda-forge
-dependencies:
-  - kmc
-  - python=3.7
