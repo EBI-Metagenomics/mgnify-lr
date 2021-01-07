@@ -41,7 +41,7 @@ export PIPELINE_FOLDER=/hps/nobackup2/production/metagenomics/jcaballero/mgnify-
 # run_folder
 export RUN_DIR=/hps/nobackup2/production/metagenomics/jcaballero/runs
 
-while getopts :a:d:f:h:l:m:n:r:s:t:u:z:i:j:k:g:c: option; do
+while getopts :a:d:f:h:l:m:n:r:s:t:u:z:i:j:k:g:c:x: option; do
     case "${option}" in
         m) MEMORY=${OPTARG};;
         n) NUM_CORES=${OPTARG};;
