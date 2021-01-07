@@ -20,7 +20,6 @@ export RESTART="False"       # flag to try to restart a failed run
 
 # max limit of memory that would be used by toil to restart
 export MEMORY=120
-export RESTART_MEMORY=120G
 # number of cores to run toil
 export NUM_CORES=8
 # lsf queue limit
@@ -55,7 +54,6 @@ while getopts :a:d:f:h:l:m:n:r:s:t:u:z:i:j:k:g:c:x: option; do
         u) UNIPROT=${OPTARG};;
         d) DOCKER=${OPTARG};;
         l) LIMIT_QUEUE=${OPTARG};;
-        z) RESTART_MEMORY=${OPTARG};;
         k) MEDAKA=${OPTARG};;
         i) MINILL=${OPTARG};;
         j) MINNANO=${OPTARG};;
@@ -169,37 +167,47 @@ then
     then
         echo "launching TOIL/CWL job with Singularity/Docker as ${NAME_RUN}"
         toil-cwl-runner \
-        --preserve-entire-environment --enable-dev --disableChaining \
-        --logFile ${LOG_DIR}/${NAME_RUN}.log \
-        --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
-        --singularity --batchSystem lsf --disableCaching \
-        --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 5 \
-        --stats \
-        ${CWL} ${RUN_YML} > ${OUT_JSON}
+            --preserve-entire-environment \
+            --enable-dev \
+            --logFile ${LOG_DIR}/${NAME_RUN}.log \
+            --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} \
+            --outdir ${OUT_DIR_FINAL} \
+            --singularity \
+            --batchSystem lsf \
+            --defaultMemory ${MEMORY} \
+            --defaultCores ${NUM_CORES} \
+            --retryCount 5 \
+            --stats \
+            ${CWL} ${RUN_YML} > ${OUT_JSON}
         EXIT_CODE=$?
     elif [ "${DOCKER}" == "False" ]
     then
         echo "launching TOIL/CWL job as ${NAME_RUN}"
         toil-cwl-runner \
-        --preserve-entire-environment --enable-dev --disableChaining \
-        --logFile ${LOG_DIR}/${NAME_RUN}.log \
-        --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
-        --no-container --batchSystem lsf --disableCaching \
-        --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 5 \
-        --stats \
-        ${CWL} ${RUN_YML} > ${OUT_JSON}
+            --preserve-entire-environment \
+            --enable-dev \
+            --logFile ${LOG_DIR}/${NAME_RUN}.log \
+            --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} \
+            --outdir ${OUT_DIR_FINAL} \
+            --no-container \
+            --batchSystem lsf \
+            --defaultMemory ${MEMORY} \
+            --defaultCores ${NUM_CORES} \
+            --retryCount 5 \
+            --stats \
+            ${CWL} ${RUN_YML} > ${OUT_JSON}
         EXIT_CODE=$?
     fi
 else
     echo "relaunching TOIL/CWL job as ${NAME_RUN}"
     toil-cwl-runner \
-    --restart \
-    --preserve-entire-environment \
-    --logDebug \
-    --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} \
-    --enable-dev \
-    --outdir ${OUT_DIR_FINAL} \
-    ${CWL} ${YML}  >> ${OUT_JSON} 
+        --restart \
+        --preserve-entire-environment \
+        --logDebug \
+        --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} \
+        --enable-dev \
+        --outdir ${OUT_DIR_FINAL} \
+        ${CWL} ${YML}  >> ${OUT_JSON} 
     EXIT_CODE=$?
 fi
 

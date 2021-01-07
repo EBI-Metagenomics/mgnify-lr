@@ -10,6 +10,7 @@ for IMG in  mgnify-lr.flye:2.8.1 \
             mgnify-lr.pilon:1.23 \
             mgnify-lr.bwa-mem2:2.1.1 \
             mgnify-lr.minimap2_filter:2.17.3 \
+            mgnify-lr.minimap2:2.17 \
             mgnify-lr.spades:3.14.1 \
             mgnify-lr.prodigal:2.6.3 \
             mgnify-lr.filtercontigs:0.0.1 \
