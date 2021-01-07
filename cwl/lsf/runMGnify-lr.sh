@@ -15,7 +15,8 @@ export MEDAKA=r941_min_high_g360  # medaka model to use
 export MINILL=50             # minimal size for illumina reads
 export MINNANO=200           # minimal size for nanopore reads
 export MINCONTIG=500         # minimal size for assembled contigs
-export DOCKER="True"        # flag to use singularity+docker
+export DOCKER="True"         # flag to use singularity+docker
+export RESTART="False"       # flag to try to restart a failed run
 
 # max limit of memory that would be used by toil to restart
 export MEMORY=120
@@ -59,6 +60,7 @@ while getopts :a:d:f:h:l:m:n:r:s:t:u:z:i:j:k:g:c: option; do
         i) MINILL=${OPTARG};;
         j) MINNANO=${OPTARG};;
         c) MINCONTIG=${OPTARG};;
+        x) RESTART=${OPTARG};;
         *) echo "invalid option: $option"; exit;;
     esac
 done
@@ -93,8 +95,13 @@ export LOG_DIR=${OUT_DIR}/log-dir/${NAME_RUN}
 export OUT_DIR_FINAL=${OUT_DIR}/results/${NAME_RUN}
 export OUT_JSON=${OUT_DIR_FINAL}/out.json
 
-echo "Create empty ${LOG_DIR} and ${OUT_DIR_FINAL}"
-mkdir -p "${LOG_DIR}" "${OUT_DIR_FINAL}" "${JOB_TOIL_FOLDER}"
+if [ "$RESTART" == "False" ]
+then
+    echo "Create empty ${LOG_DIR} and ${OUT_DIR_FINAL}"
+    mkdir -p "${LOG_DIR}" "${OUT_DIR_FINAL}" "${JOB_TOIL_FOLDER}"
+else 
+    echo "restart mode detected, reusing dirs"
+fi
 
 # ----------------------------- configs  -----------------------------
 export RUN_YML=${OUT_DIR_FINAL}/${NAME_RUN}.yml
@@ -138,9 +145,14 @@ case $TYPE in
         ;;
 esac
 
-echo "creating YAML file:"
-echo python3 $YML_SCRIPT $PARAM -o $RUN_YML
-python3 $YML_SCRIPT $PARAM -o $RUN_YML
+if [ "$RESTART" == "False" ]
+then
+    echo "creating YAML file:"
+    echo python3 $YML_SCRIPT $PARAM -o $RUN_YML
+    python3 $YML_SCRIPT $PARAM -o $RUN_YML
+else 
+    echo "reusing YAML file: $RUN_YML"
+fi
 
 # ----------------------------- running pipeline -----------------------------
 echo "Running with:
@@ -151,27 +163,46 @@ echo "Toil start: $(date)"
 
 cd ${WORK_DIR} || exit
 
-if [ "${DOCKER}" == "True" ]; then
+if [ "$RESTART" == "False" ]
+then
+    if [ "${DOCKER}" == "True" ]
+    then
+        echo "launching TOIL/CWL job with Singularity/Docker as ${NAME_RUN}"
+        toil-cwl-runner \
+        --preserve-entire-environment --enable-dev --disableChaining \
+        --logFile ${LOG_DIR}/${NAME_RUN}.log \
+        --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
+        --singularity --batchSystem lsf --disableCaching \
+        --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 5 \
+        --stats \
+        ${CWL} ${RUN_YML} > ${OUT_JSON}
+        EXIT_CODE=$?
+    elif [ "${DOCKER}" == "False" ]
+    then
+        echo "launching TOIL/CWL job as ${NAME_RUN}"
+        toil-cwl-runner \
+        --preserve-entire-environment --enable-dev --disableChaining \
+        --logFile ${LOG_DIR}/${NAME_RUN}.log \
+        --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
+        --no-container --batchSystem lsf --disableCaching \
+        --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 5 \
+        --stats \
+        ${CWL} ${RUN_YML} > ${OUT_JSON}
+        EXIT_CODE=$?
+    fi
+else
+    echo "relaunching TOIL/CWL job as ${NAME_RUN}"
     toil-cwl-runner \
-      --preserve-entire-environment --enable-dev --disableChaining \
-      --logFile ${LOG_DIR}/${NAME_RUN}.log \
-      --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
-      --singularity --batchSystem lsf --disableCaching \
-      --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 5 \
-      --stats \
-    ${CWL} ${RUN_YML} > ${OUT_JSON}
-    EXIT_CODE=$?
-elif [ "${DOCKER}" == "False" ]; then
-    toil-cwl-runner \
-      --preserve-entire-environment --enable-dev --disableChaining \
-      --logFile ${LOG_DIR}/${NAME_RUN}.log \
-      --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} --outdir ${OUT_DIR_FINAL} \
-      --no-container --batchSystem lsf --disableCaching \
-      --defaultMemory ${MEMORY} --defaultCores ${NUM_CORES} --retryCount 5 \
-      --stats \
-    ${CWL} ${RUN_YML} > ${OUT_JSON}
+    --restart \
+    --preserve-entire-environment \
+    --logDebug \
+    --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} \
+    --enable-dev \
+    --outdir ${OUT_DIR_FINAL} \
+    ${CWL} ${YML}  >> ${OUT_JSON} 
     EXIT_CODE=$?
 fi
+
 
 echo "Toil finish: $(date)"
 sleep 1m
