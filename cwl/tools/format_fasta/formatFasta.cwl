@@ -7,7 +7,7 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 1
-    ramMin: 2000 # 1 GB for testing, it needs more in production
+    ramMin: 2000
 hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.formatfasta:0.0.1

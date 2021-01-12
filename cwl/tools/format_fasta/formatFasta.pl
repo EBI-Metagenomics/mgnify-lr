@@ -33,16 +33,15 @@ else {
 }
 open ($oh, ">", $outfile) or die ("cannot write output to $outfile\n");
 
+$/ = "\n>";
 while (<$ih>) {
-    my $ln = $_;
-    if ($ln =~ /^>/) {
-        print $oh $ln;
-    }
-    else {
-        while ($ln) {
-            print $oh substr($ln, 0, $cols), "\n";
-            substr($ln, 0, $cols) = '';
-        }
+    s/>//g;
+    my ($id, @seq) = split(/\n/, $_);
+    my $seq = join "", @seq;
+    print $oh ">$id\n";
+    while ($seq) {
+        print $oh substr($seq, 0, $cols), "\n";
+        substr($seq, 0, $cols) = '';
     }
 }
 
