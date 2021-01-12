@@ -28,7 +28,7 @@ inputs:
       position: 1
       prefix: -a
   refSeq:
-    type: File
+    type: File?
     format: edam:format_1929
     label: genome fasta
     inputBinding:
