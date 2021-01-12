@@ -33,12 +33,6 @@ inputs:
     inputBinding:
       position: 2
       prefix: -a
-  outGbkName:
-    type: string
-    label: prodigal predicted proteins output in GBK
-    inputBinding:
-      position: 3
-      prefix: -o
    
 outputs:
   outProt:
@@ -46,11 +40,6 @@ outputs:
     format: edam:format_1929 # FASTA
     outputBinding:
       glob: $(inputs.outProtName)
-  outGBK:
-    type: File
-    format: edam:format_1936 # GBK 
-    outputBinding:
-      glob: $(inputs.outGbkName)
 
 stdout: prodigal.log
 stderr: prodigal.err
