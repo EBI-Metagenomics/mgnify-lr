@@ -10,7 +10,7 @@ requirements:
     ramMin: 2000 # 1 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.filtercontigs:0.0.1
+    dockerPull: jcaballero/mgnify-lr.filtercontigs:0.0.2
 
 baseCommand: [ "filterContigs.pl" ]
 

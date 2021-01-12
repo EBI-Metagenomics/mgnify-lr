@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# filterContigs.pl --szie [int] --in [input file] --out [output file]
+# filterContigs.pl --size [int] --in [input file] --out [output file]
 # script to filter contigs by size in a sequence file (Fasta)
 # (C) 2020 EMBL-EBI
 
@@ -50,7 +50,9 @@ while (<$ih>) {
     my $seq = join "", @seq;
     my $len = length $seq;
     if ($len >= $minsize) {
-        print $oh join "\n", ">$id", @seq;
+        print $oh ">$id\n";
+        print $oh join "\n", @seq;
+        print $oh "\n";
         $pass++;
     }
 }
