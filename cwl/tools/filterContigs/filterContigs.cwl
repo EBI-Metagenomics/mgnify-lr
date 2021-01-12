@@ -28,7 +28,7 @@ inputs:
     inputBinding:
       position: 2
       prefix: -s
-  outFasta:
+  outName:
     type: string
     label: output fasta file name
     inputBinding:
@@ -40,7 +40,7 @@ outputs:
     type: File
     format: edam:format_1929
     outputBinding:
-      glob: $(inputs.outFasta)
+      glob: $(inputs.outName)
   
 stdout: filterContigs.log
 stderr: filterContigs.err
