@@ -8,7 +8,7 @@
 # Defaults
 export THREADS=1
 export FORMAT="fastq"
-export ALNMODE="map-ont"
+export ALNMODE="none"
 export GENOME=null
 export READS=null
 export OUTFILE=null
@@ -25,15 +25,21 @@ while getopts :t:f:a:g:r:o: option; do
     esac
 done
 
-case $FORMAT in
-    fastq)
-        minimap2 -a -x $ALNMODE -t $THREADS $GENOME $READS | samtools $FORMAT -f 4 | gzip > $OUTFILE
-    ;;
-    fasta)
-        minimap2 -a -x $ALNMODE -t $THREADS $GENOME $READS | samtools $FORMAT -f 4 > $OUTFILE
-    ;;
-    *)
-        echo "unknown format $FORMAT"
-        exit
-    ;;
-esac
+if [ "$ALNMODE" == "none" ]
+then
+    echo "no align mode detected, file will be no filtered"
+    cp $READS $OUTFILE
+else
+    case $FORMAT in
+        fastq)
+            minimap2 -a -x $ALNMODE -t $THREADS $GENOME $READS | samtools $FORMAT -f 4 | gzip > $OUTFILE
+        ;;
+        fasta)
+            minimap2 -a -x $ALNMODE -t $THREADS $GENOME $READS | samtools $FORMAT -f 4 > $OUTFILE
+        ;;
+        *)
+            echo "unknown format $FORMAT"
+            exit
+        ;;
+    esac
+fi

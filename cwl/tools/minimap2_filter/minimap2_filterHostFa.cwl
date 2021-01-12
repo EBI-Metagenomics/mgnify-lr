@@ -1,4 +1,4 @@
-cwlVersion: v1.1
+cwlVersion: v1.2
 class: CommandLineTool
 label: Minimap2 align and filter host
 doc: |
@@ -10,7 +10,7 @@ requirements:
     ramMin: 2000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.minimap2_filter:2.17.3
+    dockerPull: jcaballero/mgnify-lr.minimap2_filter:2.17.4
 
 baseCommand: [ "minimap2_filter.sh" ]
 
