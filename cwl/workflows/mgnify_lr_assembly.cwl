@@ -19,10 +19,6 @@ inputs:
     type: string?
     label: long reads technology, supported techs are nanopore and pacbio
     default: nanopore
-  min_contig_size:
-    type: int?
-    label: contigs filter by size
-    default: 500
   host_genome:
     type: File?
     format: edam:format_1929
