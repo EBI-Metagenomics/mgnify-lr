@@ -7,7 +7,7 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 8
-    ramMin: 80000
+    ramMin: 8000
 hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.flye:2.8.1
