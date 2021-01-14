@@ -1,4 +1,4 @@
-cwlVersion: v1.1
+cwlVersion: v1.2
 class: CommandLineTool
 label: BWA-mem2 align to filter host-mapping reads
 doc: |
@@ -6,60 +6,73 @@ doc: |
 
 requirements:
   InitialWorkDirRequirement:
-    listing: [ $(inputs.reference) ]
+    listing: [ $(inputs.refSeq) ]
   ResourceRequirement:
     coresMin: 8
-    ramMin: 2000 # 1 GB for testing, it needs more in production
+    ramMin: 4000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.bwa-mem2:2.1.1
+    dockerPull: jcaballero/mgnify-lr.bwa-mem2:2.1.2
 
 baseCommand: [ "bwa-mem2_filterHostFq.sh" ]
 
 arguments:
- - $(runtime.cores)
+  - -t
+  - $(runtime.cores)
 
 inputs:
-  reference:
-    type: File
-    format: edam:format_1929
-    label: Genome index (bwa-mem2 -x sr)
+  alignMode:
+    type: string?
+    label: flag to pass when genome filtering is off
+    default: none
     inputBinding:
+      prefix: -a
+      position: 0
+  refSeq:
+    type: File?
+    format: edam:format_1929
+    label: Genome Fasta
+    inputBinding:
+      prefix: -g
       position: 1
   reads1:
     type: File
     format: edam:format_1930
     label: reads first pair
     inputBinding:
+      prefix: -p
       position: 2
   reads2:
     type: File
     format: edam:format_1930
     label: reads second pair
     inputBinding:
+      prefix: -q
       position: 3
-  out1name:
+  out1:
     type: string
     label: output fastq first pair file name
     inputBinding:
+      prefix: -x
       position: 4
-  out2name:
+  out2:
     type: string
     label: output fastq second pair file name
     inputBinding:
+      prefix: -y
       position: 5
 
 outputs:
-  out1:
+  outReads1:
     type: File
     format: edam:format_1930
     outputBinding:
-      glob: $(inputs.out1name)
-  out2:
+      glob: $(inputs.out1)
+  outReads2:
     type: File
     format: edam:format_1930
     outputBinding:
-      glob: $(inputs.out2name)
+      glob: $(inputs.out2)
   
 stdout: bwa-mem2_filterHostFq.log
 stderr: bwa-mem2_filterHostFq.err
