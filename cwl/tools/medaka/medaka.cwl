@@ -1,4 +1,4 @@
-cwlVersion: v1.1
+cwlVersion: v1.2
 class: CommandLineTool
 label: Correct assembled contigs with Medaka.
 doc: |
@@ -9,7 +9,7 @@ requirements:
     listing: [ $(inputs.assembly) ]
   ResourceRequirement:
     coresMin: 8
-    ramMin: 8000 # 8 GB for testing, it needs more in production
+    ramMin: 8000
 hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.medaka:1.1.3

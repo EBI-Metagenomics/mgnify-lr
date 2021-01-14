@@ -1,4 +1,4 @@
-cwlVersion: v1.1
+cwlVersion: v1.2
 class: CommandLineTool
 label: Index read mapping (BAM) with Samtools.
 doc: |
@@ -9,7 +9,7 @@ requirements:
     listing: [ $(inputs.inputBam) ]
   ResourceRequirement:
     coresMin: 8
-    ramMin: 2000 # 2 GB for testing
+    ramMin: 2000
 hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.samtools:1.11

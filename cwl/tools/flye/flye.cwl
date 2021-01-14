@@ -1,4 +1,4 @@
-cwlVersion: v1.1
+cwlVersion: v1.2
 class: CommandLineTool
 label: Assembly of Nanopore reads with Flye assembler.
 doc: |
@@ -7,7 +7,7 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 8
-    ramMin: 8000
+    ramMin: 80000
 hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.flye:2.8.1

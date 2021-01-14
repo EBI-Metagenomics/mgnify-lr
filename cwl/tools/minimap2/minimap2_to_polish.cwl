@@ -1,4 +1,4 @@
-cwlVersion: v1.1
+cwlVersion: v1.2
 class: CommandLineTool
 label: Minimap2 to polish.
 doc: |
@@ -7,10 +7,10 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 8
-    ramMin: 2000 # 2 GB for testing, it needs more in production
+    ramMin: 2000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.minimap2:2.17
+    dockerPull: jcaballero/mgnify-lr.minimap2:2.17.4
 
 baseCommand: [ "minimap2" ]
 

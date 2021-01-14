@@ -1,4 +1,4 @@
-cwlVersion: v1.1
+cwlVersion: v1.2
 class: CommandLineTool
 label: removeSmallReads from a Fastq.
 doc: |
@@ -7,7 +7,7 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 1
-    ramMin: 2000 # 2 GB for testing, it needs more in production
+    ramMin: 2000
 hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.removesmallreads:0.0.1
