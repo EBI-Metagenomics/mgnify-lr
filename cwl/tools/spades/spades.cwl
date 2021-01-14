@@ -1,4 +1,4 @@
-cwlVersion: v1.1
+cwlVersion: v1.2
 class: CommandLineTool
 label: Hybrid assembly of Nanopore and Illumina reads with SPAdes.
 doc: |
@@ -11,7 +11,7 @@ requirements:
     ramMin: 8000 # 8 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.spades:3.14.1
+    dockerPull: jcaballero/mgnify-lr.spades:3.15.0
 
 baseCommand: [ spades.py ]
 
