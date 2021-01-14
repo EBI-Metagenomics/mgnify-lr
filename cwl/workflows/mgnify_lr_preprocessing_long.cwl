@@ -5,7 +5,6 @@ doc: |
       Implementation of pre-processing and QC for long-reads before assembly pipeline in MGnify
 
 requirements:
-  InlineJavascriptRequirement: {}
   ResourceRequirement:
     coresMin: 8
     ramMin: 8000
