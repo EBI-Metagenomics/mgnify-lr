@@ -1,72 +1,62 @@
 #!/usr/bin/perl
 
-# gen_csv.pl --reads [reads fastq] --contigs [contigs fasta] --out [report file]
-# script to generate a CSV table for ENA upload
+# gen_stats_json.pl --reads [reads Fastq] --contigs [contigs Fasta] --out [out JSON]
+# script to generate an assembly stats JSON for ENA upload
 # (C) 2021 EMBL-EBI
 
 use strict;
 use warnings;
 use Getopt::Long;
 
-my $reads     = undef;
-my $contigs   = undef;
-my $out       = undef;
-my $proj      = undef;
-my $run       = undef;
-my $coverage  = undef;
-my $assembler = "Flye";
-my $version   = "2.8.1";
-my $lineage   = "";
-my $biome     = "";
-my $upload    = "yes";
-my $nohead    = undef;
+my $reads       = undef;
+my $contigs     = undef;
+my $out         = "assembly_stats.json";
+my $coverage    = undef;
+my $mem_alloc   = 100;
+my $peak_mem    = undef;
+my $exec_time   = undef;
+my $assembler   = "Flye";
+my $version     = "2.8.1";
+my $our_version = "0.6";
 
 GetOptions ("reads=s"     => \$reads,
             "fasta=s"     => \$contigs,
             "out=s"       => \$out,
-            "proj=s"      => \$proj,
-            "idrun=s"     => \$run,
             "assembler=s" => \$assembler,
             "version=s"   => \$version,
-            "lineage=s"   => \$lineage,
-            "biome=s"     => \$biome,
-            "upload=s"    => \$upload,
-            "coverage=s"  => \$coverage,
-            "nohead"      => \$nohead
+            "coverage=f"  => \$coverage,
+            "mem_alloc=i" => \$mem_alloc,
+            "peak_mem=f"  => \$peak_mem,
+            "exec_time=f" => \$exec_time
         )
 or print_help();
-print_help() if ( !($reads) or !($contigs) or !($out) or !($proj) or !($run) or !($coverage));
-   
-my $header = "Project ID,Run ID,Assembler name,Assembler version,Input base pairs,Assembled base pairs (raw),Coverage,Num contigs,Largest contig,N50,L50,Num contigs (min length 1000),Sum of BP of contigs (min length 1000),Num contigs (min length 10000),Sum of BP of contigs (min length 10000),Num contigs (min length 50000),Sum of BP of contigs (min length 50000),lineage,biome_id,upload(yes/no),reason";
+print_help() unless (defined $reads and defined $contigs);
 open (my $oh, ">", $out) or die ("cannot write output to $out\n");
-
-print $oh "$header\n" unless ($nohead);
 
 my $input_bp = calc_input_bp($reads);
 my %stats    = calc_assembly_stats($contigs);
 
-print $oh join ",", 
-            $proj, 
-            $run, 
-            $assembler, 
-            $version, 
-            $input_bp, 
-            $stats{'seq_bp'}, 
-            $coverage, 
-            $stats{'seq_num'}, 
-            $stats{'longest'}, 
-            $stats{'n50'}, 
-            $stats{'l50'}, 
-            $stats{'seq_num_1k'}, 
-            $stats{'seq_bp_1k'}, 
-            $stats{'seq_num_10k'}, 
-            $stats{'seq_bp_10k'}, 
-            $stats{'seq_num_50k'}, 
-            $stats{'seq_bp_50k'},
-            $lineage,
-            $biome,
-            $upload,
-            "\n"; 
+print $oh <<JSON
+{
+  "assembler_name": "$assembler",
+  "assembler_version": "$version",
+  "mem_alloc": $mem_alloc,
+  "peak_mem": $peak_mem,
+  "exec_time": $exec_time,
+  "input_read_count": $input_bp,
+  "limited_1000": [$stats{'seq_num_1k'}, $stats{'seq_bp_1k'}],
+  "limited_10000": [$stats{'seq_num_10k'}, $stats{'seq_bp_10k'}],
+  "limited_50000": [$stats{'seq_num_50k'}, $stats{'seq_bp_50k'}],
+  "num_contigs": $stats{'seq_num'},
+  "assembly_length": $stats{'seq_bp'},
+  "largest_contig": $stats{'longest'},
+  "n50": $stats{'n50'},
+  "l50": $stats{'l50'},
+  "coverage": $coverage,
+  "version": $our_version
+}
+JSON
+;
 close $oh;
 
 sub print_help {
@@ -74,20 +64,15 @@ sub print_help {
 Usage: perl gen_csv.pl [PARAMS]
     
 PARAMS
-    --fasta     -f     Path to the contigs Fasta*
-    --reads     -r     Path to the reads Fastq*
-    --out       -o     Path to report file*
-    --proj      -p     Project ID*
-    --idrun     -i     Run ID*
-    --coverage  -c     Computed coverage*
-    --assembler -a     Assembler name, default: "$assembler"
-    --version   -v     Assembler version, default: "$version"
-    --lineage   -l     Lineage
-    --biome     -b     Biome
-    --upload    -u     Upload field (yes/no), default: "$upload"
-    --nohead    -n     Don't print header line
-
- *Required
+    --fasta     -f    [str]    Path to the contigs Fasta
+    --reads     -r    [str]    Path to the reads Fastq
+    --out       -o    [str]    Output JSON file, default: "$out"
+    --coverage  -c    [float]  Computed coverage
+    --assembler -a    [str]    Assembler name, default: "$assembler"
+    --version   -v    [str]    Assembler version, default: "$version"
+    --mem_alloc -m    [int]    Reported mem allocation (Gb), default: "$mem_alloc"
+    --peak_mem  -p    [float]  Reported mem peak (Gb)
+    --exec_time -e    [float]  Reported run time (secs)
 
 HELP
 
