@@ -13,5 +13,6 @@ while (<>) {
     $sum += $ln[5];
 }
 
-my $mean = sprintf("%.1f", $sum / $num);
+my $mean = $sum / $num;
+$mean /= 100;
 print "$mean\n";
