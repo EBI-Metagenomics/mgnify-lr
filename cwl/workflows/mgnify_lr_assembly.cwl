@@ -47,17 +47,24 @@ inputs:
     type: string?
     label: clean contigs unmap to host genome (fasta)
     default: assembly_unmapHost.fasta
+  min_contig_size:
+    type: int?
+    label: filter assembly contigs by this size
+    default: 500
   final_assembly:
     type: string?
-    label: final assembly file (fasta)
-    default: assembly_final.fasta
+    label: final assembly file name (fasta)
+    default: contigs.fasta
   
 outputs:
   final_assembly_fasta:
     type: File
     format: edam:format_1929
-    outputSource: step_5_cleaning_host/outReads
-  
+    outputSource: step_6_filterContigs/outFasta
+  assembly_stats:
+    type: File
+    outputSource: step_7_assembly_stats/outAssemblyStats
+
 steps:
   step_1_assembly:
     label: assembly long-reads with flye
@@ -105,6 +112,24 @@ steps:
       refSeq: host_genome
       inSeq: step_4_polishing_medaka/outConsensus
     out: [ outReads ]
+
+  step_6_filterContigs:
+    label: remove short contigs
+    run: ../tools/filterContigs/filterContigs.cwl
+    in:
+      minSize: min_contig_size
+      inFasta: step_5_cleaning_host/outReads
+      outName: final_assembly
+    out: [ outFasta ]
+  
+  step_7_assembly_stats:
+    label: generation of assembly stats JSON
+    run: ../tools/assembly_stats/assemblyStats.cwl
+    in:
+      alignMode: align_polish
+      contigs: step_6_filterContigs/outFasta
+      reads: long_reads
+    out: [ outAssemblyStats ]
   
 $namespaces:
  edam: http://edamontology.org/
