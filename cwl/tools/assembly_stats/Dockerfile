@@ -1,15 +1,27 @@
-# Dockerfile for assembly_stats
+# Dockerfile for AssemblyStats
 
-FROM alpine:latest
+FROM ubuntu:latest
 
-RUN apk add --no-cache bash perl
+RUN apt update && \
+    apt upgrade -y && \
+    apt install -y \
+        wget \
+        samtools
 
-COPY calc_stats.pl /usr/local/bin
-RUN chmod +x /usr/local/bin/calc_stats.pl
+ENV minimap2Ver=2.17
+WORKDIR /opt
+RUN wget -q https://github.com/lh3/minimap2/releases/download/v${minimap2Ver}/minimap2-${minimap2Ver}_x64-linux.tar.bz2 && \
+    tar jxf minimap2-${minimap2Ver}_x64-linux.tar.bz2 && \
+    cp minimap2-${minimap2Ver}_x64-linux/minimap2 /usr/local/bin && \
+    rm -rf minimap2-${minimap2Ver}_x64-linux*
 
-LABEL software="assemblyStats"
-LABEL software.version="0.0.1"
-LABEL description="Quick tool to calculate assembly stats in a Fasta/Fastq input"
+COPY calc_stats.pl /usr/local/bin/
+COPY gen_stats_json.pl /usr/local/bin/
+RUN chmod +x /usr/local/bin/*
+
+LABEL software="AssemblyStats"
+LABEL software.version="0.0.2"
+LABEL description="Tools to compute assembly statistics (N50, coverage, contigs, ...)"
 
 # for singularity compatibility
 ENV LC_ALL=C
