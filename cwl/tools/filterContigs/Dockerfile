@@ -1,4 +1,4 @@
-# Dockerfile for removeSmallContigs
+# Dockerfile for filterContigs
 
 FROM alpine:latest
 
@@ -8,7 +8,7 @@ COPY filterContigs.pl /usr/local/bin
 RUN chmod +x /usr/local/bin/filterContigs.pl
 
 LABEL software="removeSmallContigs"
-LABEL software.version="0.0.1"
+LABEL software.version="0.0.2"
 LABEL description="Quick tool to filter contigs by size a Fastas input"
 
 # for singularity compatibility

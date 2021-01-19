@@ -51,14 +51,17 @@ while (<$ih>) {
     my $len = length $seq;
     if ($len >= $minsize) {
         print $oh ">$id\n";
-        print $oh join "\n", @seq;
-        print $oh "\n";
+        while ($seq) {
+            print $oh substr($seq, 0, 80), "\n";
+            substr($seq, 0, 80) = '';
+        }
         $pass++;
     }
 }
 close $ih;
 close $oh;
-# quik report
+
+# quick report
 my @path = split(/\//, $infile);
 warn "Input file:  $path[-1]\n";
 warn "Min size:    $minsize\n";
