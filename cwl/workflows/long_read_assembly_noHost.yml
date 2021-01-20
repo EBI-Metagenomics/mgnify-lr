@@ -1,0 +1,25 @@
+raw_reads:
+  class: File
+  format: edam:format_1930
+  path: ../../test_data/small.fastq.gz
+min_read_size: 200
+raw_reads_report: raw_reads_stats.txt
+align_preset: none
+reads_filter_bysize: reads_filtered
+host_unmaped_reads: reads_filtered_2.fastq.gz
+
+lr_tech: nanopore
+align_polish: map-ont
+polish_paf: meta_polish.paf
+polish_assembly_racon: meta_assembly.fasta
+medaka_model: r941_min_high_g360
+host_unmaped_contigs: meta_assembly_filtered.fasta
+min_contig_size: 500
+final_assembly: meta_assembly_final.fasta
+
+predict_proteins: meta_assembly_pred_prot.fasta
+uniprot_index:
+  class: File
+  path: ../db/uniprot.dmnd
+diamond_out: meta_assembly_diamond.tsv
+ideel_out: meta_assembly_ideel.pdf
