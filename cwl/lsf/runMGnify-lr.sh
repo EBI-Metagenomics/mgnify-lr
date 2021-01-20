@@ -19,7 +19,7 @@ export DOCKER="True"         # flag to use singularity+docker
 export RESTART="False"       # flag to try to restart a failed run
 
 # max limit of memory that would be used by toil to restart
-export MEMORY=120
+export MEMORY=100
 # number of cores to run toil
 export NUM_CORES=8
 # lsf queue limit
@@ -112,35 +112,16 @@ if [ "$HOSTFA" != "null" ]; then PARAM="$PARAM -g $HOSTFA"; fi
 
 case $TYPE in
     assembly)
-        if [ "$HOSTFA" == "null" ]
-        then
-            export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly_noHost.cwl
-        else
-            export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly.cwl
-        fi
-        ;;
-    polish)
-        PARAM="$PARAM -1 $FORWARD_READS -2 $REVERSE_READS -i $MINILL"
-        if [ "$HOSTFA" == "null" ]
-        then
-            export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly_noHost_polish.cwl
-        else
-            export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly_polish.cwl
-        fi
-        ;;
+        export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly_noHost.cwl
+    ;;
     hybrid)
         PARAM="$PARAM -1 $FORWARD_READS -2 $REVERSE_READS -i $MINILL"
-        if [ "$HOSTFA" == "null" ]
-        then
-            export CWL=${PIPELINE_FOLDER}/workflows/hybrid_read_assembly_noHost.cwl
-        else
-            export CWL=${PIPELINE_FOLDER}/workflows/hybrid_read_assembly.cwl
-        fi
-        ;;
+        export CWL=${PIPELINE_FOLDER}/workflows/hybrid_read_assembly_noHost.cwl
+    ;;
     *)
-        echo "unsuported analysis: $TYPE"
+        echo "unsuported analysis types: $TYPE"
         exit 1
-        ;;
+    ;;
 esac
 
 if [ "$RESTART" == "False" ]
