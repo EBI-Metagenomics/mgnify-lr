@@ -11,43 +11,45 @@ requirements:
     ramMin: 8000
 
 inputs:
+  # inputs for preprocessing
   raw_reads:
     type: File
     format: edam:format_1930
-    label: long reads to assemble
-  lr_tech:
-    type: string?
-    label: long reads technology, supported techs are nanopore and pacbio
-    default: nanopore
+    label: Fastq file to process
   min_read_size:
     type: int?
-    label: raw reads filter by size
+    label: Raw reads filter by size
     default: 200
-  min_contig_size:
-    type: int?
-    label: contigs filter by size
-    default: 500
   raw_reads_report:
     type: string?
     label: initial sequences report
     default: raw_reads_stats.txt
-  reads_filter_bysize_name:
-    type: string?
-    label: prefix file for reads with length lt min_read_size
-    default: reads_filtered
-  host_genome:
-    type: File
-    format: edam:format_1929
-    label: genome host, used for decontaminate
-    default: ../db/genome.fa.gz
   align_preset:
     type: string?
-    label: minimap2 align mode
-    default: map-ont
+    label: minimap2 align preset, if set to 'none', no host filtering is applied
+    default: none
+  reads_filter_bysize:
+    type: string?
+    label: prefix for reads with length lt min_read_size
+    default: reads_filtered
+  host_genome:
+    type: File?
+    format: edam:format_1929
+    label: index name for genome host, used for decontaminate
   host_unmaped_reads:
     type: string?
     label: unmapped reads to the host genome
-    default: host_unmaped.fastq.gz
+    default: reads_filtered.fastq.gz
+
+  # inputs for assembly
+  lr_tech:
+    type: string?
+    label: long reads technology, supported techs are nanopore and pacbio
+    default: nanopore
+  align_polish:
+    type: string?
+    label: minimap2 align mode for polish, can be map-ont (nanopore) or map-pb (pacbio)
+    default: map-ont
   polish_paf:
     type: string?
     label: polish align PAF file
@@ -59,188 +61,117 @@ inputs:
   medaka_model:
     type: string?
     label: medaka model to improve assembly
-    default: r941_min_fast_g330
+    default: r941_min_high_g360
   host_unmaped_contigs:
     type: string?
     label: clean contigs unmap to host genome (fasta)
-    default: assembly_unmapHost.fasta
+    default: assembly_filtered.fasta
+  min_contig_size:
+    type: int?
+    label: filter assembly contigs by this size
+    default: 500
   final_assembly:
     type: string?
-    label: final assembly file (fasta)
-    default: assembly_final.fasta
-  final_assembly_stats:
-    type: string?
-    label: final assembly stats
-    default: assembly_final_stats.txt
+    label: final assembly file name (fasta)
+    default: contigs.fasta
+  # inputs for post-processing
   predict_proteins:
     type: string?
     label: predicted proteins from assembly (fasta)
     default: predicted_proteins.fasta
-  predict_proteins_gbk:
-    type: string?
-    label: predicted proteins from assembly (gbk)
-    default: predicted_proteins.gbk
   uniprot_index:
     type: File
     label: uniprot index file
-    default: ../db/uniprot.dmnd
   diamond_out:
     type: string?
     label: proteins align to Uniprot
-    default: predict_proteins_diamond.tsv
+    default: predicted_proteins_diamond.tsv
   ideel_out:
     type: string?
     label: protein completeness evaluation
-    default: ideel_report.pdf
+    default: predicted_proteins_ideel.pdf
 
 outputs:
+  # outputs from preprocessing
   raw_reads_stats:
     type: File
-    outputSource: step_1_pre_assembly_stats/outReport
+    outputSource: step_1_preprocessing/raw_reads_stats
   filtered_reads_qcHtml:
     type: File
-    outputSource: step_2_filterShortReads/qchtml
+    outputSource: step_1_preprocessing/reads_qc_html
   filtered_reads_qcJson:
     type: File
-    outputSource: step_2_filterShortReads/qcjson
+    outputSource: step_1_preprocessing/reads_qc_json
+  # outputs from assembly
   final_assembly_fasta:
     type: File
     format: edam:format_1929
-    outputSource: step_6b_cleaning2_filterContigs/outFasta
+    outputSource: step_2_assembly/final_assembly_fasta
   final_assembly_report:
     type: File
-    outputSource: step_6c_cleaning_assemblyStats/outReport 
+    outputSource: step_2_assembly/assembly_stats
+  # outputs from postprocessing 
   predict_proteins_fasta:
     type: File
     format: edam:format_1929
-    outputSource: step_7a_annotation_prodigal/outProt
+    outputSource: step_3_postprocessing/predict_proteins_fasta
   diamond_align_table:
     type: File
-    outputSource: step_7d_annotation_diamond/alignment
+    outputSource: step_3_postprocessing/diamond_align_table
   ideel_pdf:
     type: File
-    outputSource: step_7e_annotation_ideel/outFig
+    outputSource: step_3_postprocessing/ideel_pdf
 
 steps:
-  step_1_pre_assembly_stats:
-    label: pre-assembly stats
-    run: ../tools/assembly_stats/assemblyStatsFastq.cwl
+  step_1_preprocessing:
+    label: preprocessing of raw data
+    run: mgnify_lr_preprocessing_long.cwl
     in:
-      inFile: raw_reads
-      outReport: raw_reads_report
-    out: [ outReport ]
-
-  step_2_filterShortReads:
-    label: filtering short reads
-    run: ../tools/fastp/fastp_filter.cwl
+      raw_reads: raw_reads
+      min_read_size: min_read_size
+      raw_reads_report: raw_reads_report
+      align_preset: align_preset
+      reads_filter_bysize: reads_filter_bysize
+      host_genome: host_genome
+      host_unmaped_reads: host_unmaped_reads
+    out: 
+      - raw_reads_stats
+      - reads_qc_html
+      - reads_qc_json
+      - reads_output
+  
+  step_2_assembly:
+    label: assembly of reads
+    run: mgnify_lr_assembly.cwl
     in:
-      reads: raw_reads
-      minLength: min_read_size
-      name: reads_filter_bysize_name
+      long_reads: step_1_preprocessing/reads_output
+      lr_tech: lr_tech
+      host_genome: host_genome
+      align_preset: align_preset
+      align_polish: align_polish
+      polish_paf: polish_paf
+      polish_assembly_racon: polish_assembly_racon
+      medaka_model: medaka_model
+      host_unmaped_contigs: host_unmaped_contigs
+      min_contig_size: min_contig_size
+      final_assembly: final_assembly
     out:
-      - outReads
-      - qcjson
-      - qchtml
-  
-  step_3_cleaning_alignHost:
-    label: align reads to the genome fasta index
-    run: ../tools/minimap2_filter/minimap2_filterHostFq.cwl
-    in:
-      alignMode: align_preset
-      outReadsName: host_unmaped_reads
-      inSeq: step_2_filterShortReads/outReads
-      refSeq: host_genome
-    out: [ outReads ]
+      - final_assembly_fasta
+      - assembly_stats
 
-  step_4_assembly:
-    label: assembly long-reads with flye
-    run: ../tools/flye/flye_runner.cwl
+  step_3_postprocessing:
+    label: postprocessing analysis for assembly
+    run: mgnify_lr_postprocessing.cwl
     in:
-      readType: lr_tech
-      readFile: step_3_cleaning_alignHost/outReads
-    out: [ contigs_fasta ]
-
-  step_5a_polishing_minimap2:
-    label: polishing step 1, map reads back to assembly with minimap2
-    run: ../tools/minimap2/minimap2_to_polish.cwl
-    in:
-      alignMode: align_preset
-      inAssembly: step_4_assembly/contigs_fasta
-      inReads: step_3_cleaning_alignHost/outReads
-      outPAFname: polish_paf
-    out: [ outPAF ]
-
-  step_5b_polishing_racon:
-    label: polishing step 2, using racon to improve assembly
-    run: ../tools/racon/racon.cwl
-    in:
-      inReads: step_3_cleaning_alignHost/outReads
-      mapping: step_5a_polishing_minimap2/outPAF
-      assembly: step_4_assembly/contigs_fasta
-      outName: polish_assembly_racon
-    out: [ outAssembly ]
-
-  step_5c_polishing_medaka:
-    label: polishing step 3, using medaka to create a consensus
-    run: ../tools/medaka/medaka.cwl
-    in:
-      inReads: step_3_cleaning_alignHost/outReads
-      assembly: step_5b_polishing_racon/outAssembly
-      medakaModel: medaka_model
-    out: [ outConsensus ]
-  
-  step_6a_cleaning2_alignHost:
-    label: post-assembly cleaning, mapping with minimap2
-    run: ../tools/minimap2_filter/minimap2_filterHostFa.cwl
-    in:
-      alignMode: align_preset
-      outReadsName: host_unmaped_contigs
-      refSeq: host_genome
-      inSeq: step_5c_polishing_medaka/outConsensus
-    out: [ outReads ]
-  
-  step_6b_cleaning2_filterContigs:
-    label: remove short contigs
-    run: ../tools/filterContigs/filterContigs.cwl
-    in:
-      minSize: min_contig_size
-      inFasta: step_6a_cleaning2_alignHost/outReads
-      outFasta: final_assembly
-    out: [ outFasta ]
-
-  step_6c_cleaning_assemblyStats:
-    label: final assembly stats report
-    run: ../tools/assembly_stats/assemblyStatsFasta.cwl
-    in:
-      inFile: step_6b_cleaning2_filterContigs/outFasta
-      outReport: final_assembly_stats
-    out: [ outReport ]
-
-  step_7a_annotation_prodigal:
-    label: predict proteins in assembly with Prodigal
-    run: ../tools/prodigal/prodigal.cwl
-    in:
-      inNucl: step_6b_cleaning2_filterContigs/outFasta
-      outProtName: predict_proteins
-      outGbkName: predict_proteins_gbk
-    out: [ outProt ]
-
-  step_7d_annotation_diamond:
-    label: search Uniprot database with diamond
-    run: ../tools/diamond/diamond.cwl
-    in:
-      outName: diamond_out
-      proteins: step_7a_annotation_prodigal/outProt
-      database: uniprot_index
-    out: [ alignment ]
-
-  step_7e_annotation_ideel:
-    label: ideel report for protein completeness
-    run: ../tools/ideel/ideelPy.cwl
-    in:
-      inputTable: step_7d_annotation_diamond/alignment
-      outFigName: ideel_out
-    out: [ outFig ]
+      assembly_input: step_2_assembly/final_assembly_fasta
+      predict_proteins: predict_proteins
+      uniprot_index: uniprot_index
+      diamond_out: diamond_out
+      ideel_out: ideel_out
+    out:
+      - predict_proteins_fasta
+      - diamond_align_table
+      - ideel_pdf
 
 $namespaces:
  edam: http://edamontology.org/
