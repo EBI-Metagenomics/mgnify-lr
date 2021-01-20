@@ -24,11 +24,11 @@ inputs:
   diamond_out:
     type: string?
     label: proteins align to Uniprot
-    default: predict_proteins_diamond.tsv
+    default: predicted_proteins_diamond.tsv
   ideel_out:
     type: string?
     label: protein completeness evaluation
-    default: ideel_report.pdf
+    default: predicted_proteins_ideel.pdf
 
 outputs:
   predict_proteins_fasta:
@@ -57,7 +57,7 @@ steps:
     run: ../tools/diamond/diamond.cwl
     in:
       outName: diamond_out
-      proteins: step_4_prodigal/outProt
+      proteins: step_1_prodigal/outProt
       database: uniprot_index
     out: [ alignment ]
 
@@ -65,7 +65,7 @@ steps:
     label: ideel report for protein completeness
     run: ../tools/ideel/ideelPy.cwl
     in:
-      inputTable: step_5_diamond/alignment
+      inputTable: step_2_diamond/alignment
       outFigName: ideel_out
     out: [ outFig ]
 
