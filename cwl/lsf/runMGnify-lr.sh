@@ -4,7 +4,7 @@
 # (c) 2020 EMBL- EBI
 
 # defaults
-export TYPE=null             # analysis type: {assembly, hybrid, polish}
+export TYPE=null             # analysis type: {assembly, hybrids}
 export FORWARD_READS=null    # path to illumina first pair reads fastq file
 export REVERSE_READS=null    # path to illumina second pair reads fastq file
 export SINGLE=null           # path to nanopore read fastq file
@@ -112,11 +112,11 @@ if [ "$HOSTFA" != "null" ]; then PARAM="$PARAM -g $HOSTFA"; fi
 
 case $TYPE in
     assembly)
-        export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly_noHost.cwl
+        export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly.cwl
     ;;
     hybrid)
         PARAM="$PARAM -1 $FORWARD_READS -2 $REVERSE_READS -i $MINILL"
-        export CWL=${PIPELINE_FOLDER}/workflows/hybrid_read_assembly_noHost.cwl
+        export CWL=${PIPELINE_FOLDER}/workflows/hybrid_read_assembly.cwl
     ;;
     *)
         echo "unsuported analysis types: $TYPE"
