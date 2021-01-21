@@ -1,8 +1,0 @@
-name: nanoplotTest
-reads:
-  class: File
-  format: edam:format_1930
-  path: ../../../../test_data/small.fastq.gz
-pcolor: darkslategrey
-pformat: png
-ptype: hex

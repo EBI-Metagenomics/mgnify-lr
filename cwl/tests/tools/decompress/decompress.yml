@@ -1,3 +1,0 @@
-gzfile:
-  class: File
-  path: ../../../../test_data/eco_phix_dcs.fa.gz
