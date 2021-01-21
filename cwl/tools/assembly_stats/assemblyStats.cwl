@@ -53,18 +53,6 @@ outputs:
     type: File
     outputBinding:
       glob: "assembly_stats.json"
-  outSAM:
-    type: File
-    outputBinding:
-      glob: "*.sam"
-  outBAM:
-    type: File
-    outputBinding:
-      glob: "*.bam"
-  outCOV:
-    type: File
-    outputBinding:
-      glob: "*.cov"
   
 stdout: assemblyStats.log
 stderr: assemblyStats.err

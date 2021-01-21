@@ -1,0 +1,5 @@
+inFile:
+  class: File
+  format: edam:format_1930
+  path: ../../../../test_data/small.fastq.gz
+outReport: assemblyStats_fastq.txt

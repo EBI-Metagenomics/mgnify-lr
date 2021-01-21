@@ -7,7 +7,10 @@
     "minimap2_filterHostFq": {
         "unmapped_reads.fastq.gz":   "34f815a3cbefa8c5a624a51738faa123"
     },
-    "flye": {
+    "flye_nano": {
+        "assembly.fasta":            "checked by size"
+    },
+    "flye_pacbio": {
         "assembly.fasta":            "checked by size"
     },
     "minimap2_to_polish": {
@@ -38,5 +41,17 @@
     },
     "pilon": {
         "assembly_pilon.fasta":      "bd4997dd1b730639f5114b5a5e745499"
-    }    
+    },
+    "filterContigs": {
+        "assembly_filtered.fasta":   "3ae140e9b72d0d6266201b14452adaf0"
+    },
+    "assemblyStatsFastq": {
+        "assemblyStats_fastq.txt":   "8917afdf1cd62a639685423879d91243"
+    },
+    "assemblyStatsFasta": {
+        "assemblyStats_fasta.txt":   "89a24e4a02dbfa2f844062767eb0392f"
+    },
+    "assemblyStats": {
+        "assembly_stats.json":       "ee4f8eceb0ac0a98a4d8de4cfc228f65"
+    }
 }

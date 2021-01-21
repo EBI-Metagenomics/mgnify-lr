@@ -47,12 +47,19 @@ class TestMinimap2filterHostFq(unittest.TestCase):
             self.assertEqual(md5(file), check)
 
 class TestFlye(unittest.TestCase):
-    def test_flye(self):
-        print("Checking flye")
+    def test_flye_nano(self):
+        print("Checking flye with nanopore")
         cwl = "../tools/flye/flye.cwl"
-        yml = "./tools/flye/flye.yml"
+        yml = "./tools/flye/flye_nano.yml"
         subprocess.check_call([cwl_runner, cwl, yml])
-        for file in files_md5["flye"].keys():
+        for file in files_md5["flye_nano"].keys():
+            self.assertTrue(os.path.getsize(file) > 100)
+    def test_flye_pacbio(self):
+        print("Checking flye with pacbio")
+        cwl = "../tools/flye/flye.cwl"
+        yml = "./tools/flye/flye_pacbio.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["flye_pacbio"].keys():
             self.assertTrue(os.path.getsize(file) > 100)
 
 class TestMinimap2ToPolish(unittest.TestCase):
@@ -142,6 +149,52 @@ class TestPilon(unittest.TestCase):
         subprocess.check_call([cwl_runner, cwl, yml])
         for file in files_md5["pilon"].keys():
             check = files_md5["pilon"][file]
+            self.assertEqual(md5(file), check)
+
+class TestPilon(unittest.TestCase):
+    def test_pilon(self):
+        print("Checking pilon")
+        cwl = "../tools/pilon/pilon.cwl"
+        yml = "./tools/pilon/pilon.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["pilon"].keys():
+            check = files_md5["pilon"][file]
+            self.assertEqual(md5(file), check)
+
+class TestFilterContigs(unittest.TestCase):
+    def test_filterContigs(self):
+        print("Checking filterContigs")
+        cwl = "../tools/filterContigs/filterContigs.cwl"
+        yml = "./tools/filterContigs/filterContigs.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["filterContigs"].keys():
+            check = files_md5["filterContigs"][file]
+            self.assertEqual(md5(file), check)
+
+class TestAssemblyStats(unittest.TestCase):
+    def test_assemblyStats_fastq(self):
+        print("Checking assemblyStats (fastq)")
+        cwl = "../tools/assembly_stats/assemblyStatsFastq.cwl"
+        yml = "./tools/assembly_stats/assemblyStatsFastq.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["assemblyStatsFastq"].keys():
+            check = files_md5["assemblyStatsFastq"][file]
+            self.assertEqual(md5(file), check)
+    def test_assemblyStats_fasta(self):
+        print("Checking assemblyStats (fasta)")
+        cwl = "../tools/assembly_stats/assemblyStatsFasta.cwl"
+        yml = "./tools/assembly_stats/assemblyStatsFasta.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["assemblyStatsFasta"].keys():
+            check = files_md5["assemblyStatsFasta"][file]
+            self.assertEqual(md5(file), check)
+    def test_assemblyStats_cov(self):
+        print("Checking assemblyStats (coverage)")
+        cwl = "../tools/assembly_stats/assemblyStats.cwl"
+        yml = "./tools/assembly_stats/assemblyStats.yml"
+        subprocess.check_call([cwl_runner, cwl, yml])
+        for file in files_md5["assemblyStats"].keys():
+            check = files_md5["assemblyStats"][file]
             self.assertEqual(md5(file), check)
 
 if __name__ == "__main__":
