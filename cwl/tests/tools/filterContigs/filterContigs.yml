@@ -1,0 +1,6 @@
+inFasta:
+  class: File
+  format: edam:format_1929
+  path: ../../../../test_data/assembly.fasta
+minSize: 500
+outName: assembly_filtered.fasta
