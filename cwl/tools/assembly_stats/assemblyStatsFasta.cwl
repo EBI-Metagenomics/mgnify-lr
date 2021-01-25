@@ -10,7 +10,7 @@ requirements:
     ramMin: 2000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.assemblystats:0.0.2
+    dockerPull: jcaballero/mgnify-lr.assemblystats:0.0.3
 
 baseCommand: [ "calc_stats.pl" ]
 

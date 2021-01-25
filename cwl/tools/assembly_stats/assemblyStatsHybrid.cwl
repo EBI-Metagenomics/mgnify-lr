@@ -1,8 +1,8 @@
 cwlVersion: v1.2
 class: CommandLineTool
-label: AssemblyStats from a Contig assembly.
+label: AssemblyStats from a Contig hybrid assembly.
 doc: |
-      Implementation of computing statistics (N50 and others) for an assembly file.
+      Implementation of computing statistics (N50 and others) for a hybrid assembly file.
 
 requirements:
   InitialWorkDirRequirement:
@@ -20,9 +20,9 @@ arguments:
   - -n
   - $(runtime.cores)
   - -a
-  - Flye
+  - metaSPAdes
   - -v
-  - 2.8.1
+  - 3.15.0
   - -m
   - "100"
 
@@ -39,13 +39,27 @@ inputs:
     format: edam:format_1930
     label: original raw data in Fastq
     inputBinding:
-      position: 1
+      position: 2
       prefix: -r
+  p1_reads:
+    type: File
+    format: edam:format_1930
+    label: original raw short-reads (first pair) in Fastq
+    inputBinding:
+      position: 3
+      prefix: -1
+  p2_reads:
+    type: File
+    format: edam:format_1930
+    label: original raw short-reads (second pair) in Fastq
+    inputBinding:
+      position: 4
+      prefix: -2
   alignMode:
     type: string
     label: align mode for minimap2 mapping
     inputBinding:
-      position: 2
+      position: 5
       prefix: -t
  
 outputs:
