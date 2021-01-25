@@ -15,6 +15,8 @@ print_help () {
     echo "prepare_upload.sh [PARAM]"
     echo
     echo "Parameter |  Definition"
+
+    
     echo "   -p     |  ProjectID (SRPxxx|ERPxxx|DRPxxx)"
     echo "   -c     |  Path to the directory with contigs Fasta (file name must have run id [S/E/D]RRxxx)"
     echo "   -r     |  Path to the directory with raw reads Fastq (*fastq.gz)"

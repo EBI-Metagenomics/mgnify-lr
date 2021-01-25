@@ -35,7 +35,6 @@ inputs:
     type: File?
     format: edam:format_1929
     label: index name for genome host, used for decontaminate
-    default: ../db/genome.fa.gz
   pilon_align:
     type: string?
     label: illumina reads alignment for polishing
@@ -53,7 +52,10 @@ outputs:
   final_assembly_fasta:
     type: File
     format: edam:format_1929
-    outputSource: step_6_cleaning_host/outReads
+    outputSource: step_7_filterContigs/outFasta
+  assembly_stats:
+    type: File
+    outputSource: step_8_assembly_stats/outAssemblyStats
 
 steps:
   step_1_assembly:
@@ -114,6 +116,25 @@ steps:
       inSeq: step_5_polishing_pilon_rnd2/outfile
     out: [ outReads ]
 
+  step_7_filterContigs:
+    label: remove short contigs
+    run: ../tools/filterContigs/filterContigs.cwl
+    in:
+      minSize: min_contig_size
+      inFasta: step_6_cleaning_host/outReads
+      outName: final_assembly
+    out: [ outFasta ]
+  
+  step_8_assembly_stats:
+    label: generation of assembly stats JSON
+    run: ../tools/assembly_stats/assemblyStatsHybrid.cwl
+    in:
+      alignMode: align_polish
+      contigs: step_7_filterContigs/outFasta
+      reads: long_reads
+      p1_reads: p1_reads
+      p2_reads: p2_reads
+    out: [ outAssemblyStats ]
 
 $namespaces:
  edam: http://edamontology.org/

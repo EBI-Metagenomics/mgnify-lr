@@ -1,8 +1,8 @@
-cwlVersion: v1.2.0-dev5
+cwlVersion: v1.2
 class: Workflow
 label: Hybrid read assembly workflow
 doc: |
-      Implementation of nanopore + illumina reads assembly pipeline
+      Implementation of long-reads + short-reads assembly pipeline
 
 requirements:
   SubworkflowFeatureRequirement: {}
@@ -11,14 +11,11 @@ requirements:
     ramMin: 8000
 
 inputs:
+  # inputs for preprocessing
   raw_reads:
     type: File
     format: edam:format_1930
     label: long reads to assemble
-  lr_tech:
-    type: string?
-    label: long reads technology, supported techs are nanopore and pacbio
-    default: nanopore
   p1_reads:
     type: File
     format: edam:format_1930
@@ -31,35 +28,30 @@ inputs:
     type: int?
     label: Raw reads filter by size (nanopore)
     default: 200
-  min_read_size_ill:
+  min_read_size_short:
     type: int?
     label: Raw reads filter by size (illumina)
     default: 50
-  min_contig_size:
-    type: int?
-    label: contigs filter by size
-    default: 500
   raw_reads_report:
     type: string?
     label: initial sequences report
     default: raw_reads_stats.txt
   align_preset:
     type: string?
-    label: minimap2 align preset
-    default: map-ont
-  reads_filter_bysize_nano:
+    label: minimap2 align preset, if set to 'none', no host filtering is applied
+    default: none
+  reads_filter_bysize:
     type: string?
     label: prefix for reads with length lt min_read_size
     default: nano_reads_filtered
-  reads_filter_bysize_ill:
+  reads_filter_bysize_short:
     type: string?
     label: prefix for reads with length lt min_read_size
     default: ill_reads_filtered
   host_genome:
-    type: File
+    type: File?
     format: edam:format_1929
     label: index name for genome host, used for decontaminate
-    default: ../db/genome.fa.gz
   host_unmaped_reads:
     type: string?
     label: unmapped reads to the host genome
@@ -72,6 +64,16 @@ inputs:
     type: string?
     label: unmapped reads to the host genome
     default: host_unmaped_2.fastq.gz
+
+  # inputs for assembly  
+  lr_tech:
+    type: string?
+    label: long reads technology, supported techs are nanopore and pacbio
+    default: nanopore
+  min_contig_size:
+    type: int?
+    label: contigs filter by size
+    default: 500
   pilon_align:
     type: string?
     label: illumina reads alignment for polishing
@@ -88,22 +90,15 @@ inputs:
     type: string?
     label: final assembly file (fasta)
     default: assembly_final.fasta
-  final_assembly_stats:
-    type: string?
-    label: final assembly stats
-    default: assembly_final_stats.txt
+
+  # inputs for post-processing
   predict_proteins:
     type: string?
     label: predicted proteins from assembly (fasta)
     default: predicted_proteins.fasta
-  predict_proteins_gbk:
-    type: string?
-    label: predicted proteins from assembly (gbk)
-    default: predicted_proteins.gbk
   uniprot_index:
     type: File
     label: uniprot index file
-    default: ../db/uniprot.dmnd
   diamond_out:
     type: string?
     label: proteins align to Uniprot
@@ -114,28 +109,31 @@ inputs:
     default: ideel_report.pdf
 
 outputs:
+  # outputs for preprocessing
   raw_reads_stats:
     type: File
-    outputSource: step_0_pre_assembly_stats/outReport
-  filtered_reads_nano_qc_html:
+    outputSource: step_1a_preprocessing_long/raw_reads_stats
+  filtered_reads_long_qc_html:
     type: File
-    outputSource: step_1a_filterShortReads_nano/qchtml 
-  filtered_reads_nano_qc_json:
+    outputSource: step_1a_preprocessing_long/reads_qc_html
+  filtered_reads_long_qc_json:
     type: File
-    outputSource: step_1a_filterShortReads_nano/qcjson 
-  filtered_reads_ill_qc_html:
+    outputSource: step_1a_preprocessing_long/reads_qc_json
+  filtered_reads_short_qc_html:
     type: File
-    outputSource: step_1b_filterShortReads_ill/qchtml 
-  filtered_reads_ill_qc_json:
+    outputSource: step_1b_preprocessing_short/reads_qc_html 
+  filtered_reads_short_qc_json:
     type: File
-    outputSource: step_1b_filterShortReads_ill/qcjson 
+    outputSource: step_1b_preprocessing_short/reads_qc_json
+  # outputs from assembly
   final_assembly_fasta:
     type: File
     format: edam:format_1929
     outputSource: step_4d_cleaning2_filterContigs/outFasta
   final_assembly_report:
     type: File
-    outputSource: step_4e_cleaning2_assemblyStats/outReport 
+    outputSource: step_4e_cleaning2_assemblyStats/outReport
+  # outputs from post-processing 
   predict_proteins_fasta:
     type: File
     format: edam:format_1929
@@ -148,163 +146,72 @@ outputs:
     outputSource: step_5e_annotation_ideel/outFig
 
 steps:
-  step_0_pre_assembly_stats:
-    label: pre-assembly stats
-    run: ../tools/assembly_stats/assemblyStatsFastq.cwl
+  step_1a_preprocessing_long:
+    label: preprocessing of raw long-reads data
+    run: mgnify_lr_preprocessing_long.cwl
     in:
-      inFile: raw_reads
-      outReport: raw_reads_report
-    out: [ outReport ]
+      raw_reads: raw_reads
+      min_read_size: min_read_size
+      raw_reads_report: raw_reads_report
+      align_preset: align_preset
+      reads_filter_bysize: reads_filter_bysize
+      host_genome: host_genome
+      host_unmaped_reads: host_unmaped_reads
+    out: 
+      - raw_reads_stats
+      - reads_qc_html
+      - reads_qc_json
+      - reads_output
 
-  step_1a_filterShortReads_nano:
-    label: filtering short reads (nanopore)
-    run: ../tools/fastp/fastp_filter.cwl
-    in:
-      reads: raw_reads
-      minLength: min_read_size
-      name: reads_filter_bysize_nano
-    out:
-      - outReads
-      - qcjson
-      - qchtml
-
-  step_1b_filterShortReads_ill:
-    label: filtering short reads (illumina)
-    run: ../tools/fastp/fastp.cwl
+  step_1b_preprocessing_short:
+    label: preprocessing of raw short-reads data
+    run: mgnify_lr_preprocessing_short.cwl
     in:
       reads1: p1_reads
       reads2: p2_reads
-      minLength: min_read_size_ill
-      name: reads_filter_bysize_ill
-    out:
-      - outreads1
-      - outreads2
-      - qcjson
-      - qchtml
+      min_read_size: min_read_size_short
+      align_preset: align_preset
+      reads_filter_bysize: reads_filter_bysize_short
+      host_genome: host_genome
+      host_unmaped_reads_1: host_unmaped_reads_1
+      host_unmaped_reads_2: host_unmaped_reads_2
+    out: 
+      - reads_qc_html
+      - reads_qc_json
+      - reads_out_1
+      - reads_out_2
 
-  step_1c_cleaning_alignHost_nano:
-    label: align reads to the genome fasta index
-    run: ../tools/minimap2_filter/minimap2_filterHostFq.cwl
-    in:
-      alignMode: align_preset
-      outReadsName: host_unmaped_reads
-      inSeq: step_1a_filterShortReads_nano/outReads
-      refSeq: host_genome
-    out: [ outReads ]
-
-  step_1d_cleaning_alignHost_ill:
-    label: align reads to the genome fasta index
-    run: ../tools/bwa/bwa-mem2_filterHostFq.cwl
-    in:
-      reads1: step_1b_filterShortReads_ill/outreads1
-      reads2: step_1b_filterShortReads_ill/outreads2
-      out1name: host_unmaped_reads_1
-      out2name: host_unmaped_reads_2
-      reference: host_genome
-    out:
-      - out1
-      - out2
-    
   step_2_assembly:
-    label: hybrid assembly with SPAdes
-    run: ../tools/spades/spades_runner.cwl
+    label: Hybrid assembly with metaSPAdes
+    run: mgnify_lr_assembly_hybrid.cwl
     in:
-      readType: lr_tech
-      readFile: step_1c_cleaning_alignHost_nano/outReads
-      reads1: step_1d_cleaning_alignHost_ill/out1
-      reads2: step_1d_cleaning_alignHost_ill/out2
-    out: [ contigs_fasta ]
+      long_reads: step_1a_preprocessing_long/reads_output
+      lr_tech: lr_tech
+      p1_reads: step_1b_preprocessing_short/reads_out_1
+      p2_reads: step_1b_preprocessing_short/reads_out_2
+      align_preset: align_preset
+      host_genome: host_genome
+      pilon_align: pilon_align
+      polish_assembly_pilon: polish_assembly_pilon
+      final_assembly: final_assembly
+    out:
+      - final_assembly_fasta
+      - assembly_stats
 
-  step_3a_polishing_illumina_align_rnd1:
-    label: aligning illumina reads to assembly
-    run: ../tools/bwa/bwa-mem2.cwl
-    in:
-      reads1: step_1d_cleaning_alignHost_ill/out1
-      reads2: step_1d_cleaning_alignHost_ill/out2
-      reference: step_2_assembly/contigs_fasta
-      bamName: pilon_align
-    out: [ bam ]
-
-  step_3b_polishing_pilon_rnd1:
-    label: polishing assembly with pilon
-    run: ../tools/pilon/pilon.cwl
-    in:
-      sequences: step_2_assembly/contigs_fasta
-      alignment: step_3a_polishing_illumina_align_rnd1/bam
-      outfile: polish_assembly_pilon
-    out: [ outfile ]
-
-  step_4a_polishing_illumina_align_rnd2:
-    label: aligning illumina reads to assembly
-    run: ../tools/bwa/bwa-mem2.cwl
-    in:
-      reads1: step_1d_cleaning_alignHost_ill/out1
-      reads2: step_1d_cleaning_alignHost_ill/out2
-      reference: step_3b_polishing_pilon_rnd1/outfile
-      bamName: pilon_align
-    out: [ bam ]
-
-  step_4b_polishing_pilon_rnd2:
-    label: polishing assembly with pilon
-    run: ../tools/pilon/pilon.cwl
-    in:
-      sequences: step_3b_polishing_pilon_rnd1/outfile
-      alignment: step_4a_polishing_illumina_align_rnd2/bam
-      outfile: polish_assembly_pilon
-    out: [ outfile ]
-  
-  step_4c_cleaning2_alignHost:
-    label: post-assembly cleaning, mapping with minimap2
-    run: ../tools/minimap2_filter/minimap2_filterHostFa.cwl
-    in:
-      alignMode: align_preset
-      outReadsName: host_unmaped_contigs
-      refSeq: host_genome
-      inSeq: step_4b_polishing_pilon_rnd2/outfile
-    out: [ outReads ]
-
-  step_4d_cleaning2_filterContigs:
-    label: remove short contigs
-    run: ../tools/filterContigs/filterContigs.cwl
-    in:
-      minSize: min_contig_size
-      inFasta: step_4c_cleaning2_alignHost/outReads
-      outFasta: final_assembly
-    out: [ outFasta ]
-
-  step_4e_cleaning2_assemblyStats:
-    label: final assembly stats report
-    run: ../tools/assembly_stats/assemblyStatsFasta.cwl
-    in:
-      inFile: step_4d_cleaning2_filterContigs/outFasta
-      outReport: final_assembly_stats
-    out: [ outReport ]
-
-  step_5a_annotation_prodigal:
-    label: predict proteins in assembly with Prodigal
-    run: ../tools/prodigal/prodigal.cwl
-    in:
-      inNucl: step_4d_cleaning2_filterContigs/outFasta
-      outProtName: predict_proteins
-      outGbkName: predict_proteins_gbk
-    out: [ outProt ]
-
-  step_5d_annotation_diamond:
-    label: search Uniprot database with diamond
-    run: ../tools/diamond/diamond.cwl
-    in:
-      outName: diamond_out
-      proteins: step_5a_annotation_prodigal/outProt
-      database: uniprot_index
-    out: [ alignment ]
-
-  step_5e_annotation_ideel:
-    label: ideel report for protein completeness
-    run: ../tools/ideel/ideelPy.cwl
-    in:
-      inputTable: step_5d_annotation_diamond/alignment
-      outFigName: ideel_out
-    out: [ outFig ]
+    step_3_postprocessing:
+      label: postprocessing analysis for assembly
+      run: mgnify_lr_postprocessing.cwl
+      in:
+        assembly_input: step_2_assembly/final_assembly_fasta
+        predict_proteins: predict_proteins
+        uniprot_index: uniprot_index
+        diamond_out: diamond_out
+        ideel_out: ideel_out
+      out:
+        - predict_proteins_fasta
+        - diamond_align_table
+        - ideel_pdf
+      
 
 $namespaces:
  edam: http://edamontology.org/
