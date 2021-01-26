@@ -235,14 +235,14 @@ sub calc_coverage_hyb {
     my $bam    = "$name.bam";
     my $sam2   = $name. "_pe.sam";
     my $bam2   = $name. "_pe.bam";
-    my $merge  = "$name" . "_merged.bam"
-    my $sort = "$name" . "_sorted.bam"
+    my $merge  = "$name" . "_merged.bam";
+    my $sort = "$name" . "_sorted.bam";
     system("minimap2 -a -t $threads -x $mode $contigs $reads > $sam");
     system("samtools sort -o $bam $sam");
     system("minimap2 -a -t $threads -x sr $contigs $reads1 $reads2 > $sam2");
     system("samtools sort -o $bam2 $sam2");
-    system("samtools merge -o $merge $bam $bam2")
-    system("samtools sort -o $sort $merge")
+    system("samtools merge $merge $bam $bam2");
+    system("samtools sort -o $sort $merge");
     system("samtools coverage $sort > $contigs.cov");
     my $sum = 0;
     my $num = 0;

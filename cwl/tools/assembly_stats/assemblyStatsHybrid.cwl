@@ -47,14 +47,14 @@ inputs:
     label: original raw short-reads (first pair) in Fastq
     inputBinding:
       position: 3
-      prefix: -1
+      prefix: "-1"
   p2_reads:
     type: File
     format: edam:format_1930
     label: original raw short-reads (second pair) in Fastq
     inputBinding:
       position: 4
-      prefix: -2
+      prefix: "-2"
   alignMode:
     type: string
     label: align mode for minimap2 mapping
