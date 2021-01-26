@@ -4,13 +4,13 @@
 # (c) 2020 EMBL- EBI
 
 # defaults
-export TYPE=null             # analysis type: {assembly, hybrids}
+export TYPE=null             # analysis type: {assembly, hybrid}
 export FORWARD_READS=null    # path to illumina first pair reads fastq file
 export REVERSE_READS=null    # path to illumina second pair reads fastq file
-export SINGLE=null           # path to nanopore read fastq file
-export TECH=null             # long-reads technology (nanopore/pacbio)
-export HOSTFA=null           # path to genome fasta
-export UNIPROT=null          # path to uniprot index (diamond)
+export SINGLE=null           # path to long read fastq file
+export TECH=null             # long-reads technology {nanopore, pacbio}
+export HOSTFA=null           # path to genome fasta if host filtering is used
+export UNIPROT=/hps/nobackup2/production/metagenomics/jcaballero/mgnify-lr/cwl/db/uniprot.dmnd   # path to uniprot index (diamond)
 export MEDAKA=r941_min_high_g360  # medaka model to use
 export MINILL=50             # minimal size for illumina reads
 export MINNANO=200           # minimal size for nanopore reads
