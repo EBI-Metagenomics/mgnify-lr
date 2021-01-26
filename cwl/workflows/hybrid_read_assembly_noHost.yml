@@ -23,6 +23,7 @@ host_unmaped_reads_1: reads_filtered_host_1.fastq.gz
 host_unmaped_reads_2: reads_filtered_host_2.fastq.gz
 pilon_align: align.bam
 polish_assembly_pilon: meta_assembly
+align_polish: map-ont
 host_unmaped_contigs: meta_assembly_unmap.fasta
 final_assembly: meta_assembly_final.fasta
 final_assembly_stats: meta_assembly_final_stats.txt

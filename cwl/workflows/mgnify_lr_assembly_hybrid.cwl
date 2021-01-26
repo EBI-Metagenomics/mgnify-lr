@@ -29,7 +29,7 @@ inputs:
     label: illumina paired reads to assemble (second pair)
   align_preset:
     type: string?
-    label: minimap2 align preset
+    label: minimap2 align preset for filtering, if none, no host filtering is applied
     default: none
   host_genome:
     type: File?
@@ -43,6 +43,14 @@ inputs:
     type: string?
     label: polish assembly after illumina map
     default: assembly_polish_pilon
+  min_contig_size:
+    type: int?
+    label: minimal size for contigs, shorter are removed
+    default: 500
+  align_polish: 
+    type: string?
+    label: minimap2 align mode for coverage
+    default: map-ont
   final_assembly:
     type: string?
     label: final assembly file (fasta)

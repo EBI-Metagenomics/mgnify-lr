@@ -82,6 +82,10 @@ inputs:
     type: string?
     label: polish assembly after illumina map
     default: assembly_polish_pilon
+  align_polish:
+    type: string?
+    label: minimap2 align mode for coverage
+    default: map-ont
   host_unmaped_contigs:
     type: string?
     label: clean contigs unmap to host genome (fasta)
@@ -172,6 +176,8 @@ steps:
       min_read_size: min_read_size_short
       align_preset: align_preset
       reads_filter_bysize: reads_filter_bysize_short
+      align_polish: align_polish
+      min_contig_size: min_contig_size
       host_genome: host_genome
       host_unmaped_reads_1: host_unmaped_reads_1
       host_unmaped_reads_2: host_unmaped_reads_2
@@ -193,6 +199,7 @@ steps:
       host_genome: host_genome
       pilon_align: pilon_align
       polish_assembly_pilon: polish_assembly_pilon
+      align_polish: align_polish
       final_assembly: final_assembly
     out:
       - final_assembly_fasta
