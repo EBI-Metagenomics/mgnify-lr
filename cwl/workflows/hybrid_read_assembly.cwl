@@ -129,21 +129,21 @@ outputs:
   final_assembly_fasta:
     type: File
     format: edam:format_1929
-    outputSource: step_4d_cleaning2_filterContigs/outFasta
-  final_assembly_report:
+    outputSource: step_2_assembly/final_assembly_fasta
+  final_assembly_stats:
     type: File
-    outputSource: step_4e_cleaning2_assemblyStats/outReport
+    outputSource: step_2_assembly/assembly_stats
   # outputs from post-processing 
   predict_proteins_fasta:
     type: File
     format: edam:format_1929
-    outputSource: step_5a_annotation_prodigal/outProt
+    outputSource: step_3_postprocessing/predict_proteins_fasta
   diamond_align_table:
     type: File
-    outputSource: step_5d_annotation_diamond/alignment
+    outputSource: step_3_postprocessing/diamond_align_table
   ideel_pdf:
     type: File
-    outputSource: step_5e_annotation_ideel/outFig
+    outputSource: step_3_postprocessing/ideel_pdf
 
 steps:
   step_1a_preprocessing_long:
