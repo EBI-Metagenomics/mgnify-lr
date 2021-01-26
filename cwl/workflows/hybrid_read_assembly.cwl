@@ -176,8 +176,6 @@ steps:
       min_read_size: min_read_size_short
       align_preset: align_preset
       reads_filter_bysize: reads_filter_bysize_short
-      align_polish: align_polish
-      min_contig_size: min_contig_size
       host_genome: host_genome
       host_unmaped_reads_1: host_unmaped_reads_1
       host_unmaped_reads_2: host_unmaped_reads_2
@@ -195,11 +193,12 @@ steps:
       lr_tech: lr_tech
       p1_reads: step_1b_preprocessing_short/reads_out_1
       p2_reads: step_1b_preprocessing_short/reads_out_2
-      align_preset: align_preset
-      host_genome: host_genome
       pilon_align: pilon_align
       polish_assembly_pilon: polish_assembly_pilon
+      align_preset: align_preset
+      host_genome: host_genome
       align_polish: align_polish
+      min_contig_size: min_contig_size
       final_assembly: final_assembly
     out:
       - final_assembly_fasta

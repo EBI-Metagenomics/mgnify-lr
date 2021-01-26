@@ -51,6 +51,10 @@ inputs:
     type: string?
     label: minimap2 align mode for coverage
     default: map-ont
+  host_unmaped_contigs:
+    type: string?
+    label: clean contigs unmap to host genome (fasta)
+    default: assembly_unmapHost.fasta
   final_assembly:
     type: string?
     label: final assembly file (fasta)
@@ -119,7 +123,7 @@ steps:
     run: ../tools/minimap2_filter/minimap2_filterHostFa.cwl
     in:
       alignMode: align_preset
-      outReadsName: final_assembly
+      outReadsName: host_unmaped_contigs
       refSeq: host_genome
       inSeq: step_5_polishing_pilon_rnd2/outfile
     out: [ outReads ]
