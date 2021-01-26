@@ -198,19 +198,19 @@ steps:
       - final_assembly_fasta
       - assembly_stats
 
-    step_3_postprocessing:
-      label: postprocessing analysis for assembly
-      run: mgnify_lr_postprocessing.cwl
-      in:
-        assembly_input: step_2_assembly/final_assembly_fasta
-        predict_proteins: predict_proteins
-        uniprot_index: uniprot_index
-        diamond_out: diamond_out
-        ideel_out: ideel_out
-      out:
-        - predict_proteins_fasta
-        - diamond_align_table
-        - ideel_pdf
+  step_3_postprocessing:
+    label: postprocessing analysis for assembly
+    run: mgnify_lr_postprocessing.cwl
+    in:
+      assembly_input: step_2_assembly/final_assembly_fasta
+      predict_proteins: predict_proteins
+      uniprot_index: uniprot_index
+      diamond_out: diamond_out
+      ideel_out: ideel_out
+    out:
+      - predict_proteins_fasta
+      - diamond_align_table
+      - ideel_pdf
       
 
 $namespaces:
