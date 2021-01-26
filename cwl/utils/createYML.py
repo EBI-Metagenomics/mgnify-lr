@@ -64,9 +64,9 @@ if par.mode == "assembly":
 elif par.mode == "hybrid":
     oh.write("p1_reads:\n  class: File\n  format: edam:format_1930\n  path: {}\n".format(par.pair1))
     oh.write("p2_reads:\n  class: File\n  format: edam:format_1930\n  path: {}\n".format(par.pair2))
-    oh.write("min_read_size_ill: {}\n".format(par.minLenIll))
-    oh.write("reads_filter_bysize_nano: {}\n".format(par.prefix + "_filtered_nano"))
-    oh.write("reads_filter_bysize_ill: {}\n".format(par.prefix + "_filtered_illumina"))
+    oh.write("min_read_size_short: {}\n".format(par.minLenIll))
+    oh.write("reads_filter_bysize: {}\n".format(par.prefix + "_filtered_nano"))
+    oh.write("reads_filter_bysize_short: {}\n".format(par.prefix + "_filtered_illumina"))
     if par.host: # assembly with Host filtering and Illumina polishing
         oh.write("host_genome:\n  class: File\n  format: edam:format_1929\n  path: {}\n".format(par.host))
         oh.write("host_unmaped: {}\n".format(par.prefix + "_filterHost.fastq.gz"))
