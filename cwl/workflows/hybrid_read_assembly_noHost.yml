@@ -17,11 +17,7 @@ min_contig_size: 500
 raw_reads_report: raw_reads_stats.txt
 reads_filter_bysize: reads_filtered_nano
 reads_filter_bysize_short: reads_filtered_ill
-align_preset: map-ont
-host_genome:
-  class: File
-  format: edam:format_1929
-  path: ../db/worm.fa.gz
+align_preset: none
 host_unmaped_reads: reads_filtered_host.fastq.gz
 host_unmaped_reads_1: reads_filtered_host_1.fastq.gz
 host_unmaped_reads_2: reads_filtered_host_2.fastq.gz
