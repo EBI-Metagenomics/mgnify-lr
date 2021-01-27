@@ -197,6 +197,7 @@ steps:
       polish_assembly_pilon: polish_assembly_pilon
       align_preset: align_preset
       host_genome: host_genome
+      host_unmaped_contigs: host_unmaped_contigs
       align_polish: align_polish
       min_contig_size: min_contig_size
       final_assembly: final_assembly
@@ -228,4 +229,4 @@ $schemas:
 
 s:license: "https://www.apache.org/licenses/LICENSE-2.0"
 s:copyrightHolder: "EMBL - European Bioinformatics Institute"
-s:dateCreated: 2020-10-08
+s:dateCreated: "2020-10-08"
