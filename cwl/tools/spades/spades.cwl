@@ -11,7 +11,7 @@ requirements:
     ramMin: 80000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.spades:3.15.0
+    dockerPull: jcaballero/mgnify-lr.spades:3.14.1
 
 baseCommand: [ spades.py ]
 
