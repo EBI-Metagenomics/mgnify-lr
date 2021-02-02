@@ -160,6 +160,7 @@ then
             --defaultCores ${NUM_CORES} \
             --retryCount 5 \
             --stats \
+            --maxMemory.Scale 1 \
             ${CWL} ${RUN_YML} > ${OUT_JSON}
         EXIT_CODE=$?
     elif [ "${DOCKER}" == "False" ]
@@ -178,6 +179,7 @@ then
             --defaultCores ${NUM_CORES} \
             --retryCount 5 \
             --stats \
+            --maxMemory.Scale 1 \
             ${CWL} ${RUN_YML} > ${OUT_JSON}
         EXIT_CODE=$?
     fi
