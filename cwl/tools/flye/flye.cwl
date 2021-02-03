@@ -10,7 +10,7 @@ requirements:
     ramMin: 8000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.flye:2.8.1
+    dockerPull: jcaballero/mgnify-lr.flye:2.8.2
 
 baseCommand: [ flye ]
 

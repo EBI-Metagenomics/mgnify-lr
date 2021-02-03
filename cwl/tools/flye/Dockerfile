@@ -2,7 +2,7 @@
 
 FROM ubuntu:latest AS builder
 
-ARG flyeVer=2.8.1
+ARG flyeVer=2.8.2
 
 # install dependencies
 RUN apt update && \
@@ -29,7 +29,7 @@ RUN wget -q https://github.com/fenderglass/Flye/archive/${flyeVer}.tar.gz && \
 # Target container
 FROM ubuntu:latest
 
-ARG flyeVer=2.8.1
+ARG flyeVer=2.8.2
 
 RUN apt update && \
     apt upgrade -y && \
