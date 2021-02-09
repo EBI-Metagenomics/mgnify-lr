@@ -7,7 +7,7 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 8
-    ramMin: 4000
+    ramMin: 8000
 hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.racon:1.4.13

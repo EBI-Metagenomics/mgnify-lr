@@ -8,7 +8,7 @@ requirements:
   InlineJavascriptRequirement: {} # needed to get GB in RAM
   ResourceRequirement:
     coresMin: 8
-    ramMin: 80000
+    ramMin: 200000
 hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.spades:3.14.1

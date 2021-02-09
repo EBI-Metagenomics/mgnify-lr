@@ -19,7 +19,7 @@ export DOCKER="True"         # flag to use singularity+docker
 export RESTART="False"       # flag to try to restart a failed run
 
 # max limit of memory that would be used by toil to restart
-export MEMORY=100
+export MEMORY=40
 # number of cores to run toil
 export NUM_CORES=8
 # lsf queue limit
@@ -68,14 +68,14 @@ export JOB_GROUP=mgnify-lr
 bgadd -L "${LIMIT_QUEUE}" /"${USER}_${JOB_GROUP}" > /dev/null
 bgmod -L "${LIMIT_QUEUE}" /"${USER}_${JOB_GROUP}" > /dev/null
 
-if [ "$MEMORY" -ge "100" ]
-then
-    echo "High memory requested, using bigmem queue"
-    export TOIL_LSF_ARGS="-P bigmem -q production-rh74 -g /${USER}_${JOB_GROUP}"
-else
-    echo "Using regular queue"
-    export TOIL_LSF_ARGS="-q production-rh74 -g /${USER}_${JOB_GROUP}"
-fi
+#if [ "$MEMORY" -ge "100" ]
+#then
+#    echo "High memory requested, using bigmem queue"
+export TOIL_LSF_ARGS="-P bigmem -q production-rh74 -g /${USER}_${JOB_GROUP}"
+#else
+#    echo "Using regular queue"
+#    export TOIL_LSF_ARGS="-q production-rh74 -g /${USER}_${JOB_GROUP}"
+#fi
 MEMORY="${MEMORY}G"
 
 echo "Activating envs"
@@ -160,8 +160,7 @@ then
             --defaultCores ${NUM_CORES} \
             --retryCount 5 \
             --stats \
-            --maxMemory 2000G \
-            --scale 1 \
+            --doubleMem \
             ${CWL} ${RUN_YML} > ${OUT_JSON}
         EXIT_CODE=$?
     elif [ "${DOCKER}" == "False" ]
@@ -180,8 +179,7 @@ then
             --defaultCores ${NUM_CORES} \
             --retryCount 5 \
             --stats \
-            --maxMemory 2000G \
-            --scale 1 \
+            --doubleMem \
             ${CWL} ${RUN_YML} > ${OUT_JSON}
         EXIT_CODE=$?
     fi
