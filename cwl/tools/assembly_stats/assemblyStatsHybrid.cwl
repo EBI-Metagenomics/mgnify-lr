@@ -12,7 +12,7 @@ requirements:
     ramMin: 8000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.assemblystats:0.0.3
+    dockerPull: jcaballero/mgnify-lr.assemblystats:0.0.4
 
 baseCommand: [ "gen_stats_json.pl" ]
 

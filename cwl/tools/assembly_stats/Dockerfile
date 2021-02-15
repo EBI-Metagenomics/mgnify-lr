@@ -20,7 +20,7 @@ COPY gen_stats_json.pl /usr/local/bin/
 RUN chmod +x /usr/local/bin/*
 
 LABEL software="AssemblyStats"
-LABEL software.version="0.0.2"
+LABEL software.version="0.0.4"
 LABEL description="Tools to compute assembly statistics (N50, coverage, contigs, ...)"
 
 # for singularity compatibility

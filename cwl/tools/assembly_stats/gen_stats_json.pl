@@ -15,7 +15,7 @@ my $mem_alloc   = 100;
 my $peak_mem    = 0.0;
 my $exec_time   = 0.0;
 my $assembler   = "Flye";
-my $version     = "2.8.1";
+my $version     = "2.8.3";
 my $our_version = "0.6";
 my $threads     = 1;
 my $mode        = "map-ont";
@@ -212,11 +212,11 @@ sub calc_coverage {
         chomp;
         $num++;
         my @ln = split(/\s+/, $_);
-        $sum += $ln[5];
+        $sum += $ln[6];
     }
     close $ch;
     my $mean = $sum / $num;
-    $mean /= 100;
+    #$mean /= 100;
     return $mean;
 }
 
@@ -252,10 +252,10 @@ sub calc_coverage_hyb {
         chomp;
         $num++;
         my @ln = split(/\s+/, $_);
-        $sum += $ln[5];
+        $sum += $ln[6];
     }
     close $ch;
     my $mean = $sum / $num;
-    $mean /= 100;
+    #$mean /= 100;
     return $mean;
 }
