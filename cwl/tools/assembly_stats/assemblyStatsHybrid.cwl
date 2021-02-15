@@ -22,7 +22,7 @@ arguments:
   - -a
   - metaSPAdes
   - -v
-  - 3.15.0
+  - 3.14.1
   - -m
   - "100"
 
