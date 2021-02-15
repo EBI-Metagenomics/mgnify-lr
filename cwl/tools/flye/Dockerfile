@@ -2,7 +2,7 @@
 
 FROM ubuntu:latest AS builder
 
-ARG flyeVer=2.8.2
+ARG flyeVer=2.8.3
 
 # install dependencies
 RUN apt update && \
@@ -29,7 +29,7 @@ RUN wget -q https://github.com/fenderglass/Flye/archive/${flyeVer}.tar.gz && \
 # Target container
 FROM ubuntu:latest
 
-ARG flyeVer=2.8.2
+ARG flyeVer=2.8.3
 
 RUN apt update && \
     apt upgrade -y && \
@@ -46,9 +46,6 @@ LABEL software.version=${flyeVer}
 LABEL description="Flye is a de novo assembler for single molecule sequencing reads, such as those produced by PacBio and Oxford Nanopore Technologies."
 LABEL website="https://github.com/fenderglass/Flye"
 LABEL license="https://github.com/fenderglass/Flye/blob/flye/LICENSE"
-
-# for singularity compatibility
-ENV LC_ALL=C
 
 RUN mkdir /data
 WORKDIR /data
