@@ -71,15 +71,17 @@ bgmod -L "${LIMIT_QUEUE}" /"${USER}_${JOB_GROUP}" > /dev/null
 #if [ "$MEMORY" -ge "100" ]
 #then
 #    echo "High memory requested, using bigmem queue"
-export TOIL_LSF_ARGS="-P bigmem -q production-rh74 -g /${USER}_${JOB_GROUP}"
+#    export TOIL_LSF_ARGS="-P bigmem -q production-rh74 -g /${USER}_${JOB_GROUP}"
 #else
 #    echo "Using regular queue"
 #    export TOIL_LSF_ARGS="-q production-rh74 -g /${USER}_${JOB_GROUP}"
 #fi
+# using bigmem queue by default
+export TOIL_LSF_ARGS="-P bigmem -q production-rh74 -g /${USER}_${JOB_GROUP}"
 MEMORY="${MEMORY}G"
 
 echo "Activating envs"
-source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate mgnify-lr
+source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate toil-5.2.0
 
 # ----------------------------- preparation -----------------------------
 # work dir
