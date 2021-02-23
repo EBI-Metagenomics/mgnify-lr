@@ -5,13 +5,12 @@ doc: |
       Implementation of hybrid mode assembly using SPAdes assembler.
 
 requirements:
-  InlineJavascriptRequirement: {} # needed to get GB in RAM
   ResourceRequirement:
     coresMin: 8
-    ramMin: 200000
+    ramMin: 400000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.spades:3.14.1
+    dockerPull: jcaballero/mgnify-lr.spades:3.15.1
 
 baseCommand: [ spades.py ]
 
