@@ -96,11 +96,12 @@ steps:
 
   step_4_polishing_medaka:
     label: polishing step 3, using medaka to create a consensus
-    run: ../tools/medaka/medaka.cwl
+    run: ../tools/medaka/medaka_runner.cwl
     in:
       inReads: long_reads
       assembly: step_3_polishing_racon/outAssembly
       medakaModel: medaka_model
+      tech: lr_tech
     out: [ outConsensus ]
   
   step_5_cleaning_host:
