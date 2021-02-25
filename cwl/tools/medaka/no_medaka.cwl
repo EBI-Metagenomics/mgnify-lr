@@ -23,7 +23,8 @@ inputs:
       position: 1
       
   outName:
-    type: string
+    type: string?
+    default: "consensus.fasta"
     label: fasta outfile
     inputBinding:
       position: 2
