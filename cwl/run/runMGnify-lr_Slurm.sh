@@ -129,7 +129,6 @@ then
             --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} \
             --outdir ${OUT_DIR_FINAL} \
             --batchSystem slurm \
-            --disableCaching \
             --defaultMemory ${MEMORY} \
             --defaultCores ${NUM_CORES} \
             --retryCount 5 \
@@ -147,7 +146,6 @@ then
             --outdir ${OUT_DIR_FINAL} \
             --no-container \
             --batchSystem slurm \
-            --disableCaching \
             --defaultMemory ${MEMORY} \
             --defaultCores ${NUM_CORES} \
             --retryCount 5 \
@@ -159,7 +157,6 @@ else
     echo "relaunching TOIL/CWL job as ${NAME_RUN}"
     toil-cwl-runner \
         --restart \
-        --disableCaching \
         --preserve-entire-environment \
         --logDebug \
         --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} \
