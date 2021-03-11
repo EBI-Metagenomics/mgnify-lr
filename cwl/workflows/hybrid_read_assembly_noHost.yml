@@ -1,13 +1,13 @@
-raw_reads:
+long_reads:
   class: File
   format: edam:format_1930
   path: ../../test_data/small.fastq.gz
-lr_tech: nanopore
-p1_reads:
+long_read_tech: nanopore
+forward_short_reads:
   class: File
   format: edam:format_1930
   path: ../../test_data/small.R1.fastq.gz
-p2_reads:
+reverse_short_reads:
   class: File
   format: edam:format_1930
   path: ../../test_data/small.R2.fastq.gz
@@ -18,13 +18,13 @@ raw_reads_report: raw_reads_stats.txt
 reads_filter_bysize: reads_filtered_nano
 reads_filter_bysize_short: reads_filtered_ill
 align_preset: none
-host_unmaped_reads: reads_filtered_host.fastq.gz
-host_unmaped_reads_1: reads_filtered_host_1.fastq.gz
-host_unmaped_reads_2: reads_filtered_host_2.fastq.gz
+host_unmapped_reads: reads_filtered_host.fastq.gz
+host_unmapped_reads_1: reads_filtered_host_1.fastq.gz
+host_unmapped_reads_2: reads_filtered_host_2.fastq.gz
 pilon_align: align.bam
 polish_assembly_pilon: meta_assembly
 align_polish: map-ont
-host_unmaped_contigs: meta_assembly_unmap.fasta
+host_unmapped_contigs: meta_assembly_unmap.fasta
 final_assembly: meta_assembly_final.fasta
 final_assembly_stats: meta_assembly_final_stats.txt
 predict_proteins: meta_assembly_pred_prot.fasta

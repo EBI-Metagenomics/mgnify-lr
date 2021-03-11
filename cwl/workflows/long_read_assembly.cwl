@@ -12,7 +12,7 @@ requirements:
 
 inputs:
   # inputs for preprocessing
-  raw_reads:
+  long_reads:
     type: File
     format: edam:format_1930
     label: Fastq file to process
@@ -36,13 +36,13 @@ inputs:
     type: File?
     format: edam:format_1929
     label: index name for genome host, used for decontaminate
-  host_unmaped_reads:
+  host_unmapped_reads:
     type: string?
     label: unmapped reads to the host genome
     default: reads_filtered.fastq.gz
 
   # inputs for assembly
-  lr_tech:
+  long_read_tech:
     type: string?
     label: long reads technology, supported techs are nanopore and pacbio
     default: nanopore
@@ -62,7 +62,7 @@ inputs:
     type: string?
     label: medaka model to improve assembly
     default: r941_min_high_g360
-  host_unmaped_contigs:
+  host_unmapped_contigs:
     type: string?
     label: clean contigs unmap to host genome (fasta)
     default: assembly_filtered.fasta
@@ -127,13 +127,13 @@ steps:
     label: preprocessing of raw data
     run: mgnify_lr_preprocessing_long.cwl
     in:
-      raw_reads: raw_reads
+      long_reads: long_reads
       min_read_size: min_read_size
       raw_reads_report: raw_reads_report
       align_preset: align_preset
       reads_filter_bysize: reads_filter_bysize
       host_genome: host_genome
-      host_unmaped_reads: host_unmaped_reads
+      host_unmapped_reads: host_unmapped_reads
     out: 
       - raw_reads_stats
       - reads_qc_html
@@ -145,14 +145,14 @@ steps:
     run: mgnify_lr_assembly.cwl
     in:
       long_reads: step_1_preprocessing/reads_output
-      lr_tech: lr_tech
+      long_read_tech: long_read_tech
       host_genome: host_genome
       align_preset: align_preset
       align_polish: align_polish
       polish_paf: polish_paf
       polish_assembly_racon: polish_assembly_racon
       medaka_model: medaka_model
-      host_unmaped_contigs: host_unmaped_contigs
+      host_unmapped_contigs: host_unmapped_contigs
       min_contig_size: min_contig_size
       final_assembly: final_assembly
     out:

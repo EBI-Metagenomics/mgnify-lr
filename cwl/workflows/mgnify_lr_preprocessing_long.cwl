@@ -10,7 +10,7 @@ requirements:
     ramMin: 8000
 
 inputs:
-  raw_reads:
+  long_reads:
     type: File
     format: edam:format_1930
     label: Fastq file to process
@@ -34,10 +34,10 @@ inputs:
     type: File?
     format: edam:format_1929
     label: index name for genome host, used for decontaminate
-  host_unmaped_reads:
+  host_unmapped_reads:
     type: string?
     label: unmapped reads to the host genome
-    default: host_unmaped.fastq.gz
+    default: host_unmapped.fastq.gz
   
 outputs:
   raw_reads_stats:
@@ -59,7 +59,7 @@ steps:
     label: raw reads stats
     run: ../tools/assembly_stats/assemblyStatsFastq.cwl
     in:
-      inFile: raw_reads
+      inFile: long_reads
       outReport: raw_reads_report
     out: [ outReport ]
 
@@ -67,7 +67,7 @@ steps:
     label: filtering short reads and perform QC
     run: ../tools/fastp/fastp_filter.cwl
     in:
-      reads: raw_reads
+      reads: long_reads
       minLength: min_read_size
       name: reads_filter_bysize
     out:
@@ -80,7 +80,7 @@ steps:
     run: ../tools/minimap2_filter/minimap2_filterHostFq.cwl
     in:
       alignMode: align_preset
-      outReadsName: host_unmaped_reads
+      outReadsName: host_unmapped_reads
       inSeq: step_2_filter_reads/outReads
       refSeq: host_genome
     out: [ outReads ]

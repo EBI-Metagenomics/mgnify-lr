@@ -15,14 +15,14 @@ inputs:
     type: File
     format: edam:format_1930
     label: long-reads to assemble
-  lr_tech:
+  long_read_tech:
     type: string?
     label: long reads technology, supported techs are nanopore and pacbio
     default: nanopore
   host_genome:
     type: File?
     format: edam:format_1929
-    label: genome host, used for decontaminate
+    label: host genome, used for decontaminate
   align_preset:
     type: string?
     label: minimap2 align mode
@@ -43,10 +43,10 @@ inputs:
     type: string?
     label: medaka model to improve assembly
     default: r941_min_high_g360
-  host_unmaped_contigs:
+  host_unmapped_contigs:
     type: string?
     label: clean contigs unmap to host genome (fasta)
-    default: assembly_unmapHost.fasta
+    default: assembly_unmap_host.fasta
   min_contig_size:
     type: int?
     label: filter assembly contigs by this size
@@ -70,7 +70,7 @@ steps:
     label: assembly long-reads with flye
     run: ../tools/flye/flye_runner.cwl
     in:
-      readType: lr_tech
+      readType: long_read_tech
       readFile: long_reads
     out: [ contigs_fasta ]
 
@@ -101,7 +101,7 @@ steps:
       inReads: long_reads
       assembly: step_3_polishing_racon/outAssembly
       medakaModel: medaka_model
-      tech: lr_tech
+      tech: long_read_tech
     out: [ outConsensus ]
   
   step_5_cleaning_host:
@@ -109,7 +109,7 @@ steps:
     run: ../tools/minimap2_filter/minimap2_filterHostFa.cwl
     in:
       alignMode: align_preset
-      outReadsName: host_unmaped_contigs
+      outReadsName: host_unmapped_contigs
       refSeq: host_genome
       inSeq: step_4_polishing_medaka/outConsensus
     out: [ outReads ]

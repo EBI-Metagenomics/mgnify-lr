@@ -15,18 +15,18 @@ inputs:
     type: File
     format: edam:format_1930
     label: long reads to assemble
-  lr_tech:
+  long_read_tech:
     type: string?
     label: long reads technology, supported techs are nanopore and pacbio
     default: nanopore
-  p1_reads:
+  forward_short_reads:
     type: File
     format: edam:format_1930
-    label: illumina paired reads to assemble (first pair)
-  p2_reads:
+    label: illumina paired reads to assemble (forward)
+  reverse_short_reads:
     type: File
     format: edam:format_1930
-    label: illumina paired reads to assemble (second pair)
+    label: illumina paired reads to assemble (reverse)
   align_preset:
     type: string?
     label: minimap2 align preset for filtering, if none, no host filtering is applied
@@ -34,7 +34,7 @@ inputs:
   host_genome:
     type: File?
     format: edam:format_1929
-    label: index name for genome host, used for decontaminate
+    label: Host reference genome, used for decontaminate
   pilon_align:
     type: string?
     label: illumina reads alignment for polishing
@@ -51,10 +51,10 @@ inputs:
     type: string?
     label: minimap2 align mode for coverage
     default: map-ont
-  host_unmaped_contigs:
+  host_unmapped_contigs:
     type: string?
     label: clean contigs unmap to host genome (fasta)
-    default: assembly_unmapHost.fasta
+    default: assembly_unmap_host.fasta
   final_assembly:
     type: string?
     label: final assembly file (fasta)
@@ -74,18 +74,18 @@ steps:
     label: hybrid assembly with metaSPAdes
     run: ../tools/spades/spades_runner.cwl
     in:
-      readType: lr_tech
+      readType: long_read_tech
       readFile: long_reads
-      reads1: p1_reads
-      reads2: p2_reads
+      reads1: forward_short_reads
+      reads2: reverse_short_reads
     out: [ contigs_fasta ]
 
   step_2_polishing_align_rnd1:
     label: aligning illumina reads to assembly
     run: ../tools/bwa/bwa-mem2.cwl
     in:
-      reads1: p1_reads
-      reads2: p2_reads
+      reads1: forward_short_reads
+      reads2: reverse_short_reads
       reference: step_1_assembly/contigs_fasta
       bamName: pilon_align
     out: [ bam ]
@@ -103,8 +103,8 @@ steps:
     label: aligning illumina reads to assembly
     run: ../tools/bwa/bwa-mem2.cwl
     in:
-      reads1: p1_reads
-      reads2: p2_reads
+      reads1: forward_short_reads
+      reads2: reverse_short_reads
       reference: step_3_polishing_pilon_rnd1/outfile
       bamName: pilon_align
     out: [ bam ]
@@ -123,7 +123,7 @@ steps:
     run: ../tools/minimap2_filter/minimap2_filterHostFa.cwl
     in:
       alignMode: align_preset
-      outReadsName: host_unmaped_contigs
+      outReadsName: host_unmapped_contigs
       refSeq: host_genome
       inSeq: step_5_polishing_pilon_rnd2/outfile
     out: [ outReads ]
@@ -144,8 +144,8 @@ steps:
       alignMode: align_polish
       contigs: step_7_filterContigs/outFasta
       reads: long_reads
-      p1_reads: p1_reads
-      p2_reads: p2_reads
+      p1_reads: forward_short_reads
+      p2_reads: reverse_short_reads
     out: [ outAssemblyStats ]
 
 $namespaces:

@@ -12,21 +12,21 @@ requirements:
 
 inputs:
   # inputs for preprocessing
-  raw_reads:
+  long_reads:
     type: File
     format: edam:format_1930
     label: long reads to assemble
-  p1_reads:
+  forward_short_reads:
     type: File
     format: edam:format_1930
-    label: illumina paired reads to assemble (first pair)
-  p2_reads:
+    label: illumina paired reads to assemble (forward)
+  reverse_short_reads:
     type: File
     format: edam:format_1930
-    label: illumina paired reads to assemble (second pair)
+    label: illumina paired reads to assemble (reverse)
   min_read_size:
     type: int?
-    label: Raw reads filter by size (nanopore)
+    label: Raw reads filter by size (long reads)
     default: 200
   min_read_size_short:
     type: int?
@@ -42,31 +42,31 @@ inputs:
     default: none
   reads_filter_bysize:
     type: string?
-    label: prefix for reads with length lt min_read_size
+    label: prefix for reads with length larger than min_read_size
     default: nano_reads_filtered
   reads_filter_bysize_short:
     type: string?
-    label: prefix for reads with length lt min_read_size
+    label: prefix for reads with length larger than min_read_size
     default: ill_reads_filtered
   host_genome:
     type: File?
     format: edam:format_1929
-    label: index name for genome host, used for decontaminate
-  host_unmaped_reads:
+    label: Reference genome for host, used for decontaminate
+  host_unmapped_reads:
     type: string?
     label: unmapped reads to the host genome
-    default: host_unmaped.fastq.gz
-  host_unmaped_reads_1:
+    default: host_unmapped.fastq.gz
+  host_unmapped_reads_1:
     type: string?
     label: unmapped reads to the host genome
-    default: host_unmaped_1.fastq.gz
-  host_unmaped_reads_2:
+    default: host_unmapped_1.fastq.gz
+  host_unmapped_reads_2:
     type: string?
     label: unmapped reads to the host genome
-    default: host_unmaped_2.fastq.gz
+    default: host_unmapped_2.fastq.gz
 
   # inputs for assembly  
-  lr_tech:
+  long_read_tech:
     type: string?
     label: long reads technology, supported techs are nanopore and pacbio
     default: nanopore
@@ -86,10 +86,10 @@ inputs:
     type: string?
     label: minimap2 align mode for coverage
     default: map-ont
-  host_unmaped_contigs:
+  host_unmapped_contigs:
     type: string?
     label: clean contigs unmap to host genome (fasta)
-    default: assembly_unmapHost.fasta
+    default: assembly_unmap_host.fasta
   final_assembly:
     type: string?
     label: final assembly file (fasta)
@@ -154,13 +154,13 @@ steps:
     label: preprocessing of raw long-reads data
     run: mgnify_lr_preprocessing_long.cwl
     in:
-      raw_reads: raw_reads
+      long_reads: long_reads
       min_read_size: min_read_size
       raw_reads_report: raw_reads_report
       align_preset: align_preset
       reads_filter_bysize: reads_filter_bysize
       host_genome: host_genome
-      host_unmaped_reads: host_unmaped_reads
+      host_unmapped_reads: host_unmapped_reads
     out: 
       - raw_reads_stats
       - reads_qc_html
@@ -171,14 +171,14 @@ steps:
     label: preprocessing of raw short-reads data
     run: mgnify_lr_preprocessing_short.cwl
     in:
-      reads1: p1_reads
-      reads2: p2_reads
+      reads1: forward_short_reads
+      reads2: reverse_short_reads
       min_read_size: min_read_size_short
       align_preset: align_preset
       reads_filter_bysize: reads_filter_bysize_short
       host_genome: host_genome
-      host_unmaped_reads_1: host_unmaped_reads_1
-      host_unmaped_reads_2: host_unmaped_reads_2
+      host_unmapped_reads_1: host_unmapped_reads_1
+      host_unmapped_reads_2: host_unmapped_reads_2
     out: 
       - reads_qc_html
       - reads_qc_json
@@ -190,14 +190,14 @@ steps:
     run: mgnify_lr_assembly_hybrid.cwl
     in:
       long_reads: step_1a_preprocessing_long/reads_output
-      lr_tech: lr_tech
-      p1_reads: step_1b_preprocessing_short/reads_out_1
-      p2_reads: step_1b_preprocessing_short/reads_out_2
+      long_read_tech: long_read_tech
+      forward_short_reads: step_1b_preprocessing_short/reads_out_1
+      reverse_short_reads: step_1b_preprocessing_short/reads_out_2
       pilon_align: pilon_align
       polish_assembly_pilon: polish_assembly_pilon
       align_preset: align_preset
       host_genome: host_genome
-      host_unmaped_contigs: host_unmaped_contigs
+      host_unmapped_contigs: host_unmapped_contigs
       align_polish: align_polish
       min_contig_size: min_contig_size
       final_assembly: final_assembly

@@ -13,11 +13,11 @@ inputs:
   reads1:
     type: File
     format: edam:format_1930
-    label: Fastq file to process (first pair)
+    label: Fastq file to process (forward)
   reads2:
     type: File
     format: edam:format_1930
-    label: Fastq file to process (second pair)
+    label: Fastq file to process (reverse)
   min_read_size:
     type: int?
     label: Short reads filter by size
@@ -34,14 +34,14 @@ inputs:
     type: File?
     format: edam:format_1929
     label: index name for genome host, used for decontaminate
-  host_unmaped_reads_1:
+  host_unmapped_reads_1:
     type: string?
     label: unmapped reads to the host genome
-    default: host_unmaped_1.fastq.gz
-  host_unmaped_reads_2:
+    default: host_unmapped_1.fastq.gz
+  host_unmapped_reads_2:
     type: string?
     label: unmapped reads to the host genome
-    default: host_unmaped_2.fastq.gz
+    default: host_unmapped_2.fastq.gz
 
 outputs:
   reads_qc_html:
@@ -80,8 +80,8 @@ steps:
     in:
       reads1: step_1_filter_reads/outreads1
       reads2: step_1_filter_reads/outreads2
-      out1: host_unmaped_reads_1
-      out2: host_unmaped_reads_2
+      out1: host_unmapped_reads_1
+      out2: host_unmapped_reads_2
       refSeq: host_genome
       alignMode: align_preset
     out:

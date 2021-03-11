@@ -1,4 +1,4 @@
-raw_reads:
+long_reads:
   class: File
   format: edam:format_1930
   path: ../../test_data/small.fastq.gz
@@ -10,14 +10,14 @@ host_genome:
   class: File
   format: edam:format_1929
   path: ../db/worm.fa.gz
-host_unmaped_reads: worm_unmap.fastq.gz
+host_unmapped_reads: worm_unmap.fastq.gz
 
-lr_tech: nanopore
+long_read_tech: nanopore
 align_polish: map-ont
 polish_paf: meta_polish.paf
 polish_assembly_racon: meta_assembly.fasta
 medaka_model: r941_min_high_g360
-host_unmaped_contigs: meta_assembly_unmapHost.fasta
+host_unmapped_contigs: meta_assembly_unmap_host.fasta
 min_contig_size: 500
 final_assembly: meta_assembly_final.fasta
 
