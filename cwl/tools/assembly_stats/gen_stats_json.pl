@@ -41,18 +41,19 @@ open (my $oh, ">", $out) or die ("cannot write output to $out\n");
 
 my $input_bp = 0;
 my $coverage = 0.0;
+my $coverage_depth = 0.0;
 if (defined $reads1 and defined $reads2) {
     warn "hybrid assembly detected\n";
     $input_bp  = calc_input_bp($reads);
     $input_bp += calc_input_bp($reads1);
     $input_bp += calc_input_bp($reads2);
-    $coverage  = calc_coverage_hyb($contigs, $reads, $reads1, $reads2);
+    ($coverage, $coverage_depth)  = calc_coverage_hyb($contigs, $reads, $reads1, $reads2);
 }
 else {
     $input_bp = calc_input_bp($reads);
-    $coverage = calc_coverage($contigs, $reads);
+    ($coverage, $coverage_depth) = calc_coverage($contigs, $reads);
 }
-my %stats    = calc_assembly_stats($contigs);
+my %stats = calc_assembly_stats($contigs);
 
 print $oh <<JSON
 {
@@ -71,6 +72,7 @@ print $oh <<JSON
   "n50": $stats{'n50'},
   "l50": $stats{'l50'},
   "coverage": $coverage,
+  "coverage_depth": $coverage_depth,
   "version": $our_version
 }
 JSON
@@ -204,20 +206,20 @@ sub calc_coverage {
     system("minimap2 -a -t $threads -x $mode $contigs $reads > $sam");
     system("samtools sort -o $bam $sam");
     system("samtools coverage $bam > $contigs.cov");
-    my $sum = 0;
-    my $num = 0;
+    my $cover = 0;
+    my $depth = 0;
+    my $num   = 0;
     open (my $ch, "<", "$contigs.cov") or die "error reading $contigs.cov\n";
     while (<$ch>) {
         next if (/^#/);
         chomp;
         $num++;
         my @ln = split(/\s+/, $_);
-        $sum += $ln[6];
+        $cover += $ln[5];
+        $depth += $ln[6];
     }
     close $ch;
-    my $mean = $sum / $num;
-    #$mean /= 100;
-    return $mean;
+    return (($cover / $num) / 100, $depth / $num);
 }
 
 sub calc_coverage_hyb {
@@ -231,12 +233,12 @@ sub calc_coverage_hyb {
     $name =~ s/.gz$//;
     $name =~ s/.fasta$//;
     $name =~ s/.fa$//;
-    my $sam    = "$name.sam";
-    my $bam    = "$name.bam";
-    my $sam2   = $name. "_pe.sam";
-    my $bam2   = $name. "_pe.bam";
-    my $merge  = "$name" . "_merged.bam";
-    my $sort = "$name" . "_sorted.bam";
+    my $sam    = $name . ".sam";
+    my $bam    = $name . ".bam";
+    my $sam2   = $name . "_pe.sam";
+    my $bam2   = $name . "_pe.bam";
+    my $merge  = $name . "_merged.bam";
+    my $sort   = $name . "_sorted.bam";
     system("minimap2 -a -t $threads -x $mode $contigs $reads > $sam");
     system("samtools sort -o $bam $sam");
     system("minimap2 -a -t $threads -x sr $contigs $reads1 $reads2 > $sam2");
@@ -244,18 +246,18 @@ sub calc_coverage_hyb {
     system("samtools merge $merge $bam $bam2");
     system("samtools sort -o $sort $merge");
     system("samtools coverage $sort > $contigs.cov");
-    my $sum = 0;
-    my $num = 0;
+    my $cover = 0;
+    my $depth = 0;
+    my $num   = 0;
     open (my $ch, "<", "$contigs.cov") or die "error reading $contigs.cov\n";
     while (<$ch>) {
         next if (/^#/);
         chomp;
         $num++;
         my @ln = split(/\s+/, $_);
-        $sum += $ln[6];
+        $cover += $ln[5];
+        $depth += $ln[6];
     }
     close $ch;
-    my $mean = $sum / $num;
-    #$mean /= 100;
-    return $mean;
+    return (($cover / $num) / 100, $depth / $num);
 }
