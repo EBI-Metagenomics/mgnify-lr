@@ -32,11 +32,11 @@ if par.mode == "hybrid":
 
 oh = open(par.out, "w")
 
-oh.write("raw_reads:\n  class: File\n  format: edam:format_1930\n  path: {}\n".format(par.reads))
+oh.write("long_reads:\n  class: File\n  format: edam:format_1930\n  path: {}\n".format(par.reads))
 oh.write("min_read_size: {}\n".format(par.minLen))
 oh.write("raw_reads_report: {}\n".format(par.prefix + "_raw_reads_stats.txt"))    
 oh.write("min_contig_size: {}\n".format(par.minContig))
-oh.write("lr_tech: {}\n".format(par.tech))
+oh.write("long_reads_tech: {}\n".format(par.tech))
 
 if par.tech == "pacbio":
     oh.write("align_polish: map-pb\n")
@@ -55,24 +55,24 @@ if par.mode == "assembly":
     else: # assembly without Host filtering
         oh.write("align_preset: none\n")
 
-    oh.write("host_unmaped_reads: {}\n".format(par.prefix + "_filterHost.fastq.gz"))
+    oh.write("host_unmapped_reads: {}\n".format(par.prefix + "_filterHost.fastq.gz"))
     oh.write("polish_paf: {}\n".format(par.prefix + "_polish.paf"))
     oh.write("polish_assembly_racon: {}\n".format(par.prefix + "_racon.fasta"))
-    oh.write("host_unmaped_contigs: {}\n".format(par.prefix + "_unmap.fasta"))
+    oh.write("host_unmapped_contigs: {}\n".format(par.prefix + "_unmap.fasta"))
     oh.write("medaka_model: {}\n".format(par.medakaModel))
 
 elif par.mode == "hybrid":
-    oh.write("p1_reads:\n  class: File\n  format: edam:format_1930\n  path: {}\n".format(par.pair1))
-    oh.write("p2_reads:\n  class: File\n  format: edam:format_1930\n  path: {}\n".format(par.pair2))
+    oh.write("forward_short_reads:\n  class: File\n  format: edam:format_1930\n  path: {}\n".format(par.pair1))
+    oh.write("reverse_short_reads:\n  class: File\n  format: edam:format_1930\n  path: {}\n".format(par.pair2))
     oh.write("min_read_size_short: {}\n".format(par.minLenIll))
     oh.write("reads_filter_bysize: {}\n".format(par.prefix + "_filtered_nano"))
     oh.write("reads_filter_bysize_short: {}\n".format(par.prefix + "_filtered_illumina"))
     if par.host: # assembly with Host filtering and Illumina polishing
         oh.write("host_genome:\n  class: File\n  format: edam:format_1929\n  path: {}\n".format(par.host))
-        oh.write("host_unmaped: {}\n".format(par.prefix + "_filterHost.fastq.gz"))
-        oh.write("host_unmaped_reads_1: {}\n".format(par.prefix + "_filterHost_1.fastq.gz"))
-        oh.write("host_unmaped_reads_2: {}\n".format(par.prefix + "_filterHost_2.fastq.gz"))
-        oh.write("host_unmaped_contigs: {}\n".format(par.prefix + "_unmapHost.fasta"))
+        oh.write("host_unmapped: {}\n".format(par.prefix + "_filterHost.fastq.gz"))
+        oh.write("host_unmapped_reads_1: {}\n".format(par.prefix + "_filterHost_1.fastq.gz"))
+        oh.write("host_unmapped_reads_2: {}\n".format(par.prefix + "_filterHost_2.fastq.gz"))
+        oh.write("host_unmapped_contigs: {}\n".format(par.prefix + "_unmapHost.fasta"))
     oh.write("pilon_align: {}\n".format(par.prefix + "_align.bam"))
     oh.write("polish_assembly_pilon: {}\n".format(par.prefix + "_pilon"))
 
