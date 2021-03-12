@@ -56,7 +56,11 @@ outputs:
     type: File
     format: edam:format_1929
     outputBinding:
-      glob: "spades_out/contigs.fasta"
+      glob: "spades_out/scaffolds.fasta"
+  assembly_graph:
+    type: File
+    outputBinding:
+      glob: "spades_out/assembly_graph.fastg"
   
 stdout: spades.log
 stderr: spades.err

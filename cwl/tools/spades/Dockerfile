@@ -2,10 +2,10 @@
 
 FROM ubuntu:latest
 
-ARG spadesVer=3.15.1
+ARG spadesVer=3.15.2
 
 LABEL software="SPAdes"
-LABEL software.version="3.15.1"
+LABEL software.version="3.15.2"
 LABEL description="SPAdes – St. Petersburg genome assembler – is an assembly toolkit containing various assembly pipelines"
 LABEL website="https://github.com/ablab/spades"
 LABEL license="GPLv2"

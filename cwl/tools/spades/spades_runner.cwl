@@ -33,7 +33,10 @@ steps:
         nano: readFile
         reads1: reads1
         reads2: reads2
-    out: [ contigs_fasta ]
+    out:
+      - contigs_fasta
+      - assembly_graph
+
   pacbio:
     label: assembly pacbio reads
     run: spades.cwl
@@ -43,7 +46,9 @@ steps:
         pacbio: readFile
         reads1: reads1
         reads2: reads2
-    out: [ contigs_fasta ]
+    out:
+      - contigs_fasta
+      - assembly_graph
 
 outputs:
     contigs_fasta:
@@ -52,6 +57,13 @@ outputs:
         outputSource:
             - nanopore/contigs_fasta
             - pacbio/contigs_fasta
+        pickValue: first_non_null
+    assembly_graph:
+        type: File
+        format: edam:format_1929
+        outputSource:
+            - nanopore/assembly_graph
+            - pacbio/assembly_graph
         pickValue: first_non_null
 
 
