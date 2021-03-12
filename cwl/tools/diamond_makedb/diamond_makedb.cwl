@@ -7,10 +7,10 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 1
-    ramMin: 2000 # 1 GB for testing, it needs more in production
+    ramMin: 2000
 hints:
   DockerRequirement:
-    dockerPull: microbiomeinformatics/pipeline-v5.diamond:v0.9.25
+    dockerPull: jcaballero/mgnify-lr.diamond:2.0.7
 
 baseCommand: [ diamond ]
 
