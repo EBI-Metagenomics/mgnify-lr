@@ -134,6 +134,9 @@ outputs:
     type: File
     format: edam:format_1929
     outputSource: step_2_assembly/final_assembly_fasta
+  assembly_graph:
+    type: File
+    outputSource: step_2_assembly/assembly_graph
   final_assembly_stats:
     type: File
     outputSource: step_2_assembly/assembly_stats
@@ -203,6 +206,7 @@ steps:
       final_assembly: final_assembly
     out:
       - final_assembly_fasta
+      - assembly_graph
       - assembly_stats
 
   step_3_postprocessing:

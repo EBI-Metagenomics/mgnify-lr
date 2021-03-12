@@ -65,6 +65,9 @@ outputs:
     type: File
     format: edam:format_1929
     outputSource: step_7_filterContigs/outFasta
+  assembly_graph:
+    type: File
+    outputSource: step_1_assembly/assembly_graph
   assembly_stats:
     type: File
     outputSource: step_8_assembly_stats/outAssemblyStats
@@ -78,7 +81,9 @@ steps:
       readFile: long_reads
       reads1: forward_short_reads
       reads2: reverse_short_reads
-    out: [ contigs_fasta ]
+    out:
+      - contigs_fasta
+      - assembly_graph
 
   step_2_polishing_align_rnd1:
     label: aligning illumina reads to assembly
