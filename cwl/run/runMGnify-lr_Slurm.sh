@@ -132,6 +132,7 @@ then
             --batchSystem slurm \
             --defaultMemory ${MEMORY} \
             --defaultCores ${NUM_CORES} \
+            --logDebug \
             --retryCount 5 \
             --stats \
             ${CWL} ${RUN_YML} > ${OUT_JSON}
@@ -146,6 +147,7 @@ then
             --logFile ${LOG_DIR}/${NAME_RUN}.log \
             --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} \
             --outdir ${OUT_DIR_FINAL} \
+            --logDebug \
             --no-container \
             --batchSystem slurm \
             --defaultMemory ${MEMORY} \
