@@ -125,6 +125,7 @@ then
         toil-cwl-runner \
             --preserve-entire-environment \
             --enable-dev \
+            --disableCaching \
             --logFile ${LOG_DIR}/${NAME_RUN}.log \
             --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} \
             --outdir ${OUT_DIR_FINAL} \
@@ -141,6 +142,7 @@ then
         toil-cwl-runner \
             --preserve-entire-environment \
             --enable-dev \
+            --disableCaching \
             --logFile ${LOG_DIR}/${NAME_RUN}.log \
             --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} \
             --outdir ${OUT_DIR_FINAL} \
@@ -157,6 +159,7 @@ else
     echo "relaunching TOIL/CWL job as ${NAME_RUN}"
     toil-cwl-runner \
         --restart \
+        --disableCaching \
         --preserve-entire-environment \
         --logDebug \
         --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} \
