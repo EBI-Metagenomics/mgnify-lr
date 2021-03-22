@@ -54,7 +54,7 @@ done
 export TOIL_SLURM_ARGS=""
 
 echo "Activating envs"
-source /data/juan/miniconda3/bin/activate toil
+source /data/juan/toil/venv/bin/activate
 
 # ----------------------------- preparation -----------------------------
 # work dir
