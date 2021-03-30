@@ -4,3 +4,7 @@
 ../tools/bwa/bwa-mem2_filterHostFq.sh
 ../tools/filterContigs/filterContigs.pl
 ../tools/assembly_stats/calc_stats.pl
+../tools/assembly_stats/gen_stats_json.pl
+addRunStats.py
+prepare_upload.sh
+createYML.py
