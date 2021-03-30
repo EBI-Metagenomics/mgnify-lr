@@ -81,7 +81,14 @@ export TOIL_LSF_ARGS="-P bigmem -q production-rh74 -g /${USER}_${JOB_GROUP}"
 MEMORY="${MEMORY}G"
 
 echo "Activating envs"
-source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate toil-5.2.0
+if [ "$DOCKER" == "False" ]
+then
+    # Activate just toil env as tools will be run in containers
+    source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate toil-5.2.0
+else
+    #Activate full conda env with tools
+    source /hps/nobackup2/production/metagenomics/jcaballero/miniconda3/bin/activate mgnify-lr
+fi
 
 # ----------------------------- preparation -----------------------------
 # work dir
@@ -197,10 +204,69 @@ else
         --outdir ${OUT_DIR_FINAL} \
         ${CWL} ${YML}  >> ${OUT_JSON} 
     EXIT_CODE=$?
+    if [ "${DOCKER}" == "True" ]
+    then
+        echo "relaunching TOIL/CWL job with Singularity/Docker as ${NAME_RUN}"
+        toil-cwl-runner \
+            --restart \
+            --logDebug \
+            --preserve-entire-environment \
+            --enable-dev \
+            --logFile ${LOG_DIR}/${NAME_RUN}.log_restart \
+            --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} \
+            --outdir ${OUT_DIR_FINAL} \
+            --singularity \
+            --batchSystem lsf \
+            --disableCaching \
+            --defaultMemory ${MEMORY} \
+            --defaultCores ${NUM_CORES} \
+            --retryCount 5 \
+            --stats \
+            --doubleMem \
+            ${CWL} ${RUN_YML} > ${OUT_JSON}
+        EXIT_CODE=$?
+    elif [ "${DOCKER}" == "False" ]
+    then
+        echo "relaunching TOIL/CWL job as ${NAME_RUN}"
+        toil-cwl-runner \
+            --restart \
+            --logDebug \
+            --preserve-entire-environment \
+            --enable-dev \
+            --logFile ${LOG_DIR}/${NAME_RUN}.log_restart \
+            --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} \
+            --outdir ${OUT_DIR_FINAL} \
+            --no-container \
+            --batchSystem lsf \
+            --disableCaching \
+            --defaultMemory ${MEMORY} \
+            --defaultCores ${NUM_CORES} \
+            --retryCount 5 \
+            --stats \
+            --doubleMem \
+            ${CWL} ${RUN_YML} > ${OUT_JSON}
+        EXIT_CODE=$?
+    fi
 fi
 
 
 echo "Toil finish: $(date)"
 sleep 1m
+
+if [ "$EXIT_CODE" == "0" ]
+then
+    echo "retriving run stats"
+    toil stats --raw ${JOB_TOIL_FOLDER}/${NAME_RUN} > ${OUT_DIR_FINAL}/toil_stats.json
+
+    if [ -e "${OUT_DIR_FINAL}/assembly_stats.json" ]
+    then
+        echo "adding run stats in assembly_stats.json"
+        python3 $PIPELINE_FOLDER/utils/addRunStats.py \
+                    -t ${OUT_DIR_FINAL}/toil_stats.json \
+                    -a ${OUT_DIR_FINAL}/assembly_stats.json
+    else
+        echo "no assembly_stats.json found"
+    fi
+fi
 
 echo "EXIT: $EXIT_CODE"
