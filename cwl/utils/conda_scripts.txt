@@ -5,6 +5,8 @@
 ../tools/filterContigs/filterContigs.pl
 ../tools/assembly_stats/calc_stats.pl
 ../tools/assembly_stats/gen_stats_json.pl
+../run/runMGnify-lr_LSF.sh
+../run/runMGnify-lr_Slurm.sh
 addRunStats.py
 prepare_upload.sh
 createYML.py
