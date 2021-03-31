@@ -7,21 +7,23 @@
 TARGETDIR=/hps/nobackup2/production/metagenomics/results/assemblies
 PROJECT=null
 CONTIGS=null
-READSDIR=null
+READS=null
 STATS=null
-LOGS=null
+PARAMS=null
+GRAPH=null
 
 print_help () {
     echo "prepare_upload.sh [PARAM]"
     echo
     echo "Parameter |  Definition"
-
-    
+    echo "----------|------------"
     echo "   -p     |  ProjectID (SRPxxx|ERPxxx|DRPxxx)"
-    echo "   -c     |  Path to the directory with contigs Fasta (file name must have run id [S/E/D]RRxxx)"
-    echo "   -r     |  Path to the directory with raw reads Fastq (*fastq.gz)"
-    echo "   -l     |  Path to the log file (Toil log)"
-    echo "   -s     |  Path to the assembly_stats.json file"
+    echo "   -c     |  Path to contigs Fasta (file name must have run_id [S/E/D]RRxxxx)"
+    echo "   -r     |  Path to raw reads Fastq (*fastq.gz), multiple files can be specified with ','"
+    echo "   -y     |  Path to params file (CWL YAML input)"
+    echo "   -s     |  Path to assembly_stats.json file"
+    echo "   -g     |  Path to assembly graph file"
+    echo "   -t     |  Target dir, default: $TARGETDIR"
 }
 
 # simple error printing and script exit
@@ -32,13 +34,15 @@ error_exit () {
 }
 
 # Parameter capture
-while getopts :p:c:s:r:l: option; do
+while getopts :p:c:s:r:y:g:t: option; do
     case "${option}" in
         p) PROJECT=${OPTARG};;
         c) CONTIGS=${OPTARG};;
         s) STATS=${OPTARG};;
-        r) READSDIR=${OPTARG};;
-        l) LOGS=${OPTARG};;
+        r) READS=${OPTARG};;
+        y) PARAMS=${OPTARG};;
+        t) TARGETDIR=${OPTARG};;
+        g) GRAPH=${OPTARG};;
         *) echo "invalid option: $option"; exit;;
     esac
 done
@@ -46,8 +50,9 @@ done
 # input validation
 if [ "$PROJECT"  == "null" ]; then error_exit "missing ProjectID (-p)"; fi
 if [ "$CONTIGS"  == "null" ]; then error_exit "missing Contigs (-c)"; fi
-if [ "$READSDIR" == "null" ]; then error_exit "missing Reads dir (-r)" ; fi
-if [ "$LOGS"     == "null" ]; then error_exit "missing Logs (-l)"; fi
+if [ "$READSDIR" == "null" ]; then error_exit "missing Reads (-r)" ; fi
+if [ "$PARAMS"   == "null" ]; then error_exit "missing Params (-y)"; fi
+if [ "$STATS"    == "null" ]; then error_exit "missing Assembly stats (-s)"; fi
 
 echo "main directory preparation"
 PROJ=$(echo "$PROJECT" | perl -lane 'print $1 if (/([ESD]RP\d\d\d\d)/)')
@@ -75,7 +80,7 @@ fi
 # coverage dir (empty)
 if [ -d "$RUNDIR/coverage" ]
 then
-    echo "$RUNDIR/coverage exist"
+    echo "$RUNDIR/coverage dir exist"
 else
     mkdir -p "$RUNDIR/coverage" || error_exit "cannot create $RUNDIR/coverage"
 fi
@@ -83,28 +88,45 @@ fi
 # assembly relocation
 if [ -e "$CONTIGS" ]
 then
+    echo "copying contigs: $CONTIGS"
     cp "$CONTIGS" "$RUNDIR/contigs.fasta" || error_exit "cannot copy $CONTIGS to $RUNDIR"
+    echo "copying $RUNID.fasta"
+    cp "$RUNDIR/contigs.fasta" "$RUNDIR/$RUNID.fasta"
+    echo "compressing $RUNID.fasta"
+    gzip "$RUNDIR/$RUNID.fasta"
+    echo "generating checksum for $RUNID.fasta.gz"
+    md5sum "$RUNDIR/$RUNID.fasta.gz" | cut -f1 -d" " > "$RUNDIR/$RUNID.fasta.gz.md5"
 else
     error_exit "$CONTIGS is not readable"
 fi
 
 # params relocation
-if [ -e "$LOGS" ]
+if [ -e "$PARAMS" ]
 then
-    cp "$LOGS" "$RUNDIR/params.txt" || error_exit "cannot copy $LOGS to $RUNDIR"
+    echo "copying params from $PARAMS"
+    cp "$PARAMS" "$RUNDIR/params.txt" || error_exit "cannot copy $PARAMS to $RUNDIR"
 else
-    error_exit "$LOGS is not readable"
+    error_exit "$PARAMS is not readable"
 fi
-## TODO: parse logs and get run time and peak memory
 
 # stats relocation
 if [ -e "$STATS" ]
 then
+    echo "copying assembly stats from $STATS"
     cp "$STATS" "$RUNDIR/assembly_stats.json" || error_exit "cannot copy $STATS to $RUNDIR"
 else
     error_exit "$STATS is not readable"
 fi
-## TODO: edit JSON with run time and peak memory
+
+# graph relocation
+if [ -e "$GRAPH" ]
+then
+    echo "copying grafh file from $GRAPH"
+    cp "$GRAPH" "$RUNDIR/" || error_exit "cannot copy $GRAPH to $RUNDIR"
+else
+    echo "no graph found"
+fi
+
 
 echo "raw fastq relocation"
 if [ -d "$WORKDIR/raw" ]
@@ -113,20 +135,21 @@ then
 else
     mkdir -p "$WORKDIR/raw" || error_exit "cannot create $WORKDIR/raw"
 fi
-for FQ in "$READSDIR"/$RUNID*fastq.gz
+
+for FQ in $( echo $READS | perl -pe "s/,/\n/g" )
 do
     if [ -e "$FQ" ]
     then
-        FQTARGET="$WORKDIR/raw/$(basename "$FQ")"
+        FQFILE=$(basename $FQ)
+        FQTARGET="$WORKDIR/raw/$FQFILE"
         if [ -e "$FQTARGET" ]
         then
             echo "  $FQTARGET exists, skip"
         else
             echo "  relocating $FQ"
-            cp "$FQ" "$WORKDIR/raw/" || error_exit "cannot copy $FQ to $WORKDIR/raw" 
+            cp "$FQ" "$WORKDIR/raw/$FQFILE" || error_exit "cannot copy $FQ to $WORKDIR/raw" 
         fi
     else
         error_exit "$FQ is not readable"
     fi
 done
-## TODO: support hybrid mode
