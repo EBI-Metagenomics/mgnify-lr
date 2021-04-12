@@ -68,7 +68,7 @@ WORKDIR="$TARGETDIR/$PROJ/$PROJECT"
 echo "preparing assembly relocation"
 RUNID=$(echo "$CONTIGS" | perl -lane 'print $1 if (/([EDS]RR\d+)/)')
 RUNPREFIX=$(echo "$RUNID" | perl -lane 'print $1 if (/([EDS]RR\d\d\d\d)/)')
-RUNDIR="$WORKDIR/$RUNPREFIX/$RUN/metaspades/001"
+RUNDIR="$WORKDIR/$RUNPREFIX/$RUNID/metaspades/001"
 
 if [ -d "$RUNDIR" ]
 then
