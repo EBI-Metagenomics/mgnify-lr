@@ -131,7 +131,7 @@ case $TYPE in
     ;;
     polish)
         PARAM="$PARAM -1 $FORWARD_READS -2 $REVERSE_READS -i $MINILL"
-        export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly_polish.cwl.cwl
+        export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly_polish.cwl
     ;;
     *)
         echo "unsuported analysis types: $TYPE"
