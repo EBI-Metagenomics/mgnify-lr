@@ -15,6 +15,7 @@ export MEDAKA=r941_min_high_g360  # medaka model to use
 export MINILL=50             # minimal size for illumina reads
 export MINNANO=200           # minimal size for nanopore reads
 export MINCONTIG=500         # minimal size for assembled contigs
+export PROJECTID=null        # Project ID to store results ([ESD]RPXXXX)
 export DOCKER="True"         # flag to use singularity+docker
 export RESTART="False"       # flag to try to restart a failed run
 
@@ -40,7 +41,7 @@ export PIPELINE_FOLDER=/hps/nobackup2/production/metagenomics/jcaballero/mgnify-
 # run_folder
 export RUN_DIR=/hps/nobackup2/production/metagenomics/jcaballero/runs
 
-while getopts :a:d:f:h:l:m:n:r:s:t:u:z:i:j:k:g:c:x: option; do
+while getopts :a:d:f:h:l:m:n:r:s:t:u:z:i:j:k:g:c:p:x: option; do
     case "${option}" in
         m) MEMORY=${OPTARG};;
         n) NUM_CORES=${OPTARG};;
@@ -58,6 +59,7 @@ while getopts :a:d:f:h:l:m:n:r:s:t:u:z:i:j:k:g:c:x: option; do
         i) MINILL=${OPTARG};;
         j) MINNANO=${OPTARG};;
         c) MINCONTIG=${OPTARG};;
+        p) PROJECTID=${OPTARG};;
         x) RESTART=${OPTARG};;
         *) echo "invalid option: $option"; exit;;
     esac
@@ -267,6 +269,20 @@ then
     else
         echo "no assembly_stats.json found"
     fi
+
+    echo "moving results to final destination"
+    RAW_READS=${SINGLE}
+    if [ -e $FORWARD_READS ]; then RAW_READS="$RAW_READS,$FORWARD_READS,$REVERSE_READS"; fi
+
+    GRAPH_PARAM=""
+    if [ $TYPE == "hybrid" ]; then GRAPH_PARAM="${OUT_DIR_FINAL}/*fastg"; fi
+    bash $PIPELINE_FOLDER/util/prepare_upload.sh \
+            -p ${PROJECTID} \
+            -c ${OUT_DIR_FINAL}/*fasta \
+            -r ${RAW_READS} \
+            -a ${OUT_DIR_FINAL}/assembly_stats.json \
+            -y ${OUT_DIR_FINAL}/${NAME_RUN}.yaml \
+            ${GRAPH_PARAM}
 fi
 
 echo "EXIT: $EXIT_CODE"
