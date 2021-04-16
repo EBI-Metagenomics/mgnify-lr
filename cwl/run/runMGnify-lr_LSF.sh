@@ -4,7 +4,7 @@
 # (c) 2020 EMBL- EBI
 
 # defaults
-export TYPE=null             # analysis type: {assembly, hybrid}
+export TYPE=null             # analysis type: {assembly, hybrid, polish}
 export FORWARD_READS=null    # path to illumina first pair reads fastq file
 export REVERSE_READS=null    # path to illumina second pair reads fastq file
 export SINGLE=null           # path to long read fastq file
@@ -128,6 +128,10 @@ case $TYPE in
     hybrid)
         PARAM="$PARAM -1 $FORWARD_READS -2 $REVERSE_READS -i $MINILL"
         export CWL=${PIPELINE_FOLDER}/workflows/hybrid_read_assembly.cwl
+    ;;
+    polish)
+        PARAM="$PARAM -1 $FORWARD_READS -2 $REVERSE_READS -i $MINILL"
+        export CWL=${PIPELINE_FOLDER}/workflows/long_read_assembly_polish.cwl.cwl
     ;;
     *)
         echo "unsuported analysis types: $TYPE"
@@ -276,7 +280,7 @@ then
     else
         echo "moving results to final destination"
         RAW_READS=${SINGLE}
-        if [ -e "$FORWARD_READS" ]; then RAW_READS="$RAW_READS,$FORWARD_READS,$REVERSE_READS"; fi
+        #if [ -e "$FORWARD_READS" ]; then RAW_READS="$RAW_READS,$FORWARD_READS,$REVERSE_READS"; fi
 
         GRAPH_PARAM=""
         if [ "$TYPE" == "hybrid" ]; then GRAPH_PARAM="${OUT_DIR_FINAL}/*fastg"; fi
