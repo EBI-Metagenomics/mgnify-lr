@@ -6,7 +6,7 @@
 import argparse
 
 parser = argparse.ArgumentParser(description='Generate the YAML file for MGnify-LR pipeline')
-parser.add_argument('-m', '--mode', type=str, choices=['assembly', 'hybrid'], help='Pipeline mode selection, default: assembly', default='assembly')
+parser.add_argument('-m', '--mode', type=str, choices=['assembly', 'hybrid', 'polish'], help='Pipeline mode selection, default: assembly', default='assembly')
 parser.add_argument('-o', '--out', type=str, help='Output YAML file', required=True)
 parser.add_argument('-r', '--reads', type=str, help='Path to long reads Fastq file', required=True)
 parser.add_argument('-t', '--tech', type=str, choices=['nanopore', 'pacbio'], help='Long-reads techonology', required=True)
@@ -22,7 +22,7 @@ parser.add_argument('-u', '--uniprot', type=str, help='Path to Uniprot file (dia
 
 par = parser.parse_args()
 
-if par.mode == "hybrid":
+if par.mode == "hybrid" or par.mode == "polish":
     if not par.pair1:
         print("Mode is '{}', missing Illumina pair 1 fastq (-1/--pair1)".format(par.mode))
         exit(1)
@@ -61,7 +61,7 @@ if par.mode == "assembly":
     oh.write("host_unmapped_contigs: {}\n".format(par.prefix + "_unmap.fasta"))
     oh.write("medaka_model: {}\n".format(par.medakaModel))
 
-elif par.mode == "hybrid":
+elif par.mode == "hybrid" or par.mode == "polish":
     oh.write("forward_short_reads:\n  class: File\n  format: edam:format_1930\n  path: {}\n".format(par.pair1))
     oh.write("reverse_short_reads:\n  class: File\n  format: edam:format_1930\n  path: {}\n".format(par.pair2))
     oh.write("min_read_size_short: {}\n".format(par.minLenIll))
