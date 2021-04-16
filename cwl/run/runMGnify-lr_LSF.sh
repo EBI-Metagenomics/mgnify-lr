@@ -270,19 +270,24 @@ then
         echo "no assembly_stats.json found"
     fi
 
-    echo "moving results to final destination"
-    RAW_READS=${SINGLE}
-    if [ -e $FORWARD_READS ]; then RAW_READS="$RAW_READS,$FORWARD_READS,$REVERSE_READS"; fi
+    if [ "$PROJECTID" == "null" ]
+    then
+        echo "no project_id, not moving results"
+    else
+        echo "moving results to final destination"
+        RAW_READS=${SINGLE}
+        if [ -e "$FORWARD_READS" ]; then RAW_READS="$RAW_READS,$FORWARD_READS,$REVERSE_READS"; fi
 
-    GRAPH_PARAM=""
-    if [ $TYPE == "hybrid" ]; then GRAPH_PARAM="${OUT_DIR_FINAL}/*fastg"; fi
-    bash $PIPELINE_FOLDER/util/prepare_upload.sh \
+        GRAPH_PARAM=""
+        if [ "$TYPE" == "hybrid" ]; then GRAPH_PARAM="${OUT_DIR_FINAL}/*fastg"; fi
+        bash $PIPELINE_FOLDER/util/prepare_upload.sh \
             -p ${PROJECTID} \
             -c ${OUT_DIR_FINAL}/*fasta \
             -r ${RAW_READS} \
             -a ${OUT_DIR_FINAL}/assembly_stats.json \
             -y ${OUT_DIR_FINAL}/${NAME_RUN}.yaml \
             ${GRAPH_PARAM}
+    fi
 fi
 
 echo "EXIT: $EXIT_CODE"
