@@ -284,7 +284,7 @@ then
 
         GRAPH_PARAM=""
         if [ "$TYPE" == "hybrid" ]; then GRAPH_PARAM="${OUT_DIR_FINAL}/*fastg"; fi
-        bash $PIPELINE_FOLDER/util/prepare_upload.sh \
+        bash $PIPELINE_FOLDER/utils/prepare_upload.sh \
             -p ${PROJECTID} \
             -c ${OUT_DIR_FINAL}/*fasta \
             -r ${RAW_READS} \
