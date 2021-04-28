@@ -61,6 +61,10 @@ outputs:
     type: File
     outputBinding:
       glob: "spades_out/assembly_graph.fastg"
+  assembly_gfa:
+    type: File
+    outputBinding:
+      glob: "spades_out/assembly_graph_with_scaffolds.gfa"
   
 stdout: spades.log
 stderr: spades.err

@@ -68,6 +68,9 @@ outputs:
   assembly_graph:
     type: File
     outputSource: step_1_assembly/assembly_graph
+  assembly_gfa:
+    type: File
+    outputSource: step_1_assembly/assembly_gfa
   assembly_stats:
     type: File
     outputSource: step_8_assembly_stats/outAssemblyStats
@@ -84,6 +87,7 @@ steps:
     out:
       - contigs_fasta
       - assembly_graph
+      - assembly_gfa
 
   step_2_polishing_align_rnd1:
     label: aligning illumina reads to assembly

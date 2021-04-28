@@ -137,6 +137,9 @@ outputs:
   assembly_graph:
     type: File
     outputSource: step_2_assembly/assembly_graph
+  assembly_gfa:
+    type: File
+    outputSource: step_2_assembly/assembly_gfa
   final_assembly_stats:
     type: File
     outputSource: step_2_assembly/assembly_stats
@@ -207,6 +210,7 @@ steps:
     out:
       - final_assembly_fasta
       - assembly_graph
+      - assembly_gfa
       - assembly_stats
 
   step_3_postprocessing:
