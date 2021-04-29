@@ -36,6 +36,7 @@ steps:
     out:
       - contigs_fasta
       - assembly_graph
+      - assembly_gfa
 
   pacbio:
     label: assembly pacbio reads
@@ -49,6 +50,7 @@ steps:
     out:
       - contigs_fasta
       - assembly_graph
+      - assembly_gfa
 
 outputs:
     contigs_fasta:
@@ -60,10 +62,15 @@ outputs:
         pickValue: first_non_null
     assembly_graph:
         type: File
-        format: edam:format_1929
         outputSource:
             - nanopore/assembly_graph
             - pacbio/assembly_graph
+        pickValue: first_non_null
+    assembly_gfa:
+        type: File
+        outputSource:
+            - nanopore/assembly_gfa
+            - pacbio/assembly_gfa
         pickValue: first_non_null
 
 
