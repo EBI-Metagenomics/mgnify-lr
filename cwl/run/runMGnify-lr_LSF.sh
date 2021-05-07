@@ -198,18 +198,7 @@ then
             ${CWL} ${RUN_YML} > ${OUT_JSON}
         EXIT_CODE=$?
     fi
-else
-    echo "relaunching TOIL/CWL job as ${NAME_RUN}"
-    toil-cwl-runner \
-        --restart \
-        --disableCaching \
-        --preserve-entire-environment \
-        --logDebug \
-        --jobStore ${JOB_TOIL_FOLDER}/${NAME_RUN} \
-        --enable-dev \
-        --outdir ${OUT_DIR_FINAL} \
-        ${CWL} ${YML}  >> ${OUT_JSON} 
-    EXIT_CODE=$?
+else # restart mode
     if [ "${DOCKER}" == "True" ]
     then
         echo "relaunching TOIL/CWL job with Singularity/Docker as ${NAME_RUN}"
