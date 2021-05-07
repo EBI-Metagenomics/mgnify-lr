@@ -7,12 +7,12 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 8
-    ramMin: 105000 # 105Gb in of a case large assembly
+    ramMin: 150000 # 150Gb in of a case large assembly
 hints:
   DockerRequirement:
     dockerPull: jcaballero/mgnify-lr.pilon:1.23
 
-baseCommand: [ "java", "-Xmx100G", "-jar", "/opt/pilon.jar" ]
+baseCommand: [ "java", "-Xmx150G", "-jar", "/opt/pilon.jar" ]
 
 arguments:
  - --threads
