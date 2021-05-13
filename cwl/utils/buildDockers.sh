@@ -4,7 +4,7 @@
 # Script to build docker containers for mgnify-lr CWL pipeline
 # (C) 2020 EMBL-EBI
 
-REPO="jcaballero"
+REPO="microbiomeinformatics"
 WDIR=$PWD
 TOOLFILE="tools.txt"
 
@@ -17,6 +17,7 @@ do
     then
         echo "Building $TOOL"
         docker build -t $TAG $DOCKERDIR
+        docker push $TAG
     else
         echo "No Dockerfile for $TOOL in $DOCKERDIR, skipped"
     fi

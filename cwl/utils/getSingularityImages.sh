@@ -2,7 +2,7 @@
 
 # Script to pull Singularity images from DockerHub
 
-REPO=jcaballero
+REPO=microbiomeinformatics
 for IMG in  $(cut -f2 -d"#" tools.txt)
 do
     singularity pull --name ${REPO}_${IMG}.sif docker://$REPO/$IMG

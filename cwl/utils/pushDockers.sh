@@ -6,7 +6,7 @@
 # (C) 2020 EMBL-EBI
 
 WDIR=$PWD
-REPO="jcaballero"
+REPO="microbiomeinformatics"
 TOOLS="tools.txt"
 for LINE in $(cat $TOOLS)
 do
