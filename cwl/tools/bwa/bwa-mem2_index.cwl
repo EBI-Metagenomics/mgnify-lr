@@ -12,7 +12,7 @@ requirements:
     ramMin: 2000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.bwa-mem2:2.1.1
+    dockerPull: microbiomeinformatics/mgnify-lr.bwa-mem2:2.1.1
 
 baseCommand: [ "bwa-mem2" ]
 

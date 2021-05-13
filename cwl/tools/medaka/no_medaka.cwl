@@ -10,7 +10,7 @@ requirements:
     ramMin: 1000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.filtercontigs:0.0.3
+    dockerPull: microbiomeinformatics/mgnify-lr.filtercontigs:0.0.3
 
 baseCommand: [ "cp" ]
 

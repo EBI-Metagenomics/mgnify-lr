@@ -10,7 +10,7 @@ requirements:
     ramMin: 2000 # 2 GB for testing, it needs more in production
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.ideel:0.0.2
+    dockerPull: microbiomeinformatics/mgnify-lr.ideel:0.0.2
 
 baseCommand: [ "ideel.py" ]
 

@@ -10,7 +10,7 @@ requirements:
     ramMin: 150000 # 150Gb in of a case large assembly
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.pilon:1.23
+    dockerPull: microbiomeinformatics/mgnify-lr.pilon:1.23
 
 baseCommand: [ "java", "-Xmx150G", "-jar", "/opt/pilon.jar" ]
 

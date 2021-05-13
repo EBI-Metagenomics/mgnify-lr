@@ -10,7 +10,7 @@ requirements:
     ramMin: 2000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.minimap2_filter:2.17.4
+    dockerPull: microbiomeinformatics/mgnify-lr.minimap2_filter:2.17.4
 
 baseCommand: [ "minimap2" ]
 

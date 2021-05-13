@@ -10,7 +10,7 @@ requirements:
     ramMin: 2000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.prodigal:2.6.3
+    dockerPull: microbiomeinformatics/mgnify-lr.prodigal:2.6.3
 
 baseCommand: [ prodigal ]
 

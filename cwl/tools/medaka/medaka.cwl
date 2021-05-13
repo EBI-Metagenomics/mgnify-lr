@@ -12,7 +12,7 @@ requirements:
     ramMin: 8000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.medaka:1.2.3
+    dockerPull: microbiomeinformatics/mgnify-lr.medaka:1.2.3
 
 baseCommand: [ "medaka_consensus" ]
 

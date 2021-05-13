@@ -10,7 +10,7 @@ requirements:
     ramMin: 200000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.flye:2.8.3
+    dockerPull: microbiomeinformatics/mgnify-lr.flye:2.8.3
 
 baseCommand: [ flye ]
 

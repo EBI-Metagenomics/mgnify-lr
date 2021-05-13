@@ -12,7 +12,7 @@ requirements:
     ramMin: 8000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.assemblystats:0.0.5
+    dockerPull: microbiomeinformatics/mgnify-lr.assemblystats:0.0.5
 
 baseCommand: [ "gen_stats_json.pl" ]
 

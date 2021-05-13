@@ -10,7 +10,7 @@ requirements:
     ramMin: 2000
 hints:
   DockerRequirement:
-    dockerPull: jcaballero/mgnify-lr.diamond:2.0.7
+    dockerPull: microbiomeinformatics/mgnify-lr.diamond:2.0.7
 
 baseCommand: [ diamond ]
 
