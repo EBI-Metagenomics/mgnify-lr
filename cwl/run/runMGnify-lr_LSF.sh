@@ -135,12 +135,12 @@ export TOIL_LSF_ARGS="-P bigmem -q production-rh74 -g /${USER}_${JOB_GROUP}"
 MEMORY="${MEMORY}G"
 
 echo "Activating envs"
-if [ "$DOCKER" == "False" ]
+if [ "$DOCKER" == "True" ]
 then
     # Activate just toil env as tools will be run in containers
     source "$PIPELINE_FOLDER/miniconda3/bin/activate" toil-5.3.0
 else
-    #Activate full conda env with tools
+    # Activate full conda env with tools
     source "$PIPELINE_FOLDER/miniconda3/bin/activate" mgnify-lr
 fi
 
