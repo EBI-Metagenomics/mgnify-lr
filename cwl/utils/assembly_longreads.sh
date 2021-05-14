@@ -42,7 +42,7 @@ launch_job () {
     FQ=$1
     NAME=$(basename $FQ .fastq.gz)
     echo "Launching assembly job $NAME"
-    CMD="bsub -q production-rh74 -e $RAWDIR/../$NAME.err -o $RAWDIR/../$NAME.log -J $NAME \"bash $LAUNCHER -p $PROJECT -s $FQ -h $TECH -t assembly -g $GENOME -k $MEDAKAMODEL -i $MINILL -j $MINLR -c $MINCONTIG\""
+    CMD="bsub -q production-rh74 -e $RAWDIR/../$NAME.err -o $RAWDIR/../$NAME.log -J $NAME 'bash $LAUNCHER -p $PROJECT -s $FQ -h $TECH -t assembly -g $GENOME -k $MEDAKAMODEL -i $MINILL -j $MINLR -c $MINCONTIG'"
     echo $CMD
     $CMD
 }
