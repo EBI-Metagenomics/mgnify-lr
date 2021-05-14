@@ -10,7 +10,8 @@ CONTIGS=null
 READS=null
 STATS=null
 PARAMS=null
-GRAPH=null
+GRAPHG=null
+GRAPHF=null
 
 print_help () {
     echo "prepare_upload.sh [PARAM]"
@@ -22,7 +23,8 @@ print_help () {
     echo "   -r     |  Path to raw reads Fastq (*fastq.gz), multiple files can be specified with ','"
     echo "   -y     |  Path to params file (CWL YAML input)"
     echo "   -s     |  Path to assembly_stats.json file"
-    echo "   -g     |  Path to assembly graph file"
+    echo "   -f     |  Path to assembly graph file (fastg)"
+    echo "   -g     |  Path to assembly graph file (gfa)"
     echo "   -t     |  Target dir, default: $TARGETDIR"
 }
 
@@ -34,7 +36,7 @@ error_exit () {
 }
 
 # Parameter capture
-while getopts :p:c:s:r:y:g:t: option; do
+while getopts :p:c:s:r:y:g:t:f: option; do
     case "${option}" in
         p) PROJECT=${OPTARG};;
         c) CONTIGS=${OPTARG};;
@@ -42,7 +44,8 @@ while getopts :p:c:s:r:y:g:t: option; do
         r) READS=${OPTARG};;
         y) PARAMS=${OPTARG};;
         t) TARGETDIR=${OPTARG};;
-        g) GRAPH=${OPTARG};;
+        g) GRAPHG=${OPTARG};;
+        f) GRAPHF=${OPTARG};;
         *) echo "invalid option: $option"; exit;;
     esac
 done
@@ -119,14 +122,20 @@ else
 fi
 
 # graph relocation
-if [ -e "$GRAPH" ]
+if [ -e "$GRAPHG" ]
 then
-    echo "copying grafh file from $GRAPH"
-    cp "$GRAPH" "$RUNDIR/" || error_exit "cannot copy $GRAPH to $RUNDIR"
+    echo "copying graph file (gfa) from $GRAPHG"
+    cp "$GRAPHG" "$RUNDIR/" || error_exit "cannot copy $GRAPHG to $RUNDIR"
 else
-    echo "no graph found"
+    echo "no GFA graph found"
 fi
-
+if [ -e "$GRAPHF" ]
+then
+    echo "copying graph file (fastg) from $GRAPHF"
+    cp "$GRAPHF" "$RUNDIR/" || error_exit "cannot copy $GRAPHF to $RUNDIR"
+else
+    echo "no Fastg graph found"
+fi
 
 echo "raw fastq relocation"
 if [ -d "$WORKDIR/raw" ]
@@ -136,11 +145,11 @@ else
     mkdir -p "$WORKDIR/raw" || error_exit "cannot create $WORKDIR/raw"
 fi
 
-for FQ in $( echo $READS | perl -pe "s/,/\n/g" )
+for FQ in $( echo "$READS" | perl -pe 's/,/\n/g' )
 do
     if [ -e "$FQ" ]
     then
-        FQFILE=$(basename $FQ)
+        FQFILE=$(basename "$FQ")
         FQTARGET="$WORKDIR/raw/$FQFILE"
         if [ -e "$FQTARGET" ]
         then
