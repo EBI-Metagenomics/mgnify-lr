@@ -228,22 +228,25 @@ else
 fi
 
 echo "launching TOIL/CWL job as $NAME, Docker: $DOCKER, RESTART: $RESTART"
-toil-cwl-runner \
+CMD="toil-cwl-runner \
             --preserve-entire-environment \
             --enable-dev \
-            --logFile "$LOG_DIR/$NAME.log" \
-            --jobStore "$JOB_TOIL_FOLDER/$NAME" \
-            --outdir "$OUT_DIR_FINAL" \
+            --logFile $LOG_DIR/$NAME.log \
+            --jobStore $JOB_TOIL_FOLDER/$NAME \
+            --outdir $OUT_DIR_FINAL \
             --batchSystem lsf \
             --disableCaching \
-            --defaultMemory "$MEMORY" \
-            --defaultCores "$NUM_CORES" \
+            --defaultMemory $MEMORY \
+            --defaultCores $NUM_CORES \
             --retryCount 5 \
             --stats \
             --doubleMem \
-            "$USEDOCKER" \
-            "$USERESTART" \
-        "$CWL" "$RUN_YML" > "$OUT_JSON"
+            $USEDOCKER \
+            $USERESTART \
+        $CWL $RUN_YML > $OUT_JSON"
+
+echo "$CMD"
+$CMD
 EXIT_CODE=$?
 
 
