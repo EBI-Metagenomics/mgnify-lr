@@ -283,13 +283,15 @@ then
             GRAPH_PARAM="-f $OUT_DIR_FINAL/*.fastg -g $OUT_DIR_FINAL/*.gfa"
         fi
         
-        bash $PIPELINE_FOLDER/cwl/utils/prepare_upload.sh \
-            -p "$PROJECTID" \
-            -c "$OUT_DIR_FINAL/*fasta" \
-            -r "$RAW_READS" \
-            -a "$OUT_DIR_FINAL/assembly_stats.json" \
-            -y "$RUN_YML" \
-            "${GRAPH_PARAM}"
+        CDM="bash $PIPELINE_FOLDER/cwl/utils/prepare_upload.sh \
+            -p $PROJECTID \
+            -c $OUT_DIR_FINAL/*fasta \
+            -r $RAW_READS \
+            -a $OUT_DIR_FINAL/assembly_stats.json \
+            -y $RUN_YML \
+            ${GRAPH_PARAM}"
+        echo "$CMD"
+        $CMD
     fi
 else
     echo "JOB FAILED, NOT FINAL STEPS"
