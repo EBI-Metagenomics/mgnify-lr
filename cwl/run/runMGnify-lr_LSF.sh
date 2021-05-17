@@ -229,21 +229,22 @@ fi
 
 echo "launching TOIL/CWL job as $NAME, Docker: $DOCKER, Restart: $RESTART"
 CMD="toil-cwl-runner \
- --preserve-entire-environment \
- --enable-dev \
- --logFile $LOG_DIR/$NAME.log \
- --jobStore $JOB_TOIL_FOLDER/$NAME \
- --outdir $OUT_DIR_FINAL \
- --batchSystem lsf \
- --disableCaching \
- --defaultMemory $MEMORY \
- --defaultCores $NUM_CORES \
- --retryCount 5 \
- --stats \
- --doubleMem \
- $USEDOCKER \
- $USERESTART \
- $CWL $RUN_YML > $OUT_JSON"
+  --preserve-entire-environment \
+  --enable-dev \
+  --logFile $LOG_DIR/$NAME.log \
+  --jobStore $JOB_TOIL_FOLDER/$NAME \
+  --outdir $OUT_DIR_FINAL \
+  --batchSystem lsf \
+  --disableCaching \
+  --defaultMemory $MEMORY \
+  --defaultCores $NUM_CORES \
+  --retryCount 5 \
+  --stats \
+  --doubleMem \
+  $USEDOCKER \
+  $USERESTART \
+  $CWL \
+  $RUN_YML"
 
 echo "$CMD"
 $CMD
