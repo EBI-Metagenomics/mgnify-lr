@@ -138,7 +138,7 @@ echo "Activating envs"
 if [ "$DOCKER" == "True" ]
 then
     # Activate just toil env as tools will be run in containers
-    source "$PIPELINE_FOLDER/miniconda3/bin/activate" toil-5.2.0
+    source "$PIPELINE_FOLDER/miniconda3/bin/activate" toil-5.3.0
 else
     # Activate full conda env with tools
     source "$PIPELINE_FOLDER/miniconda3/bin/activate" mgnify-lr
@@ -170,7 +170,7 @@ else
 fi
 
 # ----------------------------- configs  -----------------------------
-export RUN_YML=${OUT_DIR_FINAL}/${NAME}.yml
+export RUN_YML=${OUT_DIR_FINAL}/${NAME}.yaml
 export YML_SCRIPT=${PIPELINE_FOLDER}/cwl/utils/createYML.py
 
 export PARAM="-m $TYPE -r $SINGLE -l $MINNANO -k $MEDAKA -c $MINCONTIG -p $NAME -t $TECH -u $UNIPROT"
@@ -274,7 +274,7 @@ then
     else
         echo "moving results to final destination"
         RAW_READS=${SINGLE}
-        #if [ -e "$FORWARD_READS" ]; then RAW_READS="$RAW_READS,$FORWARD_READS,$REVERSE_READS"; fi
+        if [ -e "$FORWARD_READS" ]; then RAW_READS="$RAW_READS,$FORWARD_READS,$REVERSE_READS"; fi
 
         GRAPH_PARAM=""
         if [ "$TYPE" == "hybrid" ]
@@ -287,7 +287,7 @@ then
             -c "$OUT_DIR_FINAL/*fasta" \
             -r "$RAW_READS" \
             -a "$OUT_DIR_FINAL/assembly_stats.json" \
-            -y "$OUT_DIR_FINAL/${NAME}.yml" \
+            -y "$RUN_YML" \
             "${GRAPH_PARAM}"
     fi
 else
