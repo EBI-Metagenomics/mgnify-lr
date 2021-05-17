@@ -138,7 +138,7 @@ echo "Activating envs"
 if [ "$DOCKER" == "True" ]
 then
     # Activate just toil env as tools will be run in containers
-    source "$PIPELINE_FOLDER/miniconda3/bin/activate" toil-5.3.0
+    source "$PIPELINE_FOLDER/miniconda3/bin/activate" toil-5.2.0
 else
     # Activate full conda env with tools
     source "$PIPELINE_FOLDER/miniconda3/bin/activate" mgnify-lr
@@ -227,23 +227,23 @@ else
     USEDOCKER="--no-container"
 fi
 
-echo "launching TOIL/CWL job as $NAME, Docker: $DOCKER, RESTART: $RESTART"
+echo "launching TOIL/CWL job as $NAME, Docker: $DOCKER, Restart: $RESTART"
 CMD="toil-cwl-runner \
-            --preserve-entire-environment \
-            --enable-dev \
-            --logFile $LOG_DIR/$NAME.log \
-            --jobStore $JOB_TOIL_FOLDER/$NAME \
-            --outdir $OUT_DIR_FINAL \
-            --batchSystem lsf \
-            --disableCaching \
-            --defaultMemory $MEMORY \
-            --defaultCores $NUM_CORES \
-            --retryCount 5 \
-            --stats \
-            --doubleMem \
-            $USEDOCKER \
-            $USERESTART \
-        $CWL $RUN_YML > $OUT_JSON"
+ --preserve-entire-environment \
+ --enable-dev \
+ --logFile $LOG_DIR/$NAME.log \
+ --jobStore $JOB_TOIL_FOLDER/$NAME \
+ --outdir $OUT_DIR_FINAL \
+ --batchSystem lsf \
+ --disableCaching \
+ --defaultMemory $MEMORY \
+ --defaultCores $NUM_CORES \
+ --retryCount 5 \
+ --stats \
+ --doubleMem \
+ $USEDOCKER \
+ $USERESTART \
+ $CWL $RUN_YML > $OUT_JSON"
 
 echo "$CMD"
 $CMD
@@ -287,7 +287,7 @@ then
             -c "$OUT_DIR_FINAL/*fasta" \
             -r "$RAW_READS" \
             -a "$OUT_DIR_FINAL/assembly_stats.json" \
-            -y "$OUT_DIR_FINAL/${NAME}.yaml" \
+            -y "$OUT_DIR_FINAL/${NAME}.yml" \
             "${GRAPH_PARAM}"
     fi
 else
