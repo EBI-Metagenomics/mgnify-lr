@@ -277,7 +277,7 @@ then
         RAW_READS=${SINGLE}
         if [ -e "$FORWARD_READS" ]; then RAW_READS="$RAW_READS,$FORWARD_READS,$REVERSE_READS"; fi
 
-        GRAPH_PARAM=""
+        GRAPH_PARAM=" "
         if [ "$TYPE" == "hybrid" ]
         then
             GRAPH_PARAM="-f $OUT_DIR_FINAL/*.fastg -g $OUT_DIR_FINAL/*.gfa"
@@ -285,7 +285,7 @@ then
         
         CDM="bash $PIPELINE_FOLDER/cwl/utils/prepare_upload.sh \
             -p $PROJECTID \
-            -c $OUT_DIR_FINAL/*fasta \
+            -c $OUT_DIR_FINAL/${NAME}_final.fasta \
             -r $RAW_READS \
             -a $OUT_DIR_FINAL/assembly_stats.json \
             -y $RUN_YML \
