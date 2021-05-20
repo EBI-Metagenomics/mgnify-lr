@@ -86,16 +86,6 @@ then
         exit 1
     fi
     
-    if [ ! -f "$FORWARD" ]
-    then
-        echo "Hybrid mode detected, first short-read file is not readable"
-        exit 1
-    fi
-    if [ ! -f "$REVERSE" ]
-    then
-        echo "Hybrid mode detected, second short-read file is not readable"
-        exit 1
-    fi
     if [ "$NAME" == "null" ]
     then
         NAME=$(basename "$FORWARD" _1.fastq.gz)
