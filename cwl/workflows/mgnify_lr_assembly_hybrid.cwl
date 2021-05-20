@@ -35,14 +35,6 @@ inputs:
     type: File?
     format: edam:format_1929
     label: Host reference genome, used for decontaminate
-  pilon_align:
-    type: string?
-    label: illumina reads alignment for polishing
-    default: pilon_align.bam
-  polish_assembly_pilon:
-    type: string?
-    label: polish assembly after illumina map
-    default: assembly_polish_pilon
   min_contig_size:
     type: int?
     label: minimal size for contigs, shorter are removed
@@ -51,6 +43,18 @@ inputs:
     type: string?
     label: minimap2 align mode for coverage
     default: map-ont
+  polish_paf:
+    type: string?
+    label: polish align PAF file
+    default: assembly_polish.paf
+  polish_assembly_racon:
+    type: string?
+    label: polish assembly with racon
+    default: assembly_polish_racon.fasta  
+  medaka_model:
+    type: string?
+    label: medaka model to improve assembly
+    default: r941_min_high_g360
   host_unmapped_contigs:
     type: string?
     label: clean contigs unmap to host genome (fasta)
@@ -89,43 +93,43 @@ steps:
       - assembly_graph
       - assembly_gfa
 
-  step_2_polishing_align_rnd1:
-    label: aligning illumina reads to assembly
-    run: ../tools/bwa/bwa-mem2.cwl
+  step_2_merge_short_reads:
+    label: merge paired reads for polishing
+    run: ../tools/merge_reads/merge_reads.cwl
     in:
       reads1: forward_short_reads
       reads2: reverse_short_reads
-      reference: step_1_assembly/contigs_fasta
-      bamName: pilon_align
-    out: [ bam ]
+    out: [ merged_reads ]
 
-  step_3_polishing_pilon_rnd1:
-    label: polishing assembly with pilon (round 1)
-    run: ../tools/pilon/pilon.cwl
-    in:
-      sequences: step_1_assembly/contigs_fasta
-      alignment: step_2_polishing_align_rnd1/bam
-      outfile: polish_assembly_pilon
-    out: [ outfile ]
 
-  step_4_polishing_align_rnd2:
-    label: aligning illumina reads to assembly
-    run: ../tools/bwa/bwa-mem2.cwl
+  step_3_polishing_minimap2:
+    label: polishing step 1, map reads back to assembly with minimap2
+    run: ../tools/minimap2/minimap2_to_polish_pe.cwl
     in:
-      reads1: forward_short_reads
-      reads2: reverse_short_reads
-      reference: step_3_polishing_pilon_rnd1/outfile
-      bamName: pilon_align
-    out: [ bam ]
+      inAssembly: step_1_assembly/contigs_fasta
+      inReads: step_2_merge_short_reads/merged_reads
+      outPAFname: polish_paf
+    out: [ outPAF ]
 
-  step_5_polishing_pilon_rnd2:
-    label: polishing assembly with pilon (round 2)
-    run: ../tools/pilon/pilon.cwl
+  step_4_polishing_racon:
+    label: polishing step 2, using racon to improve assembly
+    run: ../tools/racon/racon.cwl
     in:
-      sequences: step_3_polishing_pilon_rnd1/outfile
-      alignment: step_4_polishing_align_rnd2/bam
-      outfile: polish_assembly_pilon
-    out: [ outfile ]
+      inReads: step_2_merge_short_reads/merged_reads
+      mapping: step_3_polishing_minimap2/outPAF
+      assembly: step_1_assembly/contigs_fasta
+      outName: polish_assembly_racon
+    out: [ outAssembly ]
+
+  step_5_polishing_medaka:
+    label: polishing step 3, using medaka to create a consensus
+    run: ../tools/medaka/medaka_runner.cwl
+    in:
+      inReads: long_reads
+      assembly: step_4_polishing_racon/outAssembly
+      medakaModel: medaka_model
+      tech: long_read_tech
+    out: [ outConsensus ]
   
   step_6_cleaning_host:
     label: post-assembly cleaning, mapping with minimap2
@@ -134,7 +138,7 @@ steps:
       alignMode: align_preset
       outReadsName: host_unmapped_contigs
       refSeq: host_genome
-      inSeq: step_5_polishing_pilon_rnd2/outfile
+      inSeq: step_5_polishing_medaka/outConsensus
     out: [ outReads ]
 
   step_7_filterContigs:
