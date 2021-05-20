@@ -51,34 +51,28 @@ if par.mode == "assembly":
             oh.write("align_preset: map-pb\n")
         else:
             oh.write("align_preset: map-ont\n")
-
     else: # assembly without Host filtering
         oh.write("align_preset: none\n")
-
     oh.write("host_unmapped_reads: {}\n".format(par.prefix + "_filterHost.fastq.gz"))
-    oh.write("polish_paf: {}\n".format(par.prefix + "_polish.paf"))
-    oh.write("polish_assembly_racon: {}\n".format(par.prefix + "_racon.fasta"))
-    oh.write("host_unmapped_contigs: {}\n".format(par.prefix + "_unmap.fasta"))
-    oh.write("medaka_model: {}\n".format(par.medakaModel))
-
 elif par.mode == "hybrid" or par.mode == "polish":
     oh.write("forward_short_reads:\n  class: File\n  format: edam:format_1930\n  path: {}\n".format(par.pair1))
     oh.write("reverse_short_reads:\n  class: File\n  format: edam:format_1930\n  path: {}\n".format(par.pair2))
     oh.write("min_read_size_short: {}\n".format(par.minLenIll))
-    oh.write("reads_filter_bysize: {}\n".format(par.prefix + "_filtered_nano"))
+    oh.write("reads_filter_bysize: {}\n".format(par.prefix + "_filtered_lr"))
     oh.write("reads_filter_bysize_short: {}\n".format(par.prefix + "_filtered_illumina"))
     if par.host: # assembly with Host filtering and Illumina polishing
         oh.write("host_genome:\n  class: File\n  format: edam:format_1929\n  path: {}\n".format(par.host))
         oh.write("host_unmapped: {}\n".format(par.prefix + "_filterHost.fastq.gz"))
         oh.write("host_unmapped_reads_1: {}\n".format(par.prefix + "_filterHost_1.fastq.gz"))
         oh.write("host_unmapped_reads_2: {}\n".format(par.prefix + "_filterHost_2.fastq.gz"))
-        oh.write("host_unmapped_contigs: {}\n".format(par.prefix + "_unmapHost.fasta"))
-    oh.write("pilon_align: {}\n".format(par.prefix + "_align.bam"))
-    oh.write("polish_assembly_pilon: {}\n".format(par.prefix + "_pilon"))
-
 else:
     print("Unknown mode '{}'".format(par.mode))
     exit(1)
+
+oh.write("polish_paf: {}\n".format(par.prefix + "_polish.paf"))
+oh.write("polish_assembly_racon: {}\n".format(par.prefix + "_racon.fasta"))
+oh.write("host_unmapped_contigs: {}\n".format(par.prefix + "_unmap.fasta"))
+oh.write("medaka_model: {}\n".format(par.medakaModel))
 
 oh.write("final_assembly: {}\n".format(par.prefix + "_final.fasta"))
 oh.write("predict_proteins: {}\n".format(par.prefix + "_prot.fasta"))
