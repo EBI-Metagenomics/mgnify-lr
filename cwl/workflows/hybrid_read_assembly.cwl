@@ -74,14 +74,18 @@ inputs:
     type: int?
     label: contigs filter by size
     default: 500
-  pilon_align:
+  polish_paf:
     type: string?
-    label: illumina reads alignment for polishing
-    default: pilon_align.bam
-  polish_assembly_pilon:
+    label: polish align PAF file
+    default: assembly_polish.paf
+  polish_assembly_racon:
     type: string?
-    label: polish assembly after illumina map
-    default: assembly_polish_pilon
+    label: polish assembly with racon
+    default: assembly_polish_racon.fasta  
+  medaka_model:
+    type: string?
+    label: medaka model to improve assembly
+    default: r941_min_high_g360
   align_polish:
     type: string?
     label: minimap2 align mode for coverage
@@ -199,8 +203,9 @@ steps:
       long_read_tech: long_read_tech
       forward_short_reads: step_1b_preprocessing_short/reads_out_1
       reverse_short_reads: step_1b_preprocessing_short/reads_out_2
-      pilon_align: pilon_align
-      polish_assembly_pilon: polish_assembly_pilon
+      polish_paf: polish_paf
+      polish_assembly_racon: polish_assembly_racon
+      medaka_model: medaka_model
       align_preset: align_preset
       host_genome: host_genome
       host_unmapped_contigs: host_unmapped_contigs
