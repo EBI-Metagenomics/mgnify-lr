@@ -17,7 +17,8 @@ baseCommand: [ "minimap2" ]
 arguments:
  - -t
  - $(runtime.cores)
- - "-x sr"
+ - -x
+ - sr
 
 inputs:
   outPAFname:
