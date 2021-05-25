@@ -273,7 +273,7 @@ then
             GRAPH_PARAM="-f $OUT_DIR_FINAL/*.fastg -g $OUT_DIR_FINAL/*.gfa"
         fi
         
-        CDM="bash $PIPELINE_FOLDER/cwl/utils/prepare_upload.sh \
+        CMD="bash $PIPELINE_FOLDER/cwl/utils/prepare_upload.sh \
             -p $PROJECTID \
             -c $OUT_DIR_FINAL/${NAME}_final.fasta \
             -r $RAW_READS \
