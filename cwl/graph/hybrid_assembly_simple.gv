@@ -1,0 +1,74 @@
+/* MGnify-LR pipeline (hybrid) graph (simple version) */
+digraph lrpipeline {
+	size="6,6";
+	
+    node [color=lightblue2, style=filled, shape=box, fixedsize=true, height=1, width=3];
+
+    input [label="Raw LR FastQ", color=red]
+
+    input2 [label="Raw PE FastQ", color=red]
+
+    genome [label="Host genome\n(optional)", color=lightgrey]
+    
+    preprocesslr [label="Preprocess and QC\nfastp"]
+
+    preprocesssr [label="Preprocess and QC\nfastp"]
+
+    hostfiltersr [label="Host filtering\nBWA2", color=lightgrey]
+    
+    hostfilterlr [label="Host filtering\nMinimap", color=lightgrey]
+
+    assembly [label="Assembly\nmetaSPAdes"]
+
+    polish1 [label="Polishing\nRacon"]
+
+    polish2 [label="Polishing\nMedaka\n(Nanopore)"]
+
+    hostfilter2 [label="Host filtering\nMinimap", color=lightgrey]
+
+    output [label="Assembly Contigs", color=red]
+
+    postqc [label="Post assembly QC\nProdigal\nDiamond\nideel"]
+
+    stats [label="Assembly stats"]
+
+    input -> preprocesslr
+
+    input2 -> preprocesssr
+
+    genome -> hostfilterlr
+
+    genome -> hostfiltersr
+
+    preprocesslr -> hostfilterlr [style=dashed]
+
+    preprocesslr -> assembly
+
+    preprocesssr -> hostfiltersr [style=dashed]
+
+    preprocesssr -> assembly
+
+    hostfilterlr -> assembly [style=dashed]
+    
+    hostfiltersr -> assembly [style=dashed]
+
+    assembly -> polish1
+
+    polish1 -> polish2
+
+    polish2 -> output
+
+    genome -> hostfilter2
+
+    polish2 -> hostfilter2 [style=dashed]
+
+    hostfilter2 -> output [style=dashed]
+
+    output -> postqc
+    
+    output -> stats
+
+    label = "\n\nMGnify-LR hybrid pipeline";
+	
+    fontsize=20;
+}
