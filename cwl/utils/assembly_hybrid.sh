@@ -82,8 +82,8 @@ then
     error_exit "$RAWDIR is missing or cannot be read"
 fi
 
-LR_FASTQ=$( find "$RAWDIR "-name "$RUN_LR*.fastq.gz"   | head -1)
-PE1_FASTQ=$(find "$RAWDIR "-name "$RUN_PE*_1.fastq.gz" | head -1)
-PE2_FASTQ=$(find "$RAWDIR "-name "$RUN_PE*_2.fastq.gz" | head -1)
+LR_FASTQ=$( find "$RAWDIR" -name "$RUN_LR*.fastq.gz"   | head -1)
+PE1_FASTQ=$(find "$RAWDIR" -name "$RUN_PE*_1.fastq.gz" | head -1)
+PE2_FASTQ=$(find "$RAWDIR" -name "$RUN_PE*_2.fastq.gz" | head -1)
 
 launch_job "$LR_FASTQ $PE1_FASTQ $PE2_FASTQ"
