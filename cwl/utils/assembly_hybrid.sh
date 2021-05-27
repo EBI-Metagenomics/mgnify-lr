@@ -90,4 +90,4 @@ echo "found long-reads $LR_FASTQ"
 echo "found short-reads 1 $PE1_FASTQ"
 echo "found short-reads 2 $PE2_FASTQ"
 
-launch_job "$LR_FASTQ $PE1_FASTQ $PE2_FASTQ"
+launch_job "$LR_FASTQ" "$PE1_FASTQ" "$PE2_FASTQ"
