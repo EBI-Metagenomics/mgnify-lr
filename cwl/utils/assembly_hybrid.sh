@@ -48,7 +48,7 @@ launch_job () {
     PE2=$3
     NAME=$(basename "$PE1" _1.fastq.gz)
     echo "Launching assembly job $NAME"
-    bsub -q production-rh74 -e $RAWDIR/../$NAME.err -o $RAWDIR/../$NAME.log -J $NAME "bash $LAUNCHER -x $RESTART -p $PROJECT -s $FQ -f $PE1 -r $PE2 -h $TECH -t hybrid -g $GENOME -k $MEDAKAMODEL -i $MINILL -j $MINLR -c $MINCONTIG"
+    bsub -q production-rh74 -e $RAWDIR/../$NAME.err -o $RAWDIR/../$NAME.log -J $NAME "bash $LAUNCHER -x $RESTART -p $PROJECT -a $NAME -s $FQ -f $PE1 -r $PE2 -h $TECH -t hybrid -g $GENOME -k $MEDAKAMODEL -i $MINILL -j $MINLR -c $MINCONTIG"
 }
 
 # Parameter capture
