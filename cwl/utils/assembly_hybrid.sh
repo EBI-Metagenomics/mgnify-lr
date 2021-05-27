@@ -86,4 +86,8 @@ LR_FASTQ=$( find "$RAWDIR" -name "$RUN_LR*.fastq.gz"   | head -1)
 PE1_FASTQ=$(find "$RAWDIR" -name "$RUN_PE*_1.fastq.gz" | head -1)
 PE2_FASTQ=$(find "$RAWDIR" -name "$RUN_PE*_2.fastq.gz" | head -1)
 
+echo "found long-reads $LR_FASTQ"
+echo "found short-reads 1 $PE1_FASTQ"
+echo "found short-reads 2 $PE2_FASTQ"
+
 launch_job "$LR_FASTQ $PE1_FASTQ $PE2_FASTQ"
