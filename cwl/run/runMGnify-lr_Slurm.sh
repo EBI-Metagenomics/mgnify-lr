@@ -29,7 +29,7 @@ export RESTART="False"                                  # flag to try to restart
 # max limit of memory that would be used by toil to restart
 export MEMORY=100
 # number of cores to run toil
-export NUM_CORES=64
+export NUM_CORES=32
 
 
 export RUN_DIR=/data/juan/runs
