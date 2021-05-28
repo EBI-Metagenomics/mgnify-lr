@@ -7,7 +7,7 @@ doc: |
 requirements:
   ResourceRequirement:
     coresMin: 8
-    ramMin: 400000
+    ramMin: 420000
 hints:
   DockerRequirement:
     dockerPull: microbiomeinformatics/mgnify-lr.spades:3.15.2
@@ -20,6 +20,8 @@ arguments:
  - --meta
  - -o
  - spades_out
+ - -m
+ - 400
 
 inputs:
   reads1:
