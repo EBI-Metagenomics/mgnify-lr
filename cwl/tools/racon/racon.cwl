@@ -6,8 +6,8 @@ doc: |
 
 requirements:
   ResourceRequirement:
-    coresMin: 8
-    ramMin: 8000
+    coresMin: 32
+    ramMin: 40000
 hints:
   DockerRequirement:
     dockerPull: microbiomeinformatics/mgnify-lr.racon:1.4.13

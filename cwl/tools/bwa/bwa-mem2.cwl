@@ -8,7 +8,7 @@ requirements:
   InitialWorkDirRequirement:
     listing: [ $(inputs.reference) ]
   ResourceRequirement:
-    coresMin: 8
+    coresMin: 32
     ramMin: 2000
 hints:
   DockerRequirement:

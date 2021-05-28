@@ -6,8 +6,8 @@ doc: |
 
 requirements:
   ResourceRequirement:
-    coresMin: 8
-    ramMin: 150000 # 150Gb in of a case large assembly
+    coresMin: 32
+    ramMin: 160000 # 150Gb in of a case large assembly
 hints:
   DockerRequirement:
     dockerPull: microbiomeinformatics/mgnify-lr.pilon:1.23

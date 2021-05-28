@@ -8,7 +8,7 @@ requirements:
   InitialWorkDirRequirement:
     listing: [ $(inputs.assembly) ]
   ResourceRequirement:
-    coresMin: 8
+    coresMin: 32
     ramMin: 8000
 hints:
   DockerRequirement:

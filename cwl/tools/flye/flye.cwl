@@ -6,7 +6,7 @@ doc: |
 
 requirements:
   ResourceRequirement:
-    coresMin: 8
+    coresMin: 32
     ramMin: 200000
 hints:
   DockerRequirement:
