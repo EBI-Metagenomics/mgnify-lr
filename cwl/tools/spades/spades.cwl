@@ -21,7 +21,7 @@ arguments:
  - -o
  - spades_out
  - -m
- - 400
+ - "400"
 
 inputs:
   reads1:
