@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script to launch a LSF job using toil for the MGnify-lr pipeline
-# (c) 2020 EMBL- EBI
+# (c) 2021 EMBL- EBI
 
 # clone of mgnify-lr repo
 export PIPELINE_FOLDER=/nfs/production/metagenomics/production/mgnify-lr
