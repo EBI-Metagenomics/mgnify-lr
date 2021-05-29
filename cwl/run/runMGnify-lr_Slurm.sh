@@ -218,6 +218,7 @@ CMD="toil-cwl-runner \
   --tmp-outdir-prefix $TMPDIR \
   --outdir $OUT_DIR_FINAL \
   --disableCaching \
+  --disableChaining \
   --defaultMemory $MEMORY \
   --defaultCores $NUM_CORES \
   --retryCount 3 \
