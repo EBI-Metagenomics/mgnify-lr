@@ -212,6 +212,8 @@ echo "launching CWL job as $NAME, Docker: $DOCKER, Restart: $RESTART"
 CMD="cwltool \
   --preserve-entire-environment \
   --enable-dev \
+  --tmp-outdir-prefix $TMPDIR \
+  --tmpdir-prefix $TMPDIR \
   $USEDOCKER \
   $CWL \
   $RUN_YML"

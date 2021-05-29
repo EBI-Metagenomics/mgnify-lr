@@ -214,6 +214,8 @@ CMD="toil-cwl-runner \
   --enable-dev \
   --logFile $LOG_DIR/$NAME.log \
   --jobStore $JOB_TOIL_FOLDER/$NAME \
+  --tmpdir-prefix $TMPDIR \
+  --tmp-outdir-prefix $TMPDIR \
   --outdir $OUT_DIR_FINAL \
   --disableCaching \
   --defaultMemory $MEMORY \
