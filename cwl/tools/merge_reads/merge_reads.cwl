@@ -10,9 +10,9 @@ requirements:
     ramMin: 2000
 hints:
   DockerRequirement:
-    dockerPull: microbiomeinformatics/mgnify-lr.merge_reads:0.0.1
+    dockerPull: microbiomeinformatics/mgnify-lr.merge_reads:0.0.2
 
-baseCommand: [ "merge_reads.sh" ]
+baseCommand: [ "merge_reads.pl" ]
 
 inputs:
   reads1:
