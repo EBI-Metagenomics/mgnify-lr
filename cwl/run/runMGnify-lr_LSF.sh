@@ -153,8 +153,8 @@ export OUT_JSON=${OUT_DIR_FINAL}/out.json
 
 if [ "$RESTART" == "False" ]
 then
-    echo "Create empty ${LOG_DIR}, ${JOB_TOIL_FOLDER} and ${OUT_DIR_FINAL}"
-    mkdir -p "${LOG_DIR}" "${OUT_DIR_FINAL}" "${JOB_TOIL_FOLDER}"
+    echo "Create empty ${LOG_DIR}, ${JOB_TOIL_FOLDER}, ${TMPDIR} and ${OUT_DIR_FINAL}"
+    mkdir -p "${LOG_DIR}" "${OUT_DIR_FINAL}" "${JOB_TOIL_FOLDER}" "${TMPDIR}"
 else 
     echo "restart mode detected, reusing dirs"
 fi
@@ -226,6 +226,8 @@ CMD="toil-cwl-runner \
   --outdir $OUT_DIR_FINAL \
   --batchSystem lsf \
   --disableCaching \
+  --tmpdir-prefix $TMPDIR \
+  --tmp-outdir-prefix $TMPDIR \
   --defaultMemory $MEMORY \
   --defaultCores $NUM_CORES \
   --retryCount 5 \
