@@ -28,9 +28,9 @@ export DOCKER="True"                                    # flag to use singularit
 export RESTART="False"                                  # flag to try to restart a failed run
 
 # Default memory if not specified or step needs more that the one defined in CWL
-export MEMORY=40
+export MEMORY=100
 # number of cores to run
-export NUM_CORES=8
+export NUM_CORES=32
 # lsf queue limit
 export LIMIT_QUEUE=100
 
