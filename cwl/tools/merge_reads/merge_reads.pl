@@ -17,7 +17,7 @@ while (<$fh1>) {
     $ln++;
     if ($ln == 1) {
         $rn++;
-        print $oh ">read_$rn\n";
+        print $oh "\@read_$rn\n";
     }
     else {
         print $oh "$_";
@@ -32,7 +32,7 @@ while (<$fh2>) {
     $ln++;
     if ($ln == 1) {
         $rn++;
-        print $oh ">read_$rn\n";
+        print $oh "\@read_$rn\n";
     }
     else {
         print $oh "$_";
