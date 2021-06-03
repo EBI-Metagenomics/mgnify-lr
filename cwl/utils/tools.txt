@@ -10,3 +10,4 @@ prodigal#mgnify-lr.prodigal:2.6.3
 filterContigs#mgnify-lr.filtercontigs:0.0.3
 assembly_stats#mgnify-lr.assemblystats:0.0.5
 diamond#mgnify-lr.diamond:2.0.7
+merge_reads#mgnify-lr.merge_reads:0.0.3
