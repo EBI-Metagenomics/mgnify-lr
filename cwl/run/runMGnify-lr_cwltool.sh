@@ -74,12 +74,12 @@ fi
 
 if [ "$TYPE" != "assembly" ]
 then
-    if [ "$FORWARD" == "null" ]
+    if [ "$FORWARD_READS" == "null" ]
     then
         echo "Hybrid mode detected, missing first short-read file (-f)"
         exit 1
     fi
-    if [ "$REVERSE" == "null" ]
+    if [ "$REVERSE_READS" == "null" ]
     then
         echo "Hybrid mode detected, missing second short-read file (-r)"
         exit 1
@@ -87,7 +87,7 @@ then
     
     if [ "$NAME" == "null" ]
     then
-        NAME=$(basename "$FORWARD" _1.fastq.gz)
+        NAME=$(basename "$FORWARD_READS" _1.fastq.gz)
     fi
 fi
 
