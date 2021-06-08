@@ -1,8 +1,8 @@
 cwlVersion: v1.2
 class: CommandLineTool
-label: Reporting and preprocessing of Fastq files with fastp.
+label: Reporting and preprocessing of LR Fastq files with fastp.
 doc: |
-      Implementation of paired-end Fastq preprocessing and quality reporting with fastp.
+      Implementation of long-reads Fastq preprocessing and quality reporting with fastp.
 
 requirements:
   ResourceRequirement:
