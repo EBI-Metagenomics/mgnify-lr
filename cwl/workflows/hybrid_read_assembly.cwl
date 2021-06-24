@@ -147,6 +147,12 @@ outputs:
   final_assembly_stats:
     type: File
     outputSource: step_2_assembly/assembly_stats
+  spades_err:
+    type: File
+    outputSource: step_2_assembly/spades_err
+  spades_log:
+    type: File
+    outputSource: step_2_assembly/spades_log
   # outputs from post-processing 
   predict_proteins_fasta:
     type: File
@@ -217,6 +223,8 @@ steps:
       - assembly_graph
       - assembly_gfa
       - assembly_stats
+      - spades_err
+      - spades_log
 
   step_3_postprocessing:
     label: postprocessing analysis for assembly

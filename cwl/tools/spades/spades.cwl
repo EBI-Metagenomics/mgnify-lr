@@ -67,6 +67,14 @@ outputs:
     type: File
     outputBinding:
       glob: "spades_out/assembly_graph_with_scaffolds.gfa"
+  spades_log:
+    type: File
+    outputBinding:
+      glob: "spades.log"
+  spades_err:
+    type: File
+    outputBinding:
+      glob: "spades.err"
   
 stdout: spades.log
 stderr: spades.err

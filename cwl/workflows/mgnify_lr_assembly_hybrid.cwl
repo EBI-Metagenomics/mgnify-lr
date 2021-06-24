@@ -78,6 +78,12 @@ outputs:
   assembly_stats:
     type: File
     outputSource: step_8_assembly_stats/outAssemblyStats
+  spades_err:
+    type: File
+    outputSource: step_1_assembly/spades_err
+  spades_log:
+    type: File
+    outputSource: step_1_assembly/spades_log
 
 steps:
   step_1_assembly:
@@ -92,6 +98,8 @@ steps:
       - contigs_fasta
       - assembly_graph
       - assembly_gfa
+      - spades_err
+      - spades_log
 
   step_2_merge_short_reads:
     label: merge paired reads for polishing

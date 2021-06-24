@@ -37,6 +37,8 @@ steps:
       - contigs_fasta
       - assembly_graph
       - assembly_gfa
+      - spades_err
+      - spades_log
 
   pacbio:
     label: assembly pacbio reads
