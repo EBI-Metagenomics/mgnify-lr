@@ -6,7 +6,7 @@ digraph lrpipeline {
 
     input [label="Raw LR FastQ", color=red]
 
-    input2 [label="Raw PE FastQ", color=red]
+    input2 [label="Raw SR FastQ", color=red]
 
     genome [label="Host genome\n(optional)", color=lightgrey]
     
